@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,6 +39,34 @@ class User
 
     #[ORM\Column(type: Types::BLOB, nullable: true)]
     private $profilPicture = null;
+
+    /**
+     * @var Collection<int, Voiture>
+     */
+    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'proprietaire', orphanRemoval: true)]
+    private Collection $voitures;
+
+    /**
+     * @var Collection<int, Trajet>
+     */
+    #[ORM\ManyToMany(targetEntity: Trajet::class, mappedBy: 'participants')]
+    private Collection $trajets;
+
+    #[ORM\OneToOne(mappedBy: 'creator', cascade: ['persist', 'remove'])]
+    private ?Avis $avisPublies = null;
+
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $avisRecus;
+
+    public function __construct()
+    {
+        $this->voitures = new ArrayCollection();
+        $this->trajets = new ArrayCollection();
+        $this->avisRecus = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -135,6 +165,110 @@ class User
     public function setProfilPicture($profilPicture): static
     {
         $this->profilPicture = $profilPicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Voiture>
+     */
+    public function getVoitures(): Collection
+    {
+        return $this->voitures;
+    }
+
+    public function addVoiture(Voiture $voiture): static
+    {
+        if (!$this->voitures->contains($voiture)) {
+            $this->voitures->add($voiture);
+            $voiture->setProprietaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoiture(Voiture $voiture): static
+    {
+        if ($this->voitures->removeElement($voiture)) {
+            // set the owning side to null (unless already changed)
+            if ($voiture->getProprietaire() === $this) {
+                $voiture->setProprietaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Trajet>
+     */
+    public function getTrajets(): Collection
+    {
+        return $this->trajets;
+    }
+
+    public function addTrajet(Trajet $trajet): static
+    {
+        if (!$this->trajets->contains($trajet)) {
+            $this->trajets->add($trajet);
+            $trajet->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrajet(Trajet $trajet): static
+    {
+        if ($this->trajets->removeElement($trajet)) {
+            $trajet->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function getAvisPublies(): ?Avis
+    {
+        return $this->avisPublies;
+    }
+
+    public function setAvisPublies(Avis $avisPublies): static
+    {
+        // set the owning side of the relation if necessary
+        if ($avisPublies->getCreator() !== $this) {
+            $avisPublies->setCreator($this);
+        }
+
+        $this->avisPublies = $avisPublies;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvisRecus(): Collection
+    {
+        return $this->avisRecus;
+    }
+
+    public function addAvisRecu(Avis $avisRecu): static
+    {
+        if (!$this->avisRecus->contains($avisRecu)) {
+            $this->avisRecus->add($avisRecu);
+            $avisRecu->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvisRecu(Avis $avisRecu): static
+    {
+        if ($this->avisRecus->removeElement($avisRecu)) {
+            // set the owning side to null (unless already changed)
+            if ($avisRecu->getUser() === $this) {
+                $avisRecu->setUser(null);
+            }
+        }
 
         return $this;
     }

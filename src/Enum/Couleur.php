@@ -6,7 +6,8 @@ enum Couleur: string
 {
     case Blanc = 'Blanc';
     case Noir = 'Noir';
-    case Gris = 'Gris';
+    case GrisFonce = 'Gris foncé';
+    case GrisClaire = 'Gris clair';
     case Rouge = 'Rouge';
     case Bleu = 'Bleu';
     case Vert = 'Vert';
