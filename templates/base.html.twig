@@ -5,13 +5,51 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
         {% endblock %}
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {{ encore_entry_script_tags('app') }}
+            {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav class="navbar">
+            
+            <a href="/" class="josefin-sans-title navbar__logo">
+                <img src="./ecoride-logo.svg" alt="ecoride-logo">
+                <label>EcoRide</label>
+            </a>
+            <div class="navbar__buttons" id="navbar-btns">
+                <twig:ux:icon name="maki:cross" class="navbar__mobile_icon" id="navbar-close-mobile-menu" display="none" style="width:20px; height:20px;"/>
+                <a href="/rechercher" class="btn-secondary">
+                    <twig:ux:icon name="iconamoon:search" class="icon"/>
+                    <label>Rechercher</label>
+                </a>
+                <a href="/publier-trajet" class="btn-secondary">
+                    <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
+                    <label>Publier un trajet</label>
+                    {# icon plus #}
+                </a>
+
+                <a href="/connexion" class="btn-green-black">Se connecter</a>
+            </div>
+
+            <twig:ux:icon name="material-symbols:menu-rounded" id="navbar-menu-icon" class="navbar__toggle_mobile navbar__mobile_icon" style="width:30px; height: 30px"/>
+
+            {# <div class="navbar__menu">
+                <a href="#" class="">Publier un trajet</a>
+                <a href="#" class="btn btn--secondary">Se connecter</a>
+            </div> #}
+
+            
+        </nav>
+
+        <div class="body-content">{% block body %}{% endblock %}</div>
+        
     </body>
 </html>

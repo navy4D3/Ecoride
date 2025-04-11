@@ -1,4 +1,4 @@
-import './bootstrap.js';
+import './bootstrap';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -7,4 +7,31 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+const navbarMenuIcon = document.getElementById('navbar-menu-icon');
+const navbarBtns = document.getElementById('navbar-btns');
+const navbarCloseMobileMenuBtn = document.getElementById('navbar-close-mobile-menu');
+
+navbarMenuIcon.addEventListener('click', function() {
+    navbarBtns.style.display = "flex";
+    navbarCloseMobileMenuBtn.style.display = "block";
+})
+
+navbarCloseMobileMenuBtn.addEventListener('click', function() {
+    navbarBtns.style.display ="none";
+})
+
+
+const inputs = document.querySelectorAll('input');
+
+inputs.forEach((input) => {
+    input.addEventListener('focus', () => {
+       
+       input.parentNode.classList.add('selected');
+
+    })
+    input.addEventListener('blur', () => {
+       
+       input.parentNode.classList.remove('selected');
+
+    })
+})

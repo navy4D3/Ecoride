@@ -2,17 +2,133 @@
 
 {% block title %}EcoRide - Covoiturez l'esprit tranquille{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datepicker') }}
+    {{ encore_entry_script_tags('searchTrajet') }}
+    
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMJphmQ4aX2kglX1AxtW-HmyeRJn6pLP4&libraries=places&callback=initAutocomplete" async defer></script>
+    {# {{ encore_entry_script_tags('googlePlace') }} #}
+
+    <script>
+        function initAutocomplete() {
+            const inputs = document.querySelectorAll('.adresse-autocomplete');
+            inputs.forEach((input) => {
+                new google.maps.places.Autocomplete(input, {
+                    types: ['geocode'],
+                    componentRestrictions: { country: 'fr' } // optionnel : limite à la France
+                });
+            });
+        }
+        
+    </script>
+    
+    {# <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"> #}
+    {# </script> #}
+{% endblock %}
+
 {% block stylesheets %}
-    {% parent %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('style-datepicker') }}
 {% endblock %}
 
 
+
+
 {% block body %}
+    <div class="home-intro">
+        {# <img src="./home-background.jpg" alt=""> #}
+        <div class="linear-gradient">
+            <div class="d-flex flex-row gap-3 align-items-center mb-3">
+                <h1>Covoiturez l'esprit tranquille <img src="./calm-apple-icon.png" alt="" style=""></h1>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 d-flex justify-content-center">
+        {{ form_start(form) }}
+            <div>
+                {# icone #}
+                <div id="lieu-depart-icon"></div>
+                {{ form_widget(form.lieuDepart) }}
+            </div>
+            <div>
+                {# icone #}
+                <div id="lieu-arrivee-icon"><div></div></div>
+                {{ form_widget(form.lieuArrivee) }}
+            </div>
+            
+            <div class="datepicker-div">
+                {# icone #}
+                <twig:ux:icon name="akar-icons:calendar" />
+                {% include 'home/datepicker.html.twig' %}
+            </div>
+            <div id="nb-passager-section">
+                {# icone #}
+                
+                <twig:ux:icon name="lucide:users" />
+                {{ form_widget(form.nbPlace) }}
+                <div id="nb-user-div">
+                    <span id="place-count">1 passager</span>
+                    <div id="nb-passager-btns">
+                        <div id="minus-icon" style="display:none;"><div></div></div>
+                        <div><twig:ux:icon name="bi:plus"  id="plus-icon"/></div>
+                    </div>
+
+                </div>
+                
+            </div>
+            
+            <button class="btn-green-black"><twig:ux:icon name="iconamoon:search" />Rechercher</button>
+            
+            
+        {{ form_end(form) }}
+
+        
+
+        
+    </div>
+
+    <div id="description-section">
+        <h2>Voyager autrement, partagez plus !</h2>
+        <p>Avec EcoRide, optimisez vos trajets en partageant votre voiture ou en trouvant un conducteur près de chez vous en quelques clics. </p>
+
+        <div id="advantage-section">
+            <div class="advantage-div">
+                <img src="./feuilles-apple-icon.png" alt="">
+                <span>Réduis tes émissions de CO2</span>
+            </div>
+
+            <div class="advantage-div">
+                <img src="./money-apple-icon.png" alt="">
+                <span>optimise tes dépenses</span>
+            </div>
+
+            <div class="advantage-div">
+                <img src="./fiesta-apple-icon.png" alt="">
+                <span>Kiff avec les passager</span>
+            </div>
+        </div>
+        
+
+    </div>
+
+    {# <div id="place-picker-box">
+        <div id="place-picker-container">
+            <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
+            
+        </div>
+    </div> #}
+
+    {# <div id="datepicker-div">
+         {% include 'home/datepicker.html.twig' %}
+    </div> #}
+   
+
+    
+    
 
 
-
-<div class="example-wrapper">
-    <h1>Covoiturez l'esprit tranquille ICONE</h1>
-    <p>My first p on this project</p>
-</div>
 {% endblock %}
