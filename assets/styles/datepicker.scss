@@ -1,12 +1,13 @@
 // @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 @import 'variables.scss';
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: $josefin-sans;
-  color: #334;
-}
+// * {
+//   padding: 0;
+//   margin: 0;
+//   box-sizing: border-box;
+//   font-family: $josefin-sans;
+//   color: #334;
+// }
+
 
 
 .datepicker-div {
@@ -26,8 +27,6 @@
 //   border-radius: 5px;
 //   border: 1px solid #eee;
 // }
-
-/* datepicker styles */
 
 .datepicker-container {
   position: relative;

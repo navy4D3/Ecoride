@@ -22,11 +22,25 @@ h1, a, label {
 
 h1 {
     font-weight: 700;
-    font-size: 60px;
+    font-size: 40px;
+}
+
+h2 {
+    font-size : 32px;
+}
+
+h3 {
+    font-size: 24px;
 }
 
 p {
+    font-size: 16px;
     font-family: $nunito ;
+    font-weight: 600;
+}
+span {
+    font-size: 16px;
+    font-family: $josefin-sans ;
     font-weight: 600;
 }
 
@@ -35,12 +49,20 @@ p {
     font-weight: 700;
 }
 
-.btn-green-black {
+.btn-green-black, .btn-blue {
     padding: 10px 20px;
-    background-color: $green-black;
-    color: $blue-background;
+    text-align: center;
     border-radius: 100px;
     border: none;
+}
+
+.btn-green-black {
+    background-color: $green-black;
+    color: $green-white;
+}
+.btn-blue {
+    background-color: $blue-btn;
+    color: $blue-background;
 }
 
 .navbar {
@@ -50,10 +72,11 @@ p {
     padding: 20px 20px;
     background-color: $green-medium;
     box-shadow: 0 2px 10px $green-black-25;
-    position: absolute;
+    position: fixed;
     width: -webkit-fill-available;
     left: 0px;
     top: 0px;
+    z-index: 1000;
 
     &__logo  {
         text-decoration: none;
@@ -126,6 +149,47 @@ p {
     }
 }
 
+.footer {
+    padding: 40px;
+    background-color: $green-black;
+    display: grid;
+    grid-template-areas: "item1 item2 item3";
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+
+    * {
+        color: $green-white;
+    }
+    
+    a {
+        font-size: 25px;
+    }
+
+    &_logo {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        max-width: min-content;
+        svg {
+            width: 50%;
+            height: fit-content;
+
+            * {
+                fill: $green-white;
+                width: 140px;
+            }
+            
+        }
+
+        span {
+            font-size: 60px;
+            font-weight: 700;
+        }
+    }
+}
+
 .selected {
     
     outline: solid 2px $green-black-25;
@@ -133,6 +197,25 @@ p {
 
 // Responsive pour mobile
 @media (max-width: 768px) {
+    
+    h1 {
+        
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size : 24px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    p, span {
+        font-size: 16px;
+    }
+    
+    
     .navbar {
         &__logo {
             img {
@@ -164,4 +247,52 @@ p {
             display: block;
         }
     }
+
+    .footer {
+        
+
+        a {
+            font-size: 20px;
+        }
+
+        span {
+            font-size: 30px;
+        }
+
+        svg {
+            width: 50%;
+        }
+    }
+}
+
+@media (max-width: 512px) {
+    .footer {
+        gap: 10px;
+        grid-template-areas:
+            "item2"
+            "item1"
+            "item3";
+        grid-template-columns: 1fr;
+
+        .item-1 {
+            grid-area: item1;
+          }
+          .item-2 {
+            grid-area: item2;
+          }
+          .item-3 {
+            grid-area: item3;
+          }
+
+        svg {
+            width: 50px;
+        }
+
+        a {
+            font-size: 16px;
+        }
+
+
+    }
+    
 }
