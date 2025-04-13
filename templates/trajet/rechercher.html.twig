@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EcoRide - Covoiturez l'esprit tranquille{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datepicker') }}
+    {{ encore_entry_script_tags('searchTrajet') }}
+    
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMJphmQ4aX2kglX1AxtW-HmyeRJn6pLP4&libraries=places&callback=initAutocomplete" async defer></script>
+    {# {{ encore_entry_script_tags('googlePlace') }} #}
+
+    <script>
+        function initAutocomplete() {
+            const inputs = document.querySelectorAll('.adresse-autocomplete');
+            inputs.forEach((input) => {
+                new google.maps.places.Autocomplete(input, {
+                    types: ['geocode'],
+                    componentRestrictions: { country: 'fr' } // optionnel : limite à la France
+                });
+            });
+        }
+        
+    </script>
+    
+    {# <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"> #}
+    {# </script> #}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('style-datepicker') }}
+{% endblock %}
+
+
+
+
+{% block body %}
+    <div class="home-intro">
+        {# <img src="./home-background.jpg" alt=""> #}
+        <div class="linear-gradient">
+            <div class="d-flex flex-row gap-3 align-items-center mb-3">
+                <h1>Un prochain voyage ?</h1>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 d-flex justify-content-center">
+        {% include 'trajet/rechercher_form.html.twig' %}
+    </div>
+
+
+    
+    
+
+
+{% endblock %}
