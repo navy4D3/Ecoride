@@ -5,8 +5,8 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
+            {{ encore_entry_link_tags('style-app') }}
+            {# <link rel="stylesheet" href="{{ asset('styles/app.scss') }}"> #}
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
@@ -18,7 +18,8 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar">
+        
+        <nav class="navbar {{ pageClass|default('') }}">
             
             <a href="/" class="josefin-sans-title navbar__logo">
                 <img src="./ecoride-logo.svg" alt="ecoride-logo">
@@ -36,22 +37,19 @@
                     {# icon plus #}
                 </a>
 
-                <a href="/login" class="btn-green-black">Se connecter</a>
+                <a href="/connect" class="btn-green-black">Se connecter</a>
             </div>
 
             <twig:ux:icon name="material-symbols:menu-rounded" id="navbar-menu-icon" class="navbar__toggle_mobile navbar__mobile_icon" style="width:30px; height: 30px"/>
 
-            {# <div class="navbar__menu">
-                <a href="#" class="">Publier un trajet</a>
-                <a href="#" class="btn btn--secondary">Se connecter</a>
-            </div> #}
+            
 
             
         </nav>
     
-        <div class="body-content">{% block body %}{% endblock %}</div>
+        <div class="body-content {{ pageClass|default('') }}">{% block body %}{% endblock %}</div>
 
-        <footer class="footer">            
+        <footer class="footer {{ pageClass|default('') }}">            
             <a href="/contact" class="item item-1">Contact</a>
             <a href="/" class="footer_logo" class="item item-2">
                 

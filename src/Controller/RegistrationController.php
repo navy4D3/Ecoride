@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\RegistrationStepTwoType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -22,40 +25,124 @@ class RegistrationController extends AbstractController
     {
     }
 
+    #[Route('/connect', name: 'app_connect')]
+    public function connect(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils): Response
+    {
+        
+        
+        $connectType = $request->query->getString('type', 'login');
+        
+        if ($connectType == 'register') {
+             // get the login error if there is one
+             
+             $form = $this->createForm(RegistrationFormType::class);
+             $errors = $form->getErrors(true);
+
+             if ($form->isSubmitted() ) {
+                return $this->redirectToRoute('app_home');
+             }
+        
+             return $this->render('registration/connect.html.twig', [
+                 'registrationForm' => $form,
+                 'formType' => 'register',
+                 'errors' => $errors
+             ]);
+        } else {            
+            $errors = $authenticationUtils->getLastAuthenticationError();
+
+            // last username entered by the user
+            $lastUsername = $authenticationUtils->getLastUsername();
+
+            return $this->render('registration/connect.html.twig', [
+                'formType' => 'login',
+                'last_username' => $lastUsername,
+                'errors' => $errors,
+            ]);
+            
+        }
+        
+        
+        
+
+    }
+
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
+        $errors = $form->getErrors(true);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                /** @var string $plainPassword */
+                $plainPassword = $form->get('password')->getData();
+                $email = $form->get('email')->getData();
 
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('yvanrobert974@gmail.com', 'EcoRide'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+                // encode the plain password
 
-            // do anything else you need here, like send an email
+                // $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
-            return $this->redirectToRoute('app_home');
+                // $entityManager->persist($user);
+                // $entityManager->flush();
+
+                // generate a signed url and email it to the user
+                // $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                //     (new TemplatedEmail())
+                //         ->from(new Address('yvanrobert974@gmail.com', 'EcoRide'))
+                //         ->to((string) $user->getEmail())
+                //         ->subject('Please Confirm your Email')
+                //         ->htmlTemplate('registration/confirmation_email.html.twig')
+                // );
+
+                // do anything else you need here, like send an email
+                
+
+                $session->set('registration_data', [
+                    'email' => $email,
+                    'hashedPassword' => $hashedPassword,
+                ]);
+
+                return $this->redirectToRoute('app_register2');
+            }  else {
+                return $this->render('registration/connect.html.twig', [
+                    'errors' => $errors,
+                    'registrationForm' => $form,
+                    'formType' => 'register'
+                ]);
+
+            }
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+        return $this->render('registration/register_form.html.twig', [
+            'formType' => 'register',
+            'registrationForm' => $form->createView(),
+            'errors' => $errors
         ]);
+    }
+
+    #[Route('/register2', name: 'app_register2')]
+    public function register2(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session): Response 
+    {
+        $form = $this->createForm(RegistrationStepTwoType::class);
+        $form->handleRequest($request);
+        $errors = $form->getErrors(true);
+
+        $data = $session->get('registration_data');
+
+        // if (!$data) {
+        //     return $this->redirectToRoute('app_connect', ['type' => 'register']);
+        // }
+
+        return $this->render('registration/register2.html.twig', [
+            'registrationStepTwoForm' => $form,
+            'errors' => $errors
+        ]);
+
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

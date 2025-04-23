@@ -1,3 +1,4 @@
+{% set pageClass = 'home' %}
 {% extends 'base.html.twig' %}
 
 {% block title %}EcoRide - Covoiturez l'esprit tranquille{% endblock %}
@@ -7,22 +8,7 @@
     {{ encore_entry_script_tags('datepicker') }}
     {{ encore_entry_script_tags('searchTrajet') }}
     
-    
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMJphmQ4aX2kglX1AxtW-HmyeRJn6pLP4&libraries=places&callback=initAutocomplete" async defer></script>
-    {# {{ encore_entry_script_tags('googlePlace') }} #}
-
-    <script>
-        function initAutocomplete() {
-            const inputs = document.querySelectorAll('.adresse-autocomplete');
-            inputs.forEach((input) => {
-                new google.maps.places.Autocomplete(input, {
-                    types: ['geocode'],
-                    componentRestrictions: { country: 'fr' } // optionnel : limite à la France
-                });
-            });
-        }
-        
-    </script>
+    {% include 'google_autocomplete.html.twig' %}
     
     {# <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"> #}
     {# </script> #}
@@ -30,7 +16,9 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('style-datepicker') }}
+    
+    {# {{ encore_entry_link_tags('style-app') }} #}
+    {# {{ encore_entry_link_tags('style-home') }} #}
 {% endblock %}
 
 
@@ -79,7 +67,7 @@
         <div class="user_type_section_conducteur">
             <span>Je suis conducteur</span>
             <twig:ux:icon name="mingcute:car-line" class="user_type_section_conducteur_icon" />
-            <a href="/register" class="btn-green-black">Publier un trajet</a>
+            <a href="/connect?type=register" class="btn-green-black">Publier un trajet</a>
         </div>
         <div class="user_type_section_passager">
             <span>Je suis passager</span>
@@ -87,21 +75,5 @@
             <a href="/rechercher" class="btn-blue">Rechercher un trajet</a>
         </div>
     </div>
-
-    {# <div id="place-picker-box">
-        <div id="place-picker-container">
-            <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
-            
-        </div>
-    </div> #}
-
-    {# <div id="datepicker-div">
-         {% include 'home/datepicker.html.twig' %}
-    </div> #}
-   
-
-    
-    
-
 
 {% endblock %}

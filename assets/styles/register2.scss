@@ -1,0 +1,73 @@
+@import 'variables.scss';
+
+.body-content.register-step-two {
+    min-height: 100vh;
+    align-content: center;
+
+    form {
+        height: 100%;
+        align-items: center;
+        
+        div {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+            
+
+            input {
+                flex-grow: 1;
+            }
+            
+        }
+
+        .profil-picture-div {
+            flex-direction: column;
+            
+            
+
+            div {
+                width: fit-content;
+                
+                background-color: $green-white;
+                // box-shadow: 0px 0px 5px $green-black-25;
+                border-radius: 100px;
+                cursor: pointer;
+
+                svg {
+                    padding: 30px;
+                    height: 100px;
+                    width: 100px;
+                    color: $green-black;
+                    
+                    * {
+                    
+                    stroke-width: 3px;
+
+            
+                    }
+                }
+            }
+        }
+
+        
+
+        button {
+
+            width: 100%;
+
+        }
+    }
+}
+
+@media (max-width: 512px) {
+
+    .body-content.register-step-two {
+        form {
+            div {
+                flex-direction: column;
+            }
+        }
+    }
+}

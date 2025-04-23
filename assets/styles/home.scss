@@ -1,8 +1,7 @@
 
 @import 'variables.scss';
 
-
-.body-content {
+.body-content.home {
     padding: 0px !important;
 }
 
@@ -90,7 +89,7 @@
     display: none;
 }
 
-form {
+.home-form {
     margin: 40px;
     padding: 20px;
     gap: 20px;

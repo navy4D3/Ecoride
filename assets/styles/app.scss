@@ -1,8 +1,10 @@
-@import  'home.scss';
+
 @import 'variables.scss';
 @import "../../node_modules/bootstrap/scss/bootstrap";
-@import 'datepicker.scss';
-
+@import  'home.scss';
+@import  'datepicker.scss';
+@import 'register-login.scss';
+@import 'register2.scss';
 
 body {
     background: $blue-background;
@@ -14,7 +16,7 @@ body {
     padding-right: 20px;
 }
 
-h1, a, label {
+h1, h2, h3, a, label {
     margin-bottom: 0px;
     font-family: $josefin-sans;
     text-decoration: none;
@@ -44,16 +46,87 @@ span {
     font-weight: 600;
 }
 
+.logo-top-left {
+    flex-grow: 0;
+    position: absolute;
+    top : 0px;
+    left: 0px;
+    
+    display: flex ;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap:10px;
+    color: $green-black;
+    height: min-content;
+    padding: 20px;
+    background-color: $blue-background;
+    border-radius: 0px 0px 40px 0px;
+
+    
+
+    svg {
+        height: 40px;
+        width: auto;
+    }
+    
+
+    span {
+        font-size: 40px;
+        font-weight: 700;
+    }
+}
+
+form {
+    ul {
+        list-style: none;
+        padding: 0px;
+        color: red;
+    }
+
+    label {
+        font-size: 24px;
+    }
+
+    input.picker[type="date"] {
+        position: relative;
+    }
+    
+    input.picker[type="date"]::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        color: transparent;
+        background: transparent;
+    }
+    
+}
+
+.alert {
+    margin-bottom: 0px !important;
+    
+}
+
 .josefin-sans-title {
     font-family: $josefin-sans;
     font-weight: 700;
 }
 
-.btn-green-black, .btn-blue {
+.btn-green-black, .btn-blue, .btn-green {
     padding: 10px 20px;
     text-align: center;
     border-radius: 100px;
     border: none;
+    font-family: $josefin-sans;
+    
+}
+
+.btn-green {
+    background-color: $green-btn;
+    color : $green-black;
 }
 
 .btn-green-black {
@@ -63,6 +136,12 @@ span {
 .btn-blue {
     background-color: $blue-btn;
     color: $blue-background;
+}
+
+.inactive {
+    opacity: 60%;
+    cursor: default !important;
+    pointer-events: none !important;
 }
 
 .navbar {
@@ -149,6 +228,117 @@ span {
     }
 }
 
+.form-green-row {
+    margin: 40px;
+    padding: 20px;
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: $green-medium;
+    border-radius: 20px;
+    box-shadow: 0px 2px 10px $green-black-25;
+    max-width: 1200px;
+    
+
+    > div {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        flex-grow: 1;
+        background-color: $green-white;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 10px;
+
+        input {
+            border: none;
+            background: none;
+            font-family: $josefin-sans;
+            width: 100%;
+            color: $green-black;
+            text-overflow: ellipsis;
+            
+            // font-family: $nunito;
+            
+
+            
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        input::placeholder {
+            color: $green-black-50;
+            opacity: 100%;
+        }
+
+        svg {
+            color: $green-black;
+            width: 25px;
+            height: 25px;
+            * {
+                stroke: $green-black;
+                stroke-width: 3px;
+            }
+            
+        }        
+    }
+
+    
+
+    > button {
+        border-radius: 15px !important;
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 15px !important;
+
+        svg {
+            color: $green-white;
+            width: 20px;
+            height: 20px;
+            * {
+                stroke: $green-white;
+                stroke-width: 3px;
+            }
+        }
+    }
+    
+} 
+
+.form-green-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    > div {
+        display: flex;
+        flex-direction: column;
+        gap:5px;
+
+        label {
+            color: $green-black;
+
+        }
+
+        input {
+            border-radius: 10px;
+            border: none;
+            background-color: $green-white;
+            padding: 10px 5px;
+            outline-color: $green-black;
+        }
+
+        input:focus {
+            outline-color: $green-black;
+        }
+    }
+}
+
 .footer {
     padding: 40px;
     background-color: $green-black;
@@ -195,6 +385,24 @@ span {
     outline: solid 2px $green-black-25;
 }
 
+@media (max-width: 1024px) {
+
+    .logo-top-left {
+        z-index: 10;
+        padding: 15px;
+        padding-bottom: 10px;
+        border-radius: 0px 0px 15px 0px;
+
+        svg {
+            height: 20px;
+            
+        }
+
+        span {
+            font-size: 20px;
+        }
+    }
+}
 // Responsive pour mobile
 @media (max-width: 768px) {
     
@@ -213,6 +421,12 @@ span {
 
     p, span {
         font-size: 16px;
+    }
+
+    form {
+        label {
+            font-size: 20px;
+        }
     }
     
     

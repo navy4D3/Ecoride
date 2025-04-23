@@ -45,3 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+
+const inputs = document.querySelectorAll('input');
+
+inputs.forEach((input) => {
+    input.addEventListener('focus', () => {
+       
+       input.parentNode.classList.add('selected');
+
+    })
+    input.addEventListener('blur', () => {
+       
+       input.parentNode.classList.remove('selected');
+
+    })
+})
