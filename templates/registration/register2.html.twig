@@ -36,10 +36,11 @@
         {{ form_row(registrationStepTwoForm.nom) }}
         {{ form_row(registrationStepTwoForm.prenom) }}
         {{ form_row(registrationStepTwoForm.date_naissance) }}
-        {{ form_row(registrationStepTwoForm.telephone) }}
         {{ form_row(registrationStepTwoForm.adresse) }}
+        {{ form_row(registrationStepTwoForm.telephone) }}
+        
 
-        <button type="submit" formaction="/register" class="btn btn-green" id="submit-btn">Finaliser</button>
+        <button type="submit" class="btn btn-green" id="submit-btn">Finaliser</button>
         {# {{ form_errors(registrationStepTwoForm) }} #}
     {{ form_end(registrationStepTwoForm) }}
 

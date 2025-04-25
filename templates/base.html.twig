@@ -19,28 +19,60 @@
     </head>
     <body>
         
-        <nav class="navbar {{ pageClass|default('') }}">
+        <nav class="navbar {{ pageClass|default('') }} {% if app.user %}connected{% endif %} ">
+            {% if app.user %}
+                <div class="navbar_buttons" id="navbar-btns">
+                    <a href="/publier-trajet" class="btn-secondary publier-trajet-btn pc-only">
+                        <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
+                        <label class="">Publier un trajet</label>
+                    </a>
+
+                    <div class="right-btns">
+                        <a href="/rechercher" class="right-btns-rechercher">
+                            <twig:ux:icon name="iconamoon:search" class="icon"/>
+                        </a>
+                        <a href="/publier-trajet" class="mobile-only right-btns-publier-trajet publier-trajet-btn">
+                            <twig:ux:icon name="flowbite:plus-outline" class="icon"/>
+                            
+                        </a>
+                        <a href="/profil" class="right-btns-profil">
+                            <twig:ux:icon name="lets-icons:user" class="icon"/>
+                        </a>
+                        <a href="/logout" class="right-btns-logout pc-only">
+                            <twig:ux:icon name="tabler:logout" class="icon"/>
+                        </a>
+                    </div>
+                    
+                    
+                </div>
+
+            {% else %}
+                <a href="/" class="josefin-sans-title navbar_logo">
+                    <img src="./ecoride-logo.svg" alt="ecoride-logo">
+                    <label>EcoRide</label>
+                </a>
+
+                <div class="navbar_buttons" id="navbar-btns">
+                    <twig:ux:icon name="maki:cross" class="navbar_mobile_icon" id="navbar-close-mobile-menu" display="none" style="width:20px; height:20px;"/>
+                    <a href="/rechercher" class="btn-secondary">
+                        <twig:ux:icon name="iconamoon:search" class="icon"/>
+
+                            <label>Rechercher</label>
+
+                    </a>
+                    <a href="/publier-trajet" class="btn-secondary">
+                        <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
+                        <label>Publier un trajet</label>
+                        {# icon plus #}
+                    </a>
+
+                        <a href="/connect" class="btn-green-black">Se connecter</a>
+
+                </div>
+
+                <twig:ux:icon name="material-symbols:menu-rounded" id="navbar-menu-icon" class="navbar_toggle_mobile navbar_mobile_icon" style="width:30px; height: 30px"/>
             
-            <a href="/" class="josefin-sans-title navbar__logo">
-                <img src="./ecoride-logo.svg" alt="ecoride-logo">
-                <label>EcoRide</label>
-            </a>
-            <div class="navbar__buttons" id="navbar-btns">
-                <twig:ux:icon name="maki:cross" class="navbar__mobile_icon" id="navbar-close-mobile-menu" display="none" style="width:20px; height:20px;"/>
-                <a href="/rechercher" class="btn-secondary">
-                    <twig:ux:icon name="iconamoon:search" class="icon"/>
-                    <label>Rechercher</label>
-                </a>
-                <a href="/publier-trajet" class="btn-secondary">
-                    <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
-                    <label>Publier un trajet</label>
-                    {# icon plus #}
-                </a>
-
-                <a href="/connect" class="btn-green-black">Se connecter</a>
-            </div>
-
-            <twig:ux:icon name="material-symbols:menu-rounded" id="navbar-menu-icon" class="navbar__toggle_mobile navbar__mobile_icon" style="width:30px; height: 30px"/>
+            {% endif %}
 
             
 

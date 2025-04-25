@@ -19,6 +19,7 @@ class RegistrationStepTwoType extends AbstractType
     {
         $builder
             ->add('photo_profil', FileType::class, [
+                'required' => false,
                 'mapped' => false,
                 'attr' => [
                     'hidden' => 'true'
@@ -62,6 +63,9 @@ class RegistrationStepTwoType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'csrf_protection' => true,
+            'csrf_field_name' => "_token",
+            'csrf_token_id' => 'register_step_two'
         ]);
     }
 }

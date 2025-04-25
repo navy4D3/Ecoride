@@ -2,11 +2,18 @@
 
 .body-content.register-step-two {
     min-height: 100vh;
-    align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+    padding: 40px 20px;
 
     form {
         height: 100%;
         align-items: center;
+        width: 100%;
+        max-width: 1000px;
         
         div {
             width: 100%;
@@ -24,7 +31,7 @@
 
         .profil-picture-div {
             flex-direction: column;
-            
+            align-items: center;
             
 
             div {
@@ -49,6 +56,10 @@
                     }
                 }
             }
+
+            label {
+                text-align: center;
+            }
         }
 
         
@@ -67,6 +78,11 @@
         form {
             div {
                 flex-direction: column;
+                align-items: flex-start;
+
+                * {
+                    width: 100%;
+                }
             }
         }
     }

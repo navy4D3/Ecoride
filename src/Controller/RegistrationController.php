@@ -9,6 +9,7 @@ use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -126,17 +127,52 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register2', name: 'app_register2')]
-    public function register2(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session): Response 
+    public function register2(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session, Security $security): Response 
     {
+        $user = new User();
         $form = $this->createForm(RegistrationStepTwoType::class);
         $form->handleRequest($request);
         $errors = $form->getErrors(true);
 
+        // $session->set('registration_data', [
+        //     'email' => 'test',
+        //     'hashedPassword' =>'password',
+        // ]);
+
         $data = $session->get('registration_data');
 
-        // if (!$data) {
-        //     return $this->redirectToRoute('app_connect', ['type' => 'register']);
-        // }
+        if (!$data) {
+            return $this->redirectToRoute('app_connect', ['type' => 'register']);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+
+            $user->setPassword($data['hashedPassword']);
+            $user->setEmail($data['email']);
+            $user->setNom($form->get('nom')->getData());
+            $user->setPrenom($form->get('prenom')->getData());
+
+            $dateNaissanceImmutable = \DateTimeImmutable::createFromMutable($form->get('date_naissance')->getData());
+            $user->setDateNaissance($dateNaissanceImmutable);
+            $user->setAdresse($form->get('adresse')->getData());
+
+            //definir photo profil par défaut
+            $user->setPhotoProfil($form->get('photo_profil')->getData());
+
+            if ($form->get('telephone')->getData()) {
+                $user->setTelephone($form->get('telephone')->getData());
+            }
+            
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $session->remove('registration_data');
+            $security->login($user);
+
+            return $this->redirectToRoute('app_home');
+        }
 
         return $this->render('registration/register2.html.twig', [
             'registrationStepTwoForm' => $form,
