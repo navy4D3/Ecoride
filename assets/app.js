@@ -11,13 +11,20 @@ const navbarMenuIcon = document.getElementById('navbar-menu-icon');
 const navbarBtns = document.getElementById('navbar-btns');
 const navbarCloseMobileMenuBtn = document.getElementById('navbar-close-mobile-menu');
 
-navbarMenuIcon.addEventListener('click', function() {
-    navbarBtns.style.display = "flex";
-    navbarCloseMobileMenuBtn.style.display = "block";
-})
+if (navbarMenuIcon) {
+    navbarMenuIcon.addEventListener('click', function() {
+        navbarBtns.style.display = "flex";
+        navbarCloseMobileMenuBtn.style.display = "block";
+    })
+}
 
-navbarCloseMobileMenuBtn.addEventListener('click', function() {
-    navbarBtns.style.display ="none";
-})
+
+if (navbarCloseMobileMenuBtn) {
+    navbarCloseMobileMenuBtn.addEventListener('click', function() {
+        navbarBtns.style.display ="none";
+    })
+}
+
+
 
 

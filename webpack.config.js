@@ -35,12 +35,14 @@ Encore
     .addEntry('searchTrajet', './assets/js/searchTrajet.js')
     .addEntry('registerLogin', './assets/js/registerLogin.js')
     .addEntry('register2', './assets/js/register2.js')
+    .addEntry('addTrajet', './assets/js/addTrajet.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
     .addStyleEntry('style-home', './assets/styles/home.scss')
     .addStyleEntry('style-datepicker', './assets/styles/datepicker.scss')
     .addStyleEntry('style-register-login', './assets/styles/register-login.scss')
     .addStyleEntry('style-register-2', './assets/styles/register2.scss')
+    .addStyleEntry('style-publier-trajet', './assets/styles/publier-trajet.scss')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

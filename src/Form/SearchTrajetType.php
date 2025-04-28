@@ -55,14 +55,16 @@ class SearchTrajetType extends AbstractType
                     'autocomplete' => 'off'
                 ],
             ])
-            // ->add('dateDepart', DateType::class , [
-            //     // 'widget' => 'single_text',
-            //     'required' => true,
-            //     'label' => false,
-            //     'attr' => [
-            //         'placeholder' => 'Date'
-            //     ],
-            // ])
+            ->add('dateDepart', TextType::class , [
+                // 'widget' => 'single_text',
+                'mapped' => false,
+                'required' => true,
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Date',
+                    'class' => "date-input"
+                ],
+            ])
             ->add('nbPlace', null, [
                 'required' => true,
                 'label' => false,

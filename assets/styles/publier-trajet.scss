@@ -1,0 +1,198 @@
+@import 'variables.scss';
+
+.body-content.publier-trajet {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:40px;
+
+    h1 {
+        text-align: center;
+        color: $green-black;
+    }
+
+    .row-inputs {
+    
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 20px;
+
+        > div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            height: -webkit-fill-available;
+        }
+
+        .hour-picker {
+            font-size: 18px;
+            background-color: $green-white; 
+            border-radius: 10px;
+            
+
+            select {
+                color : $green-black-50;
+            }
+    
+            select.valid {
+                color: $green-black;
+            }
+    
+        }
+
+        .prix-container {
+            position: relative;
+
+            span {
+                position: absolute;
+                right: 25px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $green-black;
+                pointer-events: none; /* pour que l'utilisateur puisse cliquer/taper sans gêne */
+                font-family: $nunito;
+
+            }
+        }
+
+    }
+
+    .datepicker {
+        right: auto;
+        top: auto;
+    }
+
+    .vehicules-div {
+        flex-direction: column;
+        align-items: start;
+        gap:0px;
+        
+
+        #user-vehicules {
+            display: flex;
+            flex-direction: row;
+            cursor: pointer;
+    
+            .add-vehicle-card {
+                display: flex;
+                flex-direction: column;
+                border: solid 2px $green-black;
+                border-radius: 10px 10px 20px 20px;
+                color:  $green-black;
+                padding: 10px;
+                gap:5px;
+                align-items: center;
+
+                span {
+                    font-family: $nunito;
+                }
+    
+                svg {
+                    height: 30px;
+                    width: 30px;
+                }
+    
+            }
+        }
+    }
+
+    
+
+    #itineraires-choices {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 80%;
+
+        #itineraires-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            // cursor: pointer;
+
+            * {
+                cursor: pointer;
+            }
+
+            .itineraire {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                padding: 10px 20px;
+                outline: solid 2px $green-black;
+                border-radius: 20px;
+    
+            }
+
+            .itineraire.selected {
+                background-color: $green-btn;
+                outline: none;
+                border: none;
+            }
+    
+            strong, span {
+                color: $green-black;
+            }
+    
+    
+            strong {
+                font-family: $josefin-sans;
+                font-size: 18px;
+            }
+    
+            
+        }
+
+        span {
+            font-family: $nunito;
+            opacity: 75%;
+        }
+
+        > span {
+            text-align: center;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        
+
+
+    }
+
+}
+
+@media (max-width: 768px) {
+    .body-content.publier-trajet {
+        .row-inputs {
+            flex-wrap: wrap;
+
+            > div {
+                flex-grow: 1;
+            }
+
+            .hour-picker {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 2px;
+                justify-content: space-around;
+            }
+        }
+
+        
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .body-content.publier-trajet {
+        #itineraires-choices {
+            width: 100%;
+    }
+    }
+}

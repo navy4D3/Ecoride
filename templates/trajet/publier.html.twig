@@ -1,0 +1,87 @@
+{% set pageClass = 'publier-trajet' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}EcoRide - Covoiturez l'esprit tranquille{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datepicker') }}
+    {{ encore_entry_script_tags('addTrajet') }}
+    
+    {% include 'google_autocomplete.html.twig' %}
+    
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('style-datepicker') }}
+{% endblock %}
+
+
+
+
+{% block body %}
+    <div id="trajet-details" class="flex-column gap-3" style="display: flex;">
+        <h1>Ajouter un trajet</h1>
+
+        {{ form_start(form, {attr: { class:'form-green-column'}}) }}
+            {{ form_row(form.lieuDepart) }}
+            {{ form_row(form.lieuArrivee) }}
+            
+            <div class="row-inputs">
+                <div class="datepicker-div">
+                    {{ form_label(form.dateDepart)}}
+                    {{ form_widget(form.dateDepart)}}
+                    {% include 'home/datepicker.html.twig' %}
+                </div>
+                
+                <div class="">
+                    {{ form_widget(form.heureDepart) }}
+                    <label for="">Heure</label>
+                    <div class="hour-picker">
+                        <select id="hours">
+                            <option value="" disabled selected hidden>hh</option>
+                        </select> :
+                        <select id="minutes">
+                            <option value="" disabled selected hidden>mm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="prix-container">
+                    {{ form_label(form.prixPersonne) }}
+                    {{ form_widget(form.prixPersonne) }}
+                    <span id="credit-label"></span>
+                </div>
+                                
+            </div>
+
+            <div class="vehicules-div">
+                {{ form_widget(form.voiture) }}
+                {{ form_label(form.voiture) }}
+                <div id="user-vehicules">
+                    <div class="add-vehicle-card">
+                        <span>Ajouter</span>
+                        <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
+                    </div>
+                </div>
+
+            </div>
+            
+        
+            <button id="continue-btn" class="btn-green-black">Continuer</button>
+        
+        
+        {{ form_end(form) }}
+    </div>
+
+    <div id='itineraires-choices' class=" flex-column gap-2" style="display:none";>
+        <h1>Choisis ton itinéraire</h1>
+        <div id="itineraires-list">
+        </div>
+        <button id="validate-btn" class="btn-green-black">Valider</button>
+        <span class="" id="back-btn">Retour</span>
+    </div>
+
+
+{% endblock %}

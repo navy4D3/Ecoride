@@ -81,7 +81,7 @@
     
         <div class="body-content {{ pageClass|default('') }}">{% block body %}{% endblock %}</div>
 
-        <footer class="footer {{ pageClass|default('') }}">            
+        <footer class="footer {{ pageClass|default('') }} {% if app.user %}connected{% endif %}">            
             <a href="/contact" class="item item-1">Contact</a>
             <a href="/" class="footer_logo" class="item item-2">
                 
