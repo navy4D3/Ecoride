@@ -6,6 +6,7 @@
 @import 'register-login.scss';
 @import 'register2.scss';
 @import 'publier-trajet.scss';
+@import 'add-voiture.scss';
 
 .mobile-only {
     display: none !important;
@@ -14,6 +15,14 @@
 body {
     background: $blue-background;
     margin: 0px;
+}
+
+.alert {
+    position: absolute;
+    top: 100px;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%, 0%);
 }
 
 .body-content {
@@ -84,6 +93,14 @@ span {
 }
 
 form {
+    .alert{
+        position: relative;
+        top:unset;
+        left: unset;
+        transform:unset;
+        width: 100%;
+    }
+    
     ul {
         list-style: none;
         padding: 0px;
@@ -378,6 +395,7 @@ form {
 
         label {
             color: $green-black;
+            
         }
 
         input, select {
@@ -387,6 +405,7 @@ form {
             
             outline-color: $green-black;
             flex-grow: 1;
+            width: 100%;
         }
 
         input:focus {
@@ -463,6 +482,10 @@ form {
 @media (max-width: 768px) {
     .pc-only {
         display: none !important;
+    }
+
+    .alert {
+        top: 20px;
     }
     
     
@@ -586,6 +609,11 @@ form {
 }
 
 @media (max-width: 512px) {
+    .form-green-column {
+        label {
+            width: min-content;
+        }
+    }
     .footer {
         gap: 10px;
         grid-template-areas:

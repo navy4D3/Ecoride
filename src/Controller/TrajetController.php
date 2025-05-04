@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Trajet;
+use App\Entity\Voiture;
+use App\Enum\Statut;
 use App\Form\AddTrajetType;
 use App\Form\SearchTrajetType;
+use Doctrine\ORM\EntityManagerInterface;
+use IntlDateFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,10 +66,59 @@ final class TrajetController extends AbstractController
         ]);
     }
     #[Route('/publier-trajet', name: 'app_publier_trajet')]
-    public function publierTrajet(): Response
+    public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        
-        $form = $this->createForm(AddTrajetType::class);
+        $trajet = new Trajet();
+        $form = $this->createForm(AddTrajetType::class, $trajet);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $trajet = $form->getData();
+
+            // $dateString = $form->get('dateDepart')->getData();
+            // $formatter = new IntlDateFormatter(
+            //     'fr_FR',
+            //     IntlDateFormatter::LONG,
+            //     IntlDateFormatter::NONE,
+            //     'Europe/Paris',
+            //     IntlDateFormatter::GREGORIAN,
+            //     'd MMMM yyyy' // → correspond à '20 mai 2025'
+            // );
+
+            // $timestamp = $formatter->parse($dateString);
+
+            // if ($timestamp === false) {
+            //     throw new \Exception("Impossible de parser la date : $dateString");
+            // }
+            // $dateFormatted = (new \DateTime())->setTimestamp($timestamp);
+
+            //interpreter pour date arrivée.
+            //faire la même chose pour les autres attributs
+            $googleDataJson = $form->get('googleData')->getData();
+            $googleDataArray = json_decode($googleDataJson, true);
+            $trajet->setGoogleData($googleDataArray);
+
+            // return new Response($googleDataJson);
+            $dureeInSeconds = $googleDataArray['legs'][0]['duration']['value'];
+            $trajet->setDureeInSeconds($dureeInSeconds);
+
+
+            $voitureId = $form->get('voiture')->getData();
+            $voitureObject = $em->getRepository(Voiture::class)->find($voitureId);
+            $user = $security->getUser();
+            // $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+            $trajet->setChauffeur($user);
+            // return new Response($voitureObject->get);
+
+            $trajet->setVoiture($voitureObject);
+            $trajet->setStatut(Statut::from('Planifié'));
+
+            $em->persist($trajet);
+            $em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
         return $this->render('trajet/publier.html.twig', [
             'controller_name' => 'TrajetController',
             'form' => $form,
@@ -95,6 +150,7 @@ final class TrajetController extends AbstractController
         $responseArray = $response->toArray();
         $dataToDisplay = [];
         $hasTollGlobal = false;
+        $rawData = $responseArray;
 
         foreach ($responseArray['routes'] as $route) {
             $hasToll = false;
@@ -120,6 +176,7 @@ final class TrajetController extends AbstractController
                 'distance' => $distanceFormated,
                 'summary' => $route['summary'],
                 'hasToll' => $hasToll,
+                'rawData' => $route
             ];
         
             array_push($dataToDisplay, $routeData);
@@ -150,6 +207,7 @@ final class TrajetController extends AbstractController
                 'distance' => $distanceSansPeageFormated,
                 'summary' => 'Sans péage',
                 'hasToll' => false,
+                'rawData' => $responseSansPeageArray['routes'][0]
             ];
 
             array_push($dataToDisplay, $dataItineraireSansPeage);

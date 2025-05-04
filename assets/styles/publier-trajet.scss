@@ -6,11 +6,21 @@
     align-items: center;
     justify-content: center;
     gap:40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
 
     h1 {
         text-align: center;
         color: $green-black;
     }
+
+    > div {
+        width: 100%;
+        max-width: 1000px;
+
+    }
+
+    
 
     .row-inputs {
     
@@ -25,12 +35,20 @@
             align-items: center;
             gap: 10px;
             height: -webkit-fill-available;
+            flex-grow: 1;
+
         }
 
         .hour-picker {
             font-size: 18px;
             background-color: $green-white; 
             border-radius: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 2px;
+            justify-content: space-around;
             
 
             select {
@@ -60,31 +78,83 @@
 
     }
 
+
     .datepicker {
         right: auto;
         top: auto;
     }
 
-    .vehicules-div {
+    .voitures-div {
         flex-direction: column;
         align-items: start;
         gap:0px;
         
 
-        #user-vehicules {
+        #user-voitures {
             display: flex;
             flex-direction: row;
-            cursor: pointer;
-    
-            .add-vehicle-card {
+            gap:10px;
+            overflow: auto;
+            width: 100%;
+            
+
+            .voiture-card,  .add-voiture-card {
+                border-radius: 10px 10px 20px 20px;
                 display: flex;
                 flex-direction: column;
+                align-items: center;
                 border: solid 2px $green-black;
-                border-radius: 10px 10px 20px 20px;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            .voiture-card {
+                background-color: $green-black;
+                height: min-content;
+                box-shadow: 0px 2px 4px $green-black-25;
+
+                >span {
+                    color: $blue-background;
+                    padding: 10px 20px;
+                    font-size: 18px;
+                    text-wrap: nowrap;
+                }
+
+                > div {
+                    border-radius: 0px 0px 18px 18px;
+                    padding: 10px ;
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+
+                    background-color: $green-white;
+
+                    span {
+                        font-family: $nunito;
+                        color: $green-black;
+                        text-wrap: nowrap;
+                    }
+                }
+            }
+
+            .voiture-card.selected {
+                background-color: $green-btn;
+                border-color: $green-btn;
+                outline: none;
+
+                >span {
+                    color: $green-black;
+                }
+            }
+    
+            .add-voiture-card {
+                
+                
+                
                 color:  $green-black;
                 padding: 10px;
                 gap:5px;
-                align-items: center;
+                
 
                 span {
                     font-family: $nunito;
@@ -97,9 +167,7 @@
     
             }
         }
-    }
-
-    
+    }    
 
     #itineraires-choices {
         display: flex;
@@ -167,6 +235,9 @@
 
 @media (max-width: 768px) {
     .body-content.publier-trajet {
+        padding-top: 50px;
+        padding-bottom: 100px;
+    
         .row-inputs {
             flex-wrap: wrap;
 
@@ -174,14 +245,6 @@
                 flex-grow: 1;
             }
 
-            .hour-picker {
-                flex-grow: 1;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                gap: 2px;
-                justify-content: space-around;
-            }
         }
 
         

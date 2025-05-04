@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -54,6 +56,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    /**
+     * @var Collection<int, Voiture>
+     */
+    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'proprietaire', orphanRemoval: true)]
+    private Collection $voitures;
+
+    /**
+     * @var Collection<int, Voiture>
+     */
+
+    #[ORM\OneToMany(mappedBy: 'chauffeur', targetEntity: Trajet::class)]
+    private Collection $trajetsEnTantQueChauffeur;
+
+    public function __construct()
+    {
+        $this->voitures = new ArrayCollection();
+        $this->trajetsEnTantQueChauffeur = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -212,4 +233,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Voiture>
+     */
+    public function getVoitures(): Collection
+    {
+        return $this->voitures;
+    }
+
+    public function addVoiture(Voiture $voiture): static
+    {
+        if (!$this->voitures->contains($voiture)) {
+            $this->voitures->add($voiture);
+            $voiture->setProprietaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVoiture(Voiture $voiture): static
+    {
+        if ($this->voitures->removeElement($voiture)) {
+            // set the owning side to null (unless already changed)
+            if ($voiture->getProprietaire() === $this) {
+                $voiture->setProprietaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    public function getTrajetsEnTantQueChauffeur(): Collection
+    {
+        return $this->trajetsEnTantQueChauffeur;
+    }
+
+    public function addTrajetEnTantQueChauffeur(Trajet $trajet): self
+    {
+        if (!$this->trajetsEnTantQueChauffeur->contains($trajet)) {
+            $this->trajetsEnTantQueChauffeur[] = $trajet;
+            $trajet->setChauffeur($this);
+        }
+
+        return $this;
+    }
+
+    // public function removeTrajetEnTantQueChauffeur(Trajet $trajet): self
+    // {
+    //     if ($this->trajetsEnTantQueChauffeur->removeElement($trajet)) {
+    //         if ($trajet->getChauffeur() === $this) {
+    //             $trajet->setChauffeur(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
 }

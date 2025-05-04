@@ -18,25 +18,16 @@ class Trajet
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateDepart = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $heureDepart = null;
 
     #[ORM\Column(length: 100)]
     private ?string $lieuDepart = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateArrivee = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $heureArrivee = null;
 
     #[ORM\Column(length: 100)]
     private ?string $lieuArrivee = null;
 
-    #[ORM\Column]
-    private ?int $nbPlace = null;
+
 
     #[ORM\Column(enumType: Statut::class)]
     private ?Statut $statut = null;
@@ -54,9 +45,15 @@ class Trajet
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'trajets')]
     private Collection $participants;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'trajetsEnTantQueChauffeur')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $chauffeur = null;
+
+    #[ORM\Column]
+    private ?array $googleData = [];
+
+    #[ORM\Column]
+    private ?int $dureeInSeconds = null;
 
     public function __construct()
     {
@@ -66,18 +63,6 @@ class Trajet
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDateDepart(): ?\DateTimeInterface
-    {
-        return $this->dateDepart;
-    }
-
-    public function setDateDepart(\DateTimeInterface $dateDepart): static
-    {
-        $this->dateDepart = $dateDepart;
-
-        return $this;
     }
 
     public function getHeureDepart(): ?\DateTimeInterface
@@ -104,30 +89,6 @@ class Trajet
         return $this;
     }
 
-    public function getDateArrivee(): ?\DateTimeInterface
-    {
-        return $this->dateArrivee;
-    }
-
-    public function setDateArrivee(\DateTimeInterface $dateArrivee): static
-    {
-        $this->dateArrivee = $dateArrivee;
-
-        return $this;
-    }
-
-    public function getHeureArrivee(): ?\DateTimeInterface
-    {
-        return $this->heureArrivee;
-    }
-
-    public function setHeureArrivee(\DateTimeInterface $heureArrivee): static
-    {
-        $this->heureArrivee = $heureArrivee;
-
-        return $this;
-    }
-
     public function getLieuArrivee(): ?string
     {
         return $this->lieuArrivee;
@@ -136,18 +97,6 @@ class Trajet
     public function setLieuArrivee(string $lieuArrivee): static
     {
         $this->lieuArrivee = $lieuArrivee;
-
-        return $this;
-    }
-
-    public function getNbPlace(): ?int
-    {
-        return $this->nbPlace;
-    }
-
-    public function setNbPlace(int $nbPlace): static
-    {
-        $this->nbPlace = $nbPlace;
 
         return $this;
     }
@@ -220,6 +169,30 @@ class Trajet
     public function setChauffeur(User $chauffeur): static
     {
         $this->chauffeur = $chauffeur;
+
+        return $this;
+    }
+
+    public function getGoogleData(): ?array
+    {
+        return $this->googleData;
+    }
+
+    public function setGoogleData(array $googleData): static
+    {
+        $this->googleData = $googleData;
+
+        return $this;
+    }
+
+    public function getDureeInSeconds(): ?int
+    {
+        return $this->dureeInSeconds;
+    }
+
+    public function setDureeInSeconds(int $dureeInSeconds): static
+    {
+        $this->dureeInSeconds = $dureeInSeconds;
 
         return $this;
     }

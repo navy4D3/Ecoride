@@ -17,7 +17,7 @@
             {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
         {% endblock %}
     </head>
-    <body>
+    <body class="{% if app.user %}connected{% endif %}">
         
         <nav class="navbar {{ pageClass|default('') }} {% if app.user %}connected{% endif %} ">
             {% if app.user %}
@@ -79,7 +79,7 @@
             
         </nav>
     
-        <div class="body-content {{ pageClass|default('') }}">{% block body %}{% endblock %}</div>
+        <div id="body-content" class="body-content {{ pageClass|default('') }}">{% block body %}{% endblock %}</div>
 
         <footer class="footer {{ pageClass|default('') }} {% if app.user %}connected{% endif %}">            
             <a href="/contact" class="item item-1">Contact</a>

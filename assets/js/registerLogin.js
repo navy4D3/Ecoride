@@ -23,14 +23,6 @@ connexionLabel.addEventListener('click', () => {
   toggleForm('login');
 })
 
-
-
-
-
-
-
-
-
 function toggleForm(formType) {
   inscriptionLabel.classList.toggle('active');
   connexionLabel.classList.toggle('active');

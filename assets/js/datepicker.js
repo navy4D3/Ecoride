@@ -12,6 +12,7 @@ let selectedDate = new Date();
 let year = selectedDate.getFullYear();
 let month = selectedDate.getMonth();
 
+
 // show datepicker
 dateInput.addEventListener("click", (e) => {
     e.preventDefault();
@@ -30,13 +31,18 @@ cancelBtn.addEventListener("click", (e) => {
 applyBtn.addEventListener("click", (e) => {
   // set the selected date to date input
   e.preventDefault();
-//   dateInput.value = selectedDate;
+
   dateInput.value = selectedDate.toLocaleDateString("fr-FR", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
+  // Déclencher un événement "input" manuellement
+  const event = new Event("change", { bubbles: true });
+  dateInput.dispatchEvent(event);
+
+  
   // hide datepicker
   datepicker.hidden = true;
 });

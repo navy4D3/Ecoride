@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\Trajet;
 use App\Entity\User;
 use App\Entity\Voiture;
+use Doctrine\DBAL\Types\JsonType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +23,7 @@ class AddTrajetType extends AbstractType
     {
         $builder
             ->add('dateDepart', TextType::class, [
-                'mapped' => "false",
+                'mapped' => false,
                 'label' => "Date",
                 // 'widget' => 'single_text',
                 'attr' => [
@@ -65,12 +67,20 @@ class AddTrajetType extends AbstractType
                 ],
 
             ])
-            ->add('voiture', EntityType::class, [
-                'class' => Voiture::class,
-                'choice_label' => 'id',
+            ->add('voiture', TextType::class, [
+                'mapped' => false,
+                // 'class' => Voiture::class,
+                // 'choice_label' => 'id',
                 'attr' => [
                     'hidden' => '',
                 ]
+                
+                ])
+            ->add('googleData', HiddenType::class, [
+                'mapped' => false,
+                // 'attr' => [
+                //     'hidden' => '',
+                // ]
                 
             ]);
         
@@ -80,6 +90,9 @@ class AddTrajetType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trajet::class,
+            'csrf_protection' => true,
+            'csrf_field_name' => "_token",
+            'csrf_token_id' => 'add_trajet'
         ]);
     }
 }

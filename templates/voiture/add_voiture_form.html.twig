@@ -1,25 +1,72 @@
-<div>
-    <div class="title-section">
-        <div>
-            <span>Retour</span>
+<div id="add-voiture-section" class="add-voiture-section flex-column gap-3" style="display:flex">
+    
+    <div class=" title-section d-flex flex-row align-items-center justify-content-between">
+        <div id="add-voiture-back-btn">
+            <twig:ux:icon name="tabler:chevron-left" class="icon"/>
+            <span class="pc-only">Retour</span>
             {# icone #}
         </div>
 
         <h1>Ajouter un véhicule</h1>
 
-        
+        <div style="opacity: 0%;">Retour</div>
     </div>
 
-    {{ form_start(form, {attr: { class:'form-green-column'}}) }}
-        {{ form_row(form.immatriculation) }}
-        {{ form_row(form.date_premier_immatriculation) }}
-        {{ form_row(form.marque) }}
+    {{ form_start(form, {attr: { class:'form-green-column', id:"add-voiture-form"}}) }}
+        {% if errors %}
+                <div class="errors-container d-flex flex-column gap-1">
+                    {% for error in errors %}
+                        <div class="alert alert-danger">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+        {% endif %}
+            
+        <div class="row-inputs" >
+            {{ form_row(form.immatriculation) }}
+            {{ form_row(form.date_premiere_immatriculation, {
+                row_attr: { style:'min-width:100px'},
+                attr: { max: ( "now"|date("Y-m-d") ) }
+                })
+            }}    
+        </div>
+        
+        <div >
+            {{ form_label(form.marque) }}
+            <div class="w-100" style="position:relative">
+                {{ form_widget(form.marque, {attr: { class:'w-100'}}) }}
+                <ul id="suggestions-marque-box" class="suggestions-box"></ul>
+            </div>
+        </div>
+        
         {{ form_row(form.modele) }}
-        {{ form_row(form.couleur) }}
-        {{ form_row(form.isElectric) }}
-        {# nb place
-        surnom
-        description #}
+
+        <div class="row-inputs" >
+            
+            <div class="position-relative" style="max-width:250px; min-width: 250px;">
+                {{ form_label(form.couleur) }}
+                {{ form_widget(form.couleur) }}
+                <div id="color-view" class="color-view"></div>
+            </div>
+            {{ form_row(form.places, {
+                row_attr: { style: 'min-width:150px; max-width:300px;'}
+            }) }}
+            
+            {{ form_row(form.surnom, {
+                row_attr: { style: 'min-width:240px;'}
+            }) }}
+            <div>
+                {{ form_label(form.isElectric) }}
+                <label class="switch">
+                    {{ form_widget(form.isElectric) }}
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        
+        {# voir comment gerer les boutons pour que le formulaire soit soumis et enregistre toutes les données, itineraire inclus #}
+        <button id="add-voiture-submit" type="button" class="btn-green-black submit-btn inactive">Ajouter</button>
     {{ form_end(form) }}
 
 

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\Couleur;
+use App\Enum\Marque;
 use App\Repository\VoitureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,8 +20,8 @@ class Voiture
     #[ORM\Column(length: 50)]
     private ?string $modele = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $marque = null;
+    #[ORM\Column(enumType: Marque::class)]
+    private ?Marque $marque = null;
 
     #[ORM\Column]
     private ?bool $isElectric = null;
@@ -43,6 +44,12 @@ class Voiture
      */
     #[ORM\OneToMany(targetEntity: Trajet::class, mappedBy: 'voiture', orphanRemoval: true)]
     private Collection $trajets;
+
+    #[ORM\Column]
+    private ?int $places = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $surnom = null;
 
     public function __construct()
     {
@@ -70,8 +77,14 @@ class Voiture
     {
         return $this->marque;
     }
+    public function getMarqueLabel(): ?string
+    {
+        return $this->marque?->value;
+    }
 
-    public function setMarque(string $marque): static
+    
+
+    public function setMarque(Marque $marque): static
     {
         $this->marque = $marque;
 
@@ -164,6 +177,30 @@ class Voiture
                 $trajet->setVoiture(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPlaces(): ?int
+    {
+        return $this->places;
+    }
+
+    public function setPlaces(int $places): static
+    {
+        $this->places = $places;
+
+        return $this;
+    }
+
+    public function getSurnom(): ?string
+    {
+        return $this->surnom;
+    }
+
+    public function setSurnom(string $surnom): static
+    {
+        $this->surnom = $surnom;
 
         return $this;
     }

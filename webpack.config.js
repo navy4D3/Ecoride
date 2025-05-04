@@ -14,7 +14,7 @@ Encore
     // .setPublicPath(Encore.isDevServer() ? 'http://localhost:8080/build' : '/build')
     // .setManifestKeyPrefix('build/')
 
-    .enableSassLoader()
+    
     
 
     
@@ -36,13 +36,14 @@ Encore
     .addEntry('registerLogin', './assets/js/registerLogin.js')
     .addEntry('register2', './assets/js/register2.js')
     .addEntry('addTrajet', './assets/js/addTrajet.js')
+    .addEntry('addVoiture', './assets/js/addVoiture.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
     .addStyleEntry('style-home', './assets/styles/home.scss')
     .addStyleEntry('style-datepicker', './assets/styles/datepicker.scss')
     .addStyleEntry('style-register-login', './assets/styles/register-login.scss')
     .addStyleEntry('style-register-2', './assets/styles/register2.scss')
-    .addStyleEntry('style-publier-trajet', './assets/styles/publier-trajet.scss')
+    // .addStyleEntry('style-publier-trajet', './assets/styles/publier-trajet.scss')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -62,6 +63,8 @@ Encore
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
+    // .enableVersioning()
+    .enableSassLoader()
     
     // enables hashed filenames (e.g. app.abc123.css)
 
@@ -87,10 +90,10 @@ Encore
     // })
 
     // enables and configure @babel/preset-env polyfills
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = '3.38';
-    })
+    // .configureBabelPresetEnv((config) => {
+    //     config.useBuiltIns = 'usage';
+    //     config.corejs = '3.38';
+    // })
 
     // enables Sass/SCSS support
     //.enableSassLoader()

@@ -5,7 +5,7 @@ import './bootstrap';
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
-import './styles/app.css';
+import './styles/app.scss';
 
 const navbarMenuIcon = document.getElementById('navbar-menu-icon');
 const navbarBtns = document.getElementById('navbar-btns');
@@ -26,5 +26,44 @@ if (navbarCloseMobileMenuBtn) {
 }
 
 
+export function checkInputs(currentForm) {
+    const submitBtn = currentForm.querySelector('.submit-btn');
+    const fields = currentForm.querySelectorAll('input, select, textarea');
+
+    let allFilled = true;
+    fields.forEach(field => {
+        //ignore les input hidden
+        if (field.type === 'hidden') return;
+
+        if (field.value.trim() === '') {
+            allFilled = false;
+
+        }
+    });
+
+    if (allFilled) {
+        submitBtn.classList.remove('inactive');
+    } 
+}
+
+export function showSuccessAlert(message, duration = 3000) {
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success alert-dismissible fade show';
+    alert.role = 'alert';
+    alert.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+  
+    // Ajoute l'alerte en haut du body (ou ailleurs selon ton design)
+    document.body.prepend(alert);
+  
+    // Supprime l'alerte automatiquement après `duration` ms
+    setTimeout(() => {
+      alert.classList.remove('show'); // déclenche la transition
+      alert.classList.add('hide'); // si besoin
+      setTimeout(() => alert.remove(), 300); // laisse le temps à la transition de s'effectuer
+    }, duration);
+  }
 
 
