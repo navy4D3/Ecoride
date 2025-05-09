@@ -67,6 +67,7 @@ class SearchTrajetType extends AbstractType
             ])
             ->add('nbPlace', null, [
                 'required' => true,
+                'mapped' => false,
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Passagers',

@@ -55,6 +55,10 @@ class Trajet
     #[ORM\Column]
     private ?int $dureeInSeconds = null;
 
+    #[ORM\ManyToOne(inversedBy: 'trajetsAsChauffeur')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $chauffeur2 = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -195,5 +199,70 @@ class Trajet
         $this->dureeInSeconds = $dureeInSeconds;
 
         return $this;
+    }
+
+    public function getChauffeur2(): ?User
+    {
+        return $this->chauffeur2;
+    }
+
+    public function setChauffeur2(?User $chauffeur2): static
+    {
+        $this->chauffeur2 = $chauffeur2;
+
+        return $this;
+    }
+
+    public function getGpsPoints(): array
+    {
+        $data = $this->getGoogleData(); // JSON brut de Google
+        // // $data = json_decode($json, true);
+        $polyline = $data['overview_polyline']['points'];
+        // $polyline = $data['summary'];
+
+        return $this->decodePolyline($polyline);
+    }
+
+    private function decodePolyline(string $polyline): array
+    {
+        if (!$polyline) {
+            return [];
+        }
+
+        $points = [];
+    
+        $index = 0;
+        $lat = 0;
+        $lng = 0;
+        $length = strlen($polyline);
+    
+        while ($index < $length) {
+            $result = 1;
+            $shift = 0;
+            do {
+                $b = ord($polyline[$index++]) - 63 - 1;
+                $result += $b << $shift;
+                $shift += 5;
+            } while ($b >= 0x1f);
+            $lat += ($result & 1) ? ~($result >> 1) : ($result >> 1);
+    
+            $result = 1;
+            $shift = 0;
+            do {
+                $b = ord($polyline[$index++]) - 63 - 1;
+                $result += $b << $shift;
+                $shift += 5;
+            } while ($b >= 0x1f);
+            $lng += ($result & 1) ? ~($result >> 1) : ($result >> 1);
+    
+            $points[] = [
+                'lat' => $lat * 1e-5,
+                'lng' => $lng * 1e-5,
+            ];
+        }
+    
+        return $points;
+        // Fonction pour décoder les polylines Google en tableau de ['lat' => ..., 'lng' => ...]
+        // => peux t’en fournir une version PHP si besoin
     }
 }

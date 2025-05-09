@@ -70,10 +70,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'chauffeur', targetEntity: Trajet::class)]
     private Collection $trajetsEnTantQueChauffeur;
 
+    /**
+     * @var Collection<int, Trajet>
+     */
+    #[ORM\OneToMany(targetEntity: Trajet::class, mappedBy: 'chauffeur2', orphanRemoval: true)]
+    private Collection $trajetsAsChauffeur;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
         $this->trajetsEnTantQueChauffeur = new ArrayCollection();
+        $this->trajetsAsChauffeur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -280,6 +287,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function isChauffeur(): bool
+    {
+        return in_array('ROLE_CHAUFFEUR', $this->roles, true);
+    }
+
+    public function addRole(string $role): self
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
     // public function removeTrajetEnTantQueChauffeur(Trajet $trajet): self
     // {
     //     if ($this->trajetsEnTantQueChauffeur->removeElement($trajet)) {
@@ -290,5 +311,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     //     return $this;
     // }
+
+    /**
+     * @return Collection<int, Trajet>
+     */
+    public function getTrajetsAsChauffeur(): Collection
+    {
+        return $this->trajetsAsChauffeur;
+    }
+
+    public function addTrajetsAsChauffeur(Trajet $trajetsAsChauffeur): static
+    {
+        if (!$this->trajetsAsChauffeur->contains($trajetsAsChauffeur)) {
+            $this->trajetsAsChauffeur->add($trajetsAsChauffeur);
+            $trajetsAsChauffeur->setChauffeur2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrajetsAsChauffeur(Trajet $trajetsAsChauffeur): static
+    {
+        if ($this->trajetsAsChauffeur->removeElement($trajetsAsChauffeur)) {
+            // set the owning side to null (unless already changed)
+            if ($trajetsAsChauffeur->getChauffeur2() === $this) {
+                $trajetsAsChauffeur->setChauffeur2(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

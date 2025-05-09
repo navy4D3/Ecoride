@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Trajet;
+use App\Entity\User;
 use App\Entity\Voiture;
 use App\Enum\Statut;
 use App\Form\AddTrajetType;
 use App\Form\SearchTrajetType;
+use App\Service\TrajetSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,32 +32,80 @@ final class TrajetController extends AbstractController
 
 
     #[Route('/rechercher', name: 'app_rechercher')]
-
-    
-    public function index(Request $request): Response
+    public function rechercher(Request $request, TrajetSearchService $trajetSearchService, HttpClientInterface $client, Security $security, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(SearchTrajetType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() ) {
             $data = $form->getData();
+
+            $startAddress = $form->get('lieuDepart')->getData();
+            $endAddress = $form->get('lieuArrivee')->getData();
+            $date = $form->get('dateDepart')->getData();
+            $nbPlace = $form->get('nbPlace')->getData();
+            // $endAddress = $request->query->get('lieuArrivee');
+
+            $startCoords = $this->geocode($startAddress, $client);
+            $endCoords = $this->geocode($endAddress, $client);
+
+            $currentUserEmail = $security->getUser()->getUserIdentifier();
+            $currentUserId = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail])->getId();
+
+
+            // Appel au service de recherche
+            $results = $trajetSearchService->findMatchingTrips($startCoords, $endCoords, $date, $nbPlace, $currentUserId);
+
+            return $this->render('trajet/results.html.twig', [
+                'trajets' => $results['trajets'],
+                'isOnDate' => $results['isOnDate']
+
+            ]);
 
             // Ici tu peux lancer une recherche en base, par exemple :
             // $resultats = $trajetRepository->search($data);
 
             // Pour la démo, on va juste afficher les données
-            return $this->render('trajets.html.twig', [
-                'search' => $data,
-                // 'resultats' => $resultats,
-            ]);
+            // return $this->render('trajets.html.twig', [
+            //     'search' => $data,
+            //     // 'resultats' => $resultats,
+            // ]);
         }
-        return $this->render('trajet/rechercher.html.twig', [
-            'form' => $form,
 
+        return $this->render('home/index.html.twig', [
+            'form' => $form,
         ]);
     }
 
-    #[Route('/trajet', name: 'app_trajet')]
+    // public function search(Request $request, HttpClientInterface $client, TrajetSearchService $trajetSearchService): Response
+    // {
+    //     $startAddress = $request->query->get('lieuDepart');
+    //     $endAddress = $request->query->get('lieuArrivee');
+
+    //     $startCoords = $this->geocode($startAddress, $client);
+    //     $endCoords = $this->geocode($endAddress, $client);
+
+    //     // Appel au service de recherche
+    //     $results = $trajetSearchService->findMatchingTrips($startCoords, $endCoords);
+
+    //     return $this->render('search/results.html.twig', [
+    //         'trajets' => $results
+    //     ]);
+    // }
+
+    private function geocode(string $address, HttpClientInterface $client): array
+    {
+        $response = $client->request('GET', 'https://maps.googleapis.com/maps/api/geocode/json', [
+            'query' => [
+                'address' => $address,
+                'key' => $_ENV['GOOGLE_API_KEY']
+            ]
+        ]);
+        $data = $response->toArray();
+        return $data['results'][0]['geometry']['location']; // ['lat' => ..., 'lng' => ...]
+    }
+
+    #[Route('/trajet/{id}', name: 'app_trajet')]
     public function trajet(): Response
     {
         // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
@@ -94,6 +144,8 @@ final class TrajetController extends AbstractController
 
             //interpreter pour date arrivée.
             //faire la même chose pour les autres attributs
+            
+
             $googleDataJson = $form->get('googleData')->getData();
             $googleDataArray = json_decode($googleDataJson, true);
             $trajet->setGoogleData($googleDataArray);
@@ -107,6 +159,7 @@ final class TrajetController extends AbstractController
             $voitureObject = $em->getRepository(Voiture::class)->find($voitureId);
             $user = $security->getUser();
             // $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+            $trajet->setChauffeur2($user);
             $trajet->setChauffeur($user);
             // return new Response($voitureObject->get);
 

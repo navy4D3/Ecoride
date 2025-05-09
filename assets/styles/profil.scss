@@ -1,0 +1,176 @@
+.body-content.profil {
+    min-height: 100vh;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    gap:40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    flex-direction: column;
+
+    h2, p {
+        color: $green-black;
+    }
+
+    .icon {
+        height: 20px;
+        width: 20px;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
+
+        .photo-profil {
+            width: 120px;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .user-details-and-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            span {
+                color: $green-black;
+            }
+
+            .user-details {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                
+                > span {
+                    font-size: 30px;
+                    font-weight: 700;
+                }
+
+                .btn-green-black {
+                    span {
+                        color: $green-white;
+                    }
+                }
+            }
+
+            .btns {
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+
+                span {
+                    font-family: $nunito;
+                }
+            }
+
+            
+
+            
+
+        }
+
+    }
+
+    .trajets-a-venir, .trajets-passes {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .trajets-a-venir {
+
+        .trajets {
+            display: flex;
+            flex-direction: row;
+            gap:20px;
+
+            .trajet {
+                display: flex;
+                flex-direction: column;
+                padding: 10px 0px;
+                background-color: $green-white;
+                box-shadow: 0px 4px 10px $green-black-25;
+                border-radius: 15px;
+                gap: 5px;
+
+                * {
+                    color: $green-black;
+                    font-family: $nunito;
+                }
+
+                &-date-type {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding: 0px 10px;
+
+                }
+
+                &-data {
+                    display: inherit;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    &-hour {
+                        background-color: $green-black;
+                        display: flex;
+                        flex-direction: row;
+                        gap: 10px;
+                        width: 100%;
+                        padding: 5px 10px;
+
+                        * {
+                            color: $green-white;
+                            border-color: $green-white;
+
+                        }
+
+                        &-duree {
+                            display: inherit;
+                            flex-direction: row;
+                            gap: 2px;
+                            align-items: center;
+                            opacity: 60%;
+                            flex-grow: 1;
+
+                            .circle {
+                                background-color: $green-white;
+                                height: 12px;
+                                width: 12px;
+                                border-radius: 50%;
+                            }
+
+                            .circle.outline {
+                                background-color: unset;
+                                border: solid 2px;
+                            }
+
+                            .dashed-line {
+                                border-bottom: 2px dashed $green-white;
+                                min-width: 20px;
+                                flex-grow: 1;
+                            }
+                        }
+
+                    }
+
+                }
+
+                &-lieu {
+                   display: inherit; 
+                   flex-direction: row;
+                   gap: 20px;
+                   padding: 0px 10px;
+                   justify-content: space-between;
+
+                }
+            }
+        }
+    }
+    
+}

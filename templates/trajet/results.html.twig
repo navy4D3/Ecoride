@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats de recherche{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>Résultats de recherche</h2>
+
+        {% if trajets is empty %}
+            <div class="alert alert-warning mt-3">
+                Aucun trajet ne correspond à votre recherche.
+            </div>
+        {% else %}
+            {% if isOnDate %}
+                <div class="list-group mt-3">
+                    {% for trajet in trajets %}
+                        <a href="" class="list-group-item list-group-item-action">
+                        <a href="{{ path('app_trajet', { id: trajet.id }) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">{{ trajet.trip.lieuDepart }} {{ trajet.nearestStartPoint.distance }} km → {{ trajet.trip.lieuArrivee }} {{ trajet.nearestEndPoint.distance }} km</h5>
+                                    <p class="mb-1">
+                                        Départ : {{ trajet.trip.heureDepart|date('d/m/Y H:i') }}<br>
+                                        Conducteur : {{ trajet.trip.chauffeur.prenom ?? 'Anonyme' }}
+                                    </p>
+                                </div>
+                                <small>{{ trajet.trip.prixPersonne }} €</small>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="">
+                    Oups, aucun trajet ne convient à l’itinéraire et à la date demandé...
+                </div>
+                <div class="">
+                    Les trajets suivants correspondent à ton itinéraire à des dates proches.
+                </div>
+                <div class="list-group mt-3">
+                    {% for trajet in trajets %}
+                        <div>
+                            <span>{{ trajet.trip.heureDepart|date('d/m/Y H:i') }}</span>
+                            <a href="" class="list-group-item list-group-item-action">
+                            {# <a href="{{ path('trajet_show', { id: trajet.id }) }}" class="list-group-item list-group-item-action"> #}
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="mb-1">{{ trajet.trip.lieuDepart }} {{ trajet.nearestStartPoint.distance }} km → {{ trajet.trip.lieuArrivee }} {{ trajet.nearestEndPoint.distance }} km</h5>
+                                        <p class="mb-1">
+                                            Départ : {{ trajet.trip.heureDepart|date('d/m/Y H:i') }}<br>
+                                            Conducteur : {{ trajet.trip.chauffeur.prenom ?? 'Anonyme' }}
+                                        </p>
+                                    </div>
+                                    <small>{{ trajet.trip.prixPersonne }} €</small>
+                                </div>
+                            </a>
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+            {% endif %}
+            
+        {% endif %}
+    </div>
+{% endblock %}

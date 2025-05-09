@@ -158,7 +158,15 @@ class RegistrationController extends AbstractController
             $user->setAdresse($form->get('adresse')->getData());
 
             //definir photo profil par défaut
-            $user->setPhotoProfil($form->get('photo_profil')->getData());
+            $photoProfilUploaded = $form->get('photo_profil')->getData();
+
+            if ($photoProfilUploaded ) {
+                // Ouvre le fichier et lis son contenu en binaire
+                $photoData = file_get_contents($photoProfilUploaded->getRealPath());
+                $user->setPhotoProfil($photoData);
+            }
+
+            // $user->setPhotoProfil($form->get('photo_profil')->getData());
 
             if ($form->get('telephone')->getData()) {
                 $user->setTelephone($form->get('telephone')->getData());
