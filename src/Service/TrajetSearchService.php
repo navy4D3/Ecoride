@@ -1,27 +1,31 @@
 <?php
 namespace App\Service;
 
+use App\Controller\TrajetController;
 use App\Entity\User;
 use App\Enum\Statut;
 use App\Repository\TrajetRepository;
 
 class TrajetSearchService
 {
-    public function __construct(private TrajetRepository $trajetRepository) {}
+    public function __construct(private TrajetRepository $trajetRepository, private TrajetController $trajetController) {}
 
     public function findMatchingTrips(array $startCoords, array $endCoords, $date, $nbPlace, string $currentUserId): array
     {
 
         // $trips = $this->trajetRepository->findBy(['statut' => Statut::from('Planifié')]); // ou mieux : les trajets à venir seulement
-        $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId);
+        
         $isOnDate = true;
-
+        $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId, $isOnDate);
         if (empty($trips)) {
             // chercher date sur 3 jours glissant
-            $trips = $this->trajetRepository->findByRangeDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId);
+            // $trips = $this->trajetRepository->findByRangeDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId);
+            
             $isOnDate = false;
+            $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId, $isOnDate);
 
         }
+        
         //inclure une logique pour donner le/les trajets convenable a des dates différentes, avant sur 3 jours glissant, et total si toujours rien sur 3 jours glissant
         $matchingTrips = [];
 
@@ -34,8 +38,11 @@ class TrajetSearchService
             ) {
                 $nearestStartPoint = $this->findNearestPoint($startCoords, $points);
                 $nearestEndPoint = $this->findNearestPoint($endCoords, $points);
+                $placesRestante = $trip->getVoiture()->getPlaces() - count($trip->getParticipants());
                 $matchingTrips[] = [
-                    'trip' => $trip, 
+                    'datas' => $trip,
+                    'timeDatas' => $this->trajetController->showTrajetDateAndTime($trip),
+                    'placesRestante' => $placesRestante,
                     'nearestStartPoint' => $nearestStartPoint, 
                     'nearestEndPoint' => $nearestEndPoint
                 ];

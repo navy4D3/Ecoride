@@ -3,7 +3,7 @@
     display: flex;
     align-items: start;
     justify-content: center;
-    gap:40px;
+    gap:20px;
     padding-top: 40px;
     padding-bottom: 40px;
     flex-direction: column;
@@ -83,11 +83,15 @@
     }
     
     .trajets-a-venir {
+        overflow-x: auto;
+        width: 100%;
 
         .trajets {
             display: flex;
             flex-direction: row;
             gap:20px;
+            padding: 12px;
+
 
             .trajet {
                 display: flex;
@@ -138,23 +142,7 @@
                             opacity: 60%;
                             flex-grow: 1;
 
-                            .circle {
-                                background-color: $green-white;
-                                height: 12px;
-                                width: 12px;
-                                border-radius: 50%;
-                            }
-
-                            .circle.outline {
-                                background-color: unset;
-                                border: solid 2px;
-                            }
-
-                            .dashed-line {
-                                border-bottom: 2px dashed $green-white;
-                                min-width: 20px;
-                                flex-grow: 1;
-                            }
+                            
                         }
 
                     }

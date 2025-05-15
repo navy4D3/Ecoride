@@ -8,6 +8,8 @@
 @import 'publier-trajet.scss';
 @import 'add-voiture.scss';
 @import 'profil.scss';
+@import 'resultats-recherche.scss';
+@import 'rechercher-form.scss';
 
 .mobile-only {
     display: none !important;
@@ -60,6 +62,24 @@ span {
     font-size: 16px;
     font-family: $josefin-sans ;
     font-weight: 600;
+}
+
+.circle {
+    background-color: $green-white;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+}
+
+.circle.outline {
+    background-color: unset;
+    border: solid 2px;
+}
+
+.dashed-line {
+    border-bottom: 2px dashed $green-white;
+    min-width: 20px;
+    flex-grow: 1;
 }
 
 .logo-top-left {
@@ -129,6 +149,182 @@ form {
     
 }
 
+// .rechercher-form {
+//     margin: 40px;
+//     padding: 20px;
+//     gap: 20px;
+//     width: 100%;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     background-color: $green-medium;
+//     border-radius: 20px;
+//     box-shadow: 0px 2px 10px $green-black-25;
+//     max-width: 1200px;
+    
+
+//     > div {
+//         display: flex;
+//         flex-direction: row;
+//         gap: 20px;
+//         flex-grow: 1;
+//         background-color: $green-white;
+//         align-items: center;
+//         padding: 10px 15px;
+//         border-radius: 10px;
+
+//         input {
+//             border: none;
+//             background: none;
+//             font-family: $josefin-sans;
+//             width: 100%;
+//             color: $green-black;
+//             text-overflow: ellipsis;
+            
+//             // font-family: $nunito;
+            
+
+            
+//         }
+
+//         input:focus {
+//             outline: none;
+//         }
+
+//         input::placeholder {
+//             color: $green-black-50;
+//             opacity: 100%;
+//         }
+
+//         svg {
+//             color: $green-black;
+//             width: 25px;
+//             height: 25px;
+//             * {
+//                 stroke: $green-black;
+//                 stroke-width: 3px;
+//             }
+            
+//         }
+
+        
+//     }
+
+//     #nb-passager-section {
+//             max-width: fit-content;
+//     }
+
+//     #nb-user-div{
+//         display: flex;
+//         flex-direction: row;
+//         gap: 10px;
+
+//         span {
+//             color: $green-black;
+//             white-space: nowrap;
+//             margin-top: 1%;
+
+//         }
+//         #nb-passager-btns {
+//             display: flex;
+//             flex-direction: row;
+//             gap: 10px;
+            
+//         }
+
+//         #nb-passager-btns > div {
+//             padding: 5px;
+//             background-color: $green-black;
+//             color: $green-white;
+//             font-size: 2em;
+//             border-radius: 100px;
+//             width: 25px;
+//             height: 25px;
+//             display: flex;
+//             flex-direction: row;
+//             justify-content: center;
+//             align-items: center;
+//             cursor: pointer;
+
+//         }
+
+
+
+//         #plus-icon * {
+            
+//             stroke : $green-white;
+//             stroke-width: 1.5px;
+//         }
+
+        
+
+//         #minus-icon div {
+//             background-color: $green-white;
+//             height: 3px;
+//             border-radius: 10px;
+//             width: 60%;
+//         }
+        
+//     }
+    
+
+//     #lieu-depart-icon {
+//         border-radius: 100px;
+//         border: solid 3px;
+//         border-color: $green-black;
+//         width: 20px;
+//         height: 20px;
+//         aspect-ratio: 1/1;
+//     }
+
+//     #lieu-arrivee-icon {
+//         border-radius: 100px;
+//         border: solid 3px;
+//         border-color: $green-black;
+//         width: 20px;
+//         height: 20px;
+//         aspect-ratio: 1/1;
+//         padding: 2px;
+
+//         div {
+//             background: $green-black;
+//             border-radius: 100px;
+//             width: 100%;
+//             height: 100%;
+//         }
+//     }
+
+//     > button {
+//         border-radius: 15px !important;
+//         display: flex;
+//         gap: 10px;
+//         flex-direction: row;
+//         align-items: center;
+//         padding-left: 15px !important;
+
+//         svg {
+//             color: $green-white;
+//             width: 20px;
+//             height: 20px;
+//             * {
+//                 stroke: $green-white;
+//                 stroke-width: 3px;
+//             }
+//         }
+//     }
+
+//     #place-picker-box {
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//       }
+      
+//       #place-picker-container {
+//         text-align: left;
+//       }
+    
+// } 
+
 .alert {
     margin-bottom: 0px !important;
     
@@ -155,7 +351,7 @@ form {
 
 .btn-green-black {
     background-color: $green-black;
-    color: $green-white;
+    color: $green-white !important;
 }
 .btn-blue {
     background-color: $blue-btn;
@@ -415,6 +611,78 @@ form {
     }
 }
 
+input[type='radio'], input[type='checkbox'] {
+    accent-color: $green-black;
+    width: 15px;
+    height: 15px;
+    // mix-blend-mode: multiply;
+    // outline: 1px auto $green-black;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 30px;
+
+
+    input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: none;
+        outline: solid 1px $green-black;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 2px;
+        bottom: 2px;
+        background-color: $green-black;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+        
+    input:checked + .slider {
+    background-color: $green-btn;
+    outline: none;
+    }
+    
+    input:focus + .slider {
+    box-shadow: 0 0 1px $green-black-25;
+    }
+    
+    input:checked + .slider:before {
+    -webkit-transform: translateX(38px);
+    -ms-transform: translateX(38px);
+    transform: translateX(38px);
+    outline: none;
+    }
+    
+    /* Rounded sliders */
+    .slider.round {
+    border-radius: 34px;
+    }
+    
+    .slider.round:before {
+    border-radius: 50%;
+    }
+}
+
 .footer {
     padding: 40px;
     background-color: $green-black;
@@ -454,11 +722,6 @@ form {
             font-weight: 700;
         }
     }
-}
-
-.selected {
-    
-    outline: solid 2px $green-black-25;
 }
 
 @media (max-width: 1024px) {

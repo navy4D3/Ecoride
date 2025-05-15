@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Trajet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @extends ServiceEntityRepository<Trajet>
@@ -32,8 +33,12 @@ class TrajetRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    public function findByRangeDateStatutAndPlaces(string $dateString, string $statut, int $nbPassagers, string $chauffeurId
+    public function findByDateStatutAndPlaces(
+        string $dateString, 
+        string $statut, 
+        int $nbPassagers, 
+        string $chauffeurId, 
+        bool $isOnDate
     ): array 
     {
 
@@ -43,10 +48,15 @@ class TrajetRepository extends ServiceEntityRepository
 
         // $parsedDate = (new \DateTime())->setTimestamp($timestamp);
         $startOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 00:00:00');
-        $startOfRange = $startOfDate->modify('-3 day');
-
         $endOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 23:59:59');
-        $endOfRange = $endOfDate->modify('+ 3 day');
+
+        if (!$isOnDate) {
+            // $startOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 00:00:00');
+            $startOfDate = $startOfDate->modify('-3 day');
+
+            // $endOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 23:59:59');
+            $endOfDate = $endOfDate->modify('+ 3 day');
+        }
 
     
         $qb = $this->createQueryBuilder('t')
@@ -60,40 +70,8 @@ class TrajetRepository extends ServiceEntityRepository
             ->andWhere('c.id != :chauffeurId')
             ->groupBy('t.id', 'v.id')
             ->having('(v.places - 1 - COUNT(p.id)) >= :placesMin')
-            ->setParameter('start', $startOfRange)
-            ->setParameter('end', $endOfRange)
-            ->setParameter('statut', $statut)
-            ->setParameter('placesMin', $nbPassagers)
-            ->setParameter('chauffeurId', $chauffeurId);
-    
-        return $qb->getQuery()->getResult();
-    }
-    public function findByDateStatutAndPlaces(string $dateString, string $statut, int $nbPassagers, string $chauffeurId
-    ): array 
-    {
-
-        
-        $timestamp = $this->dateStringToTimestamp($dateString);
-        $parsedDate = (new \DateTime('@' . $timestamp))->setTimezone(new \DateTimeZone('Europe/Paris'));
-
-        // $parsedDate = (new \DateTime())->setTimestamp($timestamp);
-        $startOfDay = new \DateTime($parsedDate->format('Y-m-d') . ' 00:00:00');
-        $endOfDay = new \DateTime($parsedDate->format('Y-m-d') . ' 23:59:59');
-
-    
-        $qb = $this->createQueryBuilder('t')
-            ->leftJoin('t.voiture', 'v')
-            ->leftJoin('t.participants', 'p')
-            ->leftJoin('t.chauffeur', 'c')
-            ->addSelect('v')
-            ->addSelect('p')
-            ->where('t.heureDepart BETWEEN :start AND :end')
-            ->andWhere('t.statut = :statut')
-            ->andWhere('c.id != :chauffeurId')
-            ->groupBy('t.id', 'v.id')
-            ->having('(v.places - 1 - COUNT(p.id)) >= :placesMin')
-            ->setParameter('start', $startOfDay)
-            ->setParameter('end', $endOfDay)
+            ->setParameter('start', $startOfDate)
+            ->setParameter('end', $endOfDate)
             ->setParameter('statut', $statut)
             ->setParameter('placesMin', $nbPassagers)
             ->setParameter('chauffeurId', $chauffeurId);

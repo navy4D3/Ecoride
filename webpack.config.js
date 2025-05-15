@@ -37,6 +37,7 @@ Encore
     .addEntry('register2', './assets/js/register2.js')
     .addEntry('addTrajet', './assets/js/addTrajet.js')
     .addEntry('addVoiture', './assets/js/addVoiture.js')
+    .addEntry('resultatsRecherche', './assets/js/resultatsRecherche.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
     .addStyleEntry('style-home', './assets/styles/home.scss')

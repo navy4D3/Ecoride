@@ -1,0 +1,313 @@
+.rechercher-form {
+    // margin: 40px;
+    padding: 20px;
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: $green-medium;
+    border-radius: 20px;
+    box-shadow: 0px 2px 10px $green-black-25;
+    max-width: 1200px;
+
+    .selected {
+    
+        outline: solid 2px $green-black-25;
+    }
+    
+
+    > div {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        flex-grow: 1;
+        background-color: $green-white;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 10px;
+
+        input {
+            border: none;
+            background: none;
+            font-family: $josefin-sans;
+            width: 100%;
+            color: $green-black;
+            text-overflow: ellipsis;
+            
+            // font-family: $nunito;
+            
+
+            
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        input::placeholder {
+            color: $green-black-50;
+            opacity: 100%;
+        }
+
+        svg {
+            color: $green-black;
+            width: 25px;
+            height: 25px;
+            * {
+                stroke: $green-black;
+                stroke-width: 3px;
+            }
+            
+        }
+
+        
+    }
+
+    #nb-passager-section {
+            max-width: fit-content;
+    }
+
+    #nb-user-div{
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        span {
+            color: $green-black;
+            white-space: nowrap;
+            margin-top: 1%;
+
+        }
+        #nb-passager-btns {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            
+        }
+
+        #nb-passager-btns > div {
+            padding: 5px;
+            background-color: $green-black;
+            color: $green-white;
+            font-size: 2em;
+            border-radius: 100px;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+        }
+
+
+
+        #plus-icon * {
+            
+            stroke : $green-white;
+            stroke-width: 1.5px;
+        }
+
+        
+
+        #minus-icon div {
+            background-color: $green-white;
+            height: 3px;
+            border-radius: 10px;
+            width: 60%;
+        }
+        
+    }
+    
+
+    #lieu-depart-icon {
+        border-radius: 100px;
+        border: solid 3px;
+        border-color: $green-black;
+        width: 20px;
+        height: 20px;
+        aspect-ratio: 1/1;
+    }
+
+    #lieu-arrivee-icon {
+        border-radius: 100px;
+        border: solid 3px;
+        border-color: $green-black;
+        width: 20px;
+        height: 20px;
+        aspect-ratio: 1/1;
+        padding: 2px;
+
+        div {
+            background: $green-black;
+            border-radius: 100px;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    > button {
+        border-radius: 15px !important;
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 15px !important;
+
+        svg {
+            color: $green-white;
+            width: 20px;
+            height: 20px;
+            * {
+                stroke: $green-white;
+                stroke-width: 3px;
+            }
+        }
+    }
+
+    #place-picker-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      #place-picker-container {
+        text-align: left;
+      }
+    
+}
+
+.rechercher-form-collapse {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    background-color: $green-medium;
+    border-radius: 20px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0px 2px 10px $green-black-25;
+
+    * {
+        color: $green-black;
+        font-family: $nunito;
+        text-overflow: ellipsis;
+    }
+
+    svg {
+        stroke: $green-black;
+    }
+
+    .search-section {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+        overflow: auto;
+        cursor: pointer;
+        background-color: $green-white;
+        padding: 5px 10px;
+        border-radius: 10px;
+        width: fit-content;
+
+        > svg {
+            height: 30px;
+            width: 30px;
+            min-height: 30px;
+            min-width: 30px;
+        }
+
+        .form-content {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            overflow: auto;
+            min-width: 0;       // 👈 pour que les enfants puissent rétrécir
+            flex: 1;
+            // flex-wrap: nowrap;
+    
+            .lieu {
+                display: flex;
+                flex-direction: row;
+                // flex-wrap: nowrap;
+                white-space : nowrap;
+                gap: 5px;
+                width: 100%;         // 👈 force une largeur bornée
+                max-width: 100%;  
+            }
+    
+            .date-place {
+                font-weight: 400;
+                opacity: 75%;
+                white-space : nowrap;
+            }
+    
+            svg {
+                height: 20px;
+                width: 20px;
+                min-height: 20px;
+                min-width: 20px;
+            }
+        }
+
+    }
+    
+
+    
+
+    .filter-section {
+        border-radius: 10px;
+        background-color: $green-btn;
+        padding: 5px;
+        cursor: pointer;
+        margin-right: 5px;
+
+        svg {
+            height: 40px;
+            width: 40px;
+        }
+    }
+    
+
+}
+
+@media (max-width: 1024px) {
+
+    .rechercher-form {
+        flex-direction: column;
+
+        #nb-passager-section {
+            max-width: unset;
+        }
+
+        button {
+            justify-content: center;
+        }
+
+        #nb-user-div {
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+
+            span {
+                margin-top: 0px;
+            }
+        }
+
+        
+    }
+
+    .rechercher-form.mobile-center {
+        display: flex !important;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+
+    }
+    
+}

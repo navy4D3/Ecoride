@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController{
     #[Route('/profil', name: 'app_user')]
-    public function profil(Security $security, EntityManagerInterface $em, TrajetRepository $trajetRepository): Response
+    public function profil(Security $security, EntityManagerInterface $em, TrajetRepository $trajetRepository, TrajetController $trajetController): Response
     {
         $currentUserEmail = $security->getUser()->getUserIdentifier();
 
@@ -23,43 +23,29 @@ final class UserController extends AbstractController{
         // $trajetsAVenir = $currentUser->getTrajetsAsChauffeur();
         $trajetsAVenir = $trajetRepository->findAllTrajetsByUser($currentUser->getId(), 'Planifié');
         //inclure condition si vide
-        
-        $currentTime = new \DateTime();
-        $formatter = new \IntlDateFormatter(
-            'fr_FR',
-            \IntlDateFormatter::LONG,
-            \IntlDateFormatter::NONE,
-            $currentTime->getTimezone()
-        );
 
         $trajetAVenirDatasToDisplay = [];
 
         //inclure condition si vide
         foreach ($trajetsAVenir as $trajet) {
-            $departureDateTime = $trajet->getHeureDepart();
-            $durationInSeconds = $trajet->getDureeInSeconds(); // exemple : 5h40 = 20400 sec
-
-            $arrivalDateTime = $departureDateTime->modify("+$durationInSeconds seconds");
-
-            $isNextDay = $departureDateTime->format('Y-m-d') !== $arrivalDateTime->format('Y-m-d');
-
-            $hours = floor($durationInSeconds / 3600);
-            $minutes = floor(($durationInSeconds % 3600) / 60);
+            
 
             $isChauffeur = false;
             if ($trajet->getChauffeur() == $currentUser) {
                 $isChauffeur = true;
             }
 
+            $timeDatasToShow = $trajetController->showTrajetDateAndTime($trajet);
+
             // Formatage final pour le front
             $data = [
-                'dateDepart' => $formatter->format($departureDateTime),
-                'heureDepart' => $departureDateTime->format('H:i'),
+                'dateDepart' => $timeDatasToShow['dateDepart'],
+                'heureDepart' => $timeDatasToShow['heureDepart'],
                 'lieuDepart' => $trajet->getLieuDepart(),
-                'duree' => sprintf('%dh%02dmin', $hours, $minutes),
-                'heureArrivee' => $arrivalDateTime->format('H:i'),
+                'duree' => $timeDatasToShow['duree'],
+                'heureArrivee' => $timeDatasToShow['heureArrivee'],
                 'lieuArrivee' => $trajet->getLieuArrivee(),
-                'plusUn' => $isNextDay,
+                'plusUn' => $timeDatasToShow['isNextDay'],
                 'isChauffeur' => $isChauffeur,
                 'chauffeur' => $trajet->getChauffeur(),
                 'voiture' => $trajet->getVoiture()
@@ -85,7 +71,7 @@ final class UserController extends AbstractController{
 
             // Formatage final pour le front
             $data = [
-                'dateDepart' => $formatter->format($departureDateTime),
+                'dateDepart' => $timeDatasToShow['dateDepart'],
                 'lieuDepart' => $trajet->getLieuDepart(),
                 'lieuArrivee' => $trajet->getLieuArrivee(),
                 'prix' => $trajet->getPrixPersonne()
@@ -100,9 +86,11 @@ final class UserController extends AbstractController{
         ]);
     }
 
+
+
     #[Route('/user/{id}/photo_profil', name: 'user_profil_photo')]
     public function getPhotoProfil(User $user): Response
-    {   
+    {
         $photoBlob = $user->getPhotoProfil();
 
         if (!$photoBlob) {

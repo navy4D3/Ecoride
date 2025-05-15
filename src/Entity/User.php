@@ -76,6 +76,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Trajet::class, mappedBy: 'chauffeur2', orphanRemoval: true)]
     private Collection $trajetsAsChauffeur;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $note = null;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
@@ -338,6 +341,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $trajetsAsChauffeur->setChauffeur2(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNote(): ?float
+    {
+        return $this->note;
+    }
+
+    public function setNote(?float $note): static
+    {
+        $this->note = $note;
 
         return $this;
     }

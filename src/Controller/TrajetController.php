@@ -55,10 +55,13 @@ final class TrajetController extends AbstractController
 
             // Appel au service de recherche
             $results = $trajetSearchService->findMatchingTrips($startCoords, $endCoords, $date, $nbPlace, $currentUserId);
+            // inclure un filtre sur la date d'aujourd'hui, afficher que les trajets ultérieurs
+            // faire une fonction qui met à jour les trajets à passés a partir du moment ou la date est passé
 
             return $this->render('trajet/results.html.twig', [
                 'trajets' => $results['trajets'],
-                'isOnDate' => $results['isOnDate']
+                'isOnDate' => $results['isOnDate'],
+                'form' => $form,
 
             ]);
 
@@ -92,6 +95,45 @@ final class TrajetController extends AbstractController
     //         'trajets' => $results
     //     ]);
     // }
+
+    public function showTrajetDateAndTime(Trajet $trajet)
+    {
+        $currentTime = new \DateTime();
+        $formatter = new \IntlDateFormatter(
+            'fr_FR',
+            \IntlDateFormatter::LONG,
+            \IntlDateFormatter::NONE,
+            $currentTime->getTimezone()
+        );
+
+        $departureDateTime = $trajet->getHeureDepart();
+        $durationInSeconds = $trajet->getDureeInSeconds(); // exemple : 5h40 = 20400 sec
+
+        // if (!$departureDateTime instanceof \DateTime) {
+        //     $departureDateTime = \DateTime::createFromInterface($departureDateTime);
+        // }
+
+        // $arrivalDateTime = $departureDateTime->modify("+$durationInSeconds seconds");
+        // $arrivalDateTime = $departureDateTime->add(new \DateInterval('PT' . $durationInSeconds . 'S'));
+        $arrivalDateTimeStamp = $departureDateTime->getTimestamp() + $durationInSeconds;
+        $arrivalDateTime = new \DateTime();
+        $arrivalDateTime->setTimestamp($arrivalDateTimeStamp)->setTimezone($currentTime->getTimezone());
+
+        $isNextDay = $departureDateTime->format('Y-m-d') !== $arrivalDateTime->format('Y-m-d');
+
+        $hours = floor($durationInSeconds / 3600);
+        $minutes = floor(($durationInSeconds % 3600) / 60);
+
+        $results = [
+            'dateDepart' => $formatter->format($departureDateTime),
+            'heureDepart' => $departureDateTime->format('H:i'),
+            'heureArrivee' => $arrivalDateTime->format('H:i'),
+            'isNextDay' => $isNextDay,
+            'duree' => sprintf('%dh%02dmin', $hours, $minutes)
+        ];
+
+        return $results;
+    }
 
     private function geocode(string $address, HttpClientInterface $client): array
     {

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250505190233 extends AbstractMigration
+final class Version20250509142518 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,14 +20,14 @@ final class Version20250505190233 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        // $this->addSql(<<<'SQL'
-        //     ALTER TABLE trajet ADD chauffeur2_id INT NOT NULL
-        // SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE trajet ADD CONSTRAINT FK_2B5BA98CE885DC45 FOREIGN KEY (chauffeur2_id) REFERENCES user (id)
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_2B5BA98CE885DC45 ON trajet (chauffeur2_id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE user ADD note DOUBLE PRECISION DEFAULT NULL
         SQL);
     }
 
@@ -41,7 +41,7 @@ final class Version20250505190233 extends AbstractMigration
             DROP INDEX IDX_2B5BA98CE885DC45 ON trajet
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE trajet DROP chauffeur2_id
+            ALTER TABLE user DROP note
         SQL);
     }
 }
