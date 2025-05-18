@@ -127,7 +127,7 @@
                                     {% if trajet.datas.chauffeur.photoProfil %}
                                         <img src="{{ path('user_profil_photo', { id: trajet.datas.chauffeur.id }) }}" class="photo-profil-conducteur" alt="Photo">
                                     {% else %}
-                                        <img src="./default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                        <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
                                     {% endif %}
                                     
                                     <span>{{ trajet.datas.chauffeur.prenom }}</span>

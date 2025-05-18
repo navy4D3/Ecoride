@@ -69,10 +69,12 @@ class AddTrajetType extends AbstractType
             ])
             ->add('voiture', TextType::class, [
                 'mapped' => false,
+                
                 // 'class' => Voiture::class,
                 // 'choice_label' => 'id',
                 'attr' => [
                     'hidden' => '',
+                    'class' => 'voiture-input'
                 ]
                 
                 ])

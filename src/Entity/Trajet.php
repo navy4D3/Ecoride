@@ -165,6 +165,13 @@ class Trajet
         return $this;
     }
 
+    public function getPlacesRestante() {
+        $nbParticipants = count($this->getParticipants());
+        $nbPlaces = $this->getVoiture()->getPlaces();
+
+        return $nbPlaces - $nbParticipants - 1;
+    }
+
     public function getChauffeur(): ?User
     {
         return $this->chauffeur;

@@ -37,7 +37,7 @@ final class TrajetController extends AbstractController
         $form = $this->createForm(SearchTrajetType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() ) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $startAddress = $form->get('lieuDepart')->getData();
@@ -148,18 +148,33 @@ final class TrajetController extends AbstractController
     }
 
     #[Route('/trajet/{id}', name: 'app_trajet')]
-    public function trajet(): Response
+    public function trajet(EntityManagerInterface $em, $id): Response
     {
         // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
         //regex plaque FR avant 2012 : ^\d{1,4} [A-Z]{2} \d{2,3}$
+
+        $trajet = $em->getRepository(Trajet::class)->find($id);
+        $timeDatas = $this->showTrajetDateAndTime($trajet);
+        // $placesRestante = $trajet->getVoiture()->getPlaces() - count($trajet->getParticipants());
         
-        return $this->render('trajet/index.html.twig', [
-            'controller_name' => 'TrajetController',
+        return $this->render('trajet/trajet.html.twig', [
+            'trajet' => $trajet,
+            'timeDatas' => $timeDatas,
         ]);
     }
     #[Route('/publier-trajet', name: 'app_publier_trajet')]
     public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
     {
+        $user = $security->getUser();
+        $userObject = $em->getRepository(User::class)->findOneBy(['email' => $user->getUserIdentifier()]);
+
+        if (!$userObject->isChauffeur()) {
+            return $this->redirectToRoute('app_devenir_chauffeur', [
+                'redirect' => 'app_publier_trajet'
+            ]);
+            // rajouter un code pour que l'utilisateur soit redirigé vers ajout trajet à la fin
+        }
+
         $trajet = new Trajet();
         $form = $this->createForm(AddTrajetType::class, $trajet);
         $form->handleRequest($request);
@@ -199,7 +214,6 @@ final class TrajetController extends AbstractController
 
             $voitureId = $form->get('voiture')->getData();
             $voitureObject = $em->getRepository(Voiture::class)->find($voitureId);
-            $user = $security->getUser();
             // $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
             $trajet->setChauffeur2($user);
             $trajet->setChauffeur($user);

@@ -57,6 +57,20 @@
     .row-inputs {
         flex-wrap: wrap;
         align-items: center !important;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 20px;
+
+        > div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            height: -webkit-fill-available;
+            flex-grow: 1;
+
+        }
 
         .select-color-placeholder {
             color: $green-black-50;
@@ -71,16 +85,6 @@
         }
     
         
-    }
-   
-
-    
-
-    
-        
-        
-        
-        
-    
+    }    
 
 }

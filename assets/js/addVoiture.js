@@ -1,8 +1,8 @@
 import {checkInputs} from '../app';
 import {showSuccessAlert} from '../app';
-import {initUserVoitureBtns} from './addTrajet';
+// import {initUserVoitureBtns} from './addTrajet';
 
-export function addVoiture(targetElementId, previousElementId) {
+export function addVoiture(previousElementId) {
     fetch('/add-voiture', {
         method: 'POST',
         headers: {
@@ -12,7 +12,8 @@ export function addVoiture(targetElementId, previousElementId) {
     .then(response => response.json())
     .then(data => {
         // data.html contient ton formulaire rendu
-        const container = document.getElementById(targetElementId);
+        document.getElementById(previousElementId).style.display = "none";
+        const container = document.getElementById('body-content');
 
         if (container) {
             container.insertAdjacentHTML('beforeend',data.html);
@@ -20,10 +21,10 @@ export function addVoiture(targetElementId, previousElementId) {
             
 
             initMarqueInputInteraction();
-            initAddVoitureFormBtns(targetElementId, previousElementId);
+            initAddVoitureFormBtns(previousElementId);
 
         } else {
-            console.error('Le container cible n\'existe pas : ' + targetElementId);
+            console.error('Le container cible n\'existe pas : body-content');
         }
     })
     .catch(error => console.error('Erreur:', error));
@@ -67,7 +68,7 @@ function initMarqueInputInteraction() {
     // });
 }
 
-function initAddVoitureFormBtns(currentDivId, divToShowId) {
+export function initAddVoitureFormBtns(divToShowId) {
     const addVoitureForm = document.getElementById("add-voiture-form");
     const addVoitureFormInputs = addVoitureForm.querySelectorAll('input, select, textarea');
 
@@ -192,6 +193,16 @@ function treatAddVoitureForm(divToShowId) {
             showSuccessAlert('Voiture ajouté avec succès');
 
             initUserVoitureBtns();
+
+            const hasVoitureInput = document.getElementById('devenir_chauffeur_hasVoiture');
+            const voitureCards = document.querySelectorAll('.voiture-card');
+
+            if (hasVoitureInput) {
+                if (voitureCards.length > 0) {
+                    hasVoitureInput.checked = true;
+                    hasVoitureInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }
             
             //appliquer fonction JS pour selection
         } else {
@@ -199,8 +210,84 @@ function treatAddVoitureForm(divToShowId) {
 
             currentDiv.remove();
             currentParentDiv.insertAdjacentHTML('beforeend',data.html);
-            initAddVoitureFormBtns('add-voiture-section', 'trajet-details');
+            initAddVoitureFormBtns('trajet-details');
             initMarqueInputInteraction();
         }
     })
+}
+
+export function initUserVoitureBtns() {
+    const userVoituresBtns = document.querySelectorAll(".voiture-card");
+    const voitureInput =  document.querySelector('.voiture-input');
+  
+    userVoituresBtns.forEach(voitureBtn => {
+      voitureBtn.addEventListener('click', function(e) {
+        const currentVoitureId = voitureBtn.id;
+        userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
+        this.classList.add('selected');
+        voitureInput.value = currentVoitureId;
+        //declenche event sur voiture manuellement
+        const event = new Event("input", { bubbles: true });
+        voitureInput.dispatchEvent(event);
+  
+      })
+    })
+}
+
+// const addVoitureBtn = document.getElementById("add-voiture-btn");
+
+
+  // export function initUserVoitureBtns() {
+  //   const userVoituresBtns = document.querySelectorAll(".voiture-card");
+  //   const voitureInput =  document.querySelector('voiture-input');
+  
+  //   userVoituresBtns.forEach(voitureBtn => {
+  //     voitureBtn.addEventListener('click', function(e) {
+  //       const currentVoitureId = voitureBtn.id;
+  //       userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
+  //       this.classList.add('selected');
+  //       voitureInput.value = currentVoitureId;
+  //       //declenche event sur voiture manuellement
+  //       const event = new Event("input", { bubbles: true });
+  //       voitureInput.dispatchEvent(event);
+  
+  //     })
+  //   })
+  // }
+  
+initUserVoitureBtns();
+
+// addVoitureBtn.addEventListener('click', function() {
+
+// document.getElementById('trajet-details').style.display = "none";
+// // const addVoitureDiv = document.getElementById('add-voiture-section');
+
+// addVoiture('body-content', "trajet-details");
+
+// // if (addVoitureDiv) {
+// //     addVoitureDiv.style.display = "flex";
+// //     const addVoitureForm = document.getElementById('add-voiture-form');
+// //     addVoitureForm.reset();
+// // } else {
+    
+    
+// // }
+
+// })
+
+export function showAddVoitureForm(divToHideId) {
+    const addVoitureDiv = document.getElementById('add-voiture-section');
+
+    if (addVoitureDiv) {
+        addVoitureDiv.style.display = "flex";
+        const addVoitureForm = document.getElementById('add-voiture-form');
+        document.getElementById(divToHideId).style.display = "none";
+        addVoitureForm.reset();
+    } else {
+        addVoiture(divToHideId);
+        
+    }
+    
+
+
 }

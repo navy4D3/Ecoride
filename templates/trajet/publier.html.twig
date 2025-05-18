@@ -61,10 +61,10 @@
             <div class="voitures-div">
                 {{ form_widget(form.voiture) }}
                 {{ form_label(form.voiture) }}
-                <div id="user-voitures" >
+                {% include 'voiture/user_voiture_list.html.twig' %}
+                {# <div id="user-voitures" class="user-voitures-list">
                     {% if app.user.voitures %} {% for voiture in app.user.voitures %}
                         <div class="voiture-card" id="{{ voiture.id }}">
-                            {# {{ dump(voiture.marque.value) }} #}
                             
                             <span>{{ voiture.surnom }}</span>
                             <div>
@@ -83,8 +83,7 @@
                         <span>Ajouter</span>
                         <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
                     </div>
-                </div>
-
+                </div> #}
             </div>
             
         

@@ -4,7 +4,6 @@
     align-items: start;
     justify-content: center;
     gap:20px;
-    padding-top: 40px;
     padding-bottom: 40px;
     flex-direction: column;
 
@@ -17,7 +16,7 @@
         width: 20px;
     }
 
-    .header {
+    .profil-header {
         display: flex;
         flex-direction: row;
         gap: 20px;
@@ -52,7 +51,7 @@
                 }
 
                 .btn-green-black {
-                    span {
+                    * {
                         color: $green-white;
                     }
                 }

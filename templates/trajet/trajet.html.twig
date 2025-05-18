@@ -1,0 +1,109 @@
+{% set pageClass = 'trajet' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Trajet{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="header">
+        <div class="back-btn">
+            <twig:ux:icon name="tabler:chevron-left" id="" class="icon"/>
+            <span class="pc-tablet-only">Retour</span>
+        </div>
+        <h1>Details trajet</h1>
+    </div>
+
+    <div class="details-trajet">
+        <div class="details-trajet-title">
+            <h2>{{ timeDatas.dateDepart }}</h2>
+            <span class="mobile-only"><twig:ux:icon name="ion:time-outline" />{{ timeDatas.duree }}</span>
+        </div>
+        
+        <div class="details">
+            <span class="ellipsis lieu-depart">{{ trajet.lieuDepart }}</span>
+            <span class="heure-depart">{{ timeDatas.heureDepart }}</span>
+            <div class="start-end-line">
+                <div class="circle outline"></div>
+                <div class="dashed-line"></div>
+                <span class="pc-tablet-only">{{ timeDatas.duree }}</span>
+                <div class="dashed-line pc-tablet-only"></div>
+                <div class="circle"></div>
+            </div>
+            <span class="heure-arrivee">{{ timeDatas.heureArrivee }}</span>
+            <span class="ellipsis lieu-arrivee">{{ trajet.lieuArrivee }}</span>
+        </div>
+    </div>
+    {% if not (trajet.chauffeur == app.user) %}
+        {% set chauffeur = trajet.chauffeur %}
+        <div class="details-chauffeur">
+            <div class="details-chauffeur-title title">
+                <h3>Conducteur</h3>
+                <twig:ux:icon name="lets-icons:user" />
+            </div>
+
+            <div class="details-chauffeur-datas">
+                <div class="details-chauffeur-datas-photo-prenom">
+                    {% if trajet.chauffeur.photoProfil %}
+                        <img src="{{ path('user_profil_photo', { id: trajet.chauffeur.id }) }}" class="photo-profil-conducteur" alt="Photo">
+                    {% else %}
+                        <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                    {% endif %}
+                    <span>{{ chauffeur.prenom }}</span>
+                    {% if chauffeur.note %}
+                        <div class="note">
+                            <small>{{ chauffeur.note }}</small>
+                            <twig:ux:icon name="mingcute:star-fill" />
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="details-chauffeur-datas-description">
+                    <span>{{ chauffeur.description }}</span>
+                    <div class="preferences">
+                        {% for preference in chauffeur.preferences %}
+                            <div class="preference">
+                                {# icone preference #}
+                                {# Texte préférence #}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="details-voiture">
+        <div class="details-voiture-title title">
+            <h3>Véhicule</h3>
+            <twig:ux:icon name="mingcute:car-line" />
+        </div>
+        
+        <span>{{ trajet.voiture.surnom }}</span>
+        <span>{{ trajet.voiture.marqueLabel }}</span>
+        <span>{{ trajet.voiture.modele }}</span>
+        <span>{%  if trajet.voiture.isElectric %}Electrique{% else %}Thermique{% endif %}</span>
+
+        <div>
+            <h4>{{ trajet.placesRestante }} place{% if trajet.placesRestante > 1 %}s{% endif %} restante</h4>
+        </div>
+    </div>
+
+    <div class="details-passagers">
+        <div class="details-passagers-title title">
+            <h3>Véhicule</h3>
+            <twig:ux:icon name="lucide:users" />
+        </div>
+        {% if trajet.participants is empty %}
+            <p>Aucun passager n'est inscrit sur ce trajet pour le moment.</p>
+        {% else %}
+            {% for passager in trajet.participants %}
+                <div class="passager">
+
+                </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+
+{% endblock %}

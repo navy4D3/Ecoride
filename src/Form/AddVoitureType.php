@@ -50,7 +50,8 @@ class AddVoitureType extends AbstractType
                 'required' => true
             ])
             ->add('isElectric', CheckboxType::class, [
-                'label' => "Electrique"
+                'label' => "Electrique",
+                'required' => false
             ])
             ->add('places', IntegerType::class, [
                 'label' => "Places",

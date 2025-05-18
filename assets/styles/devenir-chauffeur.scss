@@ -1,0 +1,82 @@
+@import 'variables.scss';
+
+.body-content.devenir-chauffeur {
+    align-items: center;
+
+    #devenir-chauffeur-base {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    h3 {
+        text-align: center;
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        align-items: center;
+    }
+
+    #devenir-chauffeur-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 800px;
+    }
+
+    .preferences-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+
+        .preference {
+            padding: 5px 10px;
+            border: solid 2px $green-black;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .preference.active {
+            background-color: $green-btn;
+            border-color: $green-btn;
+        }
+
+    }
+
+    textarea {
+        background-color: $green-white;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 2px 4px $green-black-25;
+        padding: 10px;
+        width: 100%;
+    }
+    
+    textarea:focus {
+        outline-color: $green-black;
+    }
+
+    .user-voitures-list {
+        justify-content: center;
+
+        .voiture-card {
+            pointer-events: none;
+            cursor: none;
+
+        }
+    }
+
+}
+
+@media (max-width: 768px) {
+    .body-content.devenir-chauffeur {
+        align-items: unset;
+
+    }
+}
+

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Preference;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
@@ -78,6 +79,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?float $note = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true, enumType: Preference::class)]
+    private ?array $preferences = null;
 
     public function __construct()
     {
@@ -353,6 +360,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNote(?float $note): static
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Preference[]|null
+     */
+    public function getPreferences(): ?array
+    {
+        return $this->preferences;
+    }
+
+    public function setPreferences(?array $preferences): static
+    {
+        $this->preferences = $preferences;
 
         return $this;
     }

@@ -79,7 +79,7 @@
             
         </nav>
     
-        <div id="body-content" class="body-content {{ pageClass|default('') }}">{% block body %}{% endblock %}</div>
+        <div id="body-content" class="body-content {{ pageClass|default('') }} {% if app.user %}connected{% endif %}">{% block body %}{% endblock %}</div>
 
         <footer class="footer {{ pageClass|default('') }} {% if app.user %}connected{% endif %}">            
             <a href="/contact" class="item item-1">Contact</a>

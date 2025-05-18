@@ -1,7 +1,7 @@
-import {addVoiture} from './addVoiture';
 import {checkInputs} from '../app';
 import '../styles/publier-trajet.scss';
 import '../styles/add-voiture.scss';
+import {showAddVoitureForm} from './addVoiture';
 
 const addTrajetForm = document.getElementById("add-trajet-form");
 const fields = addTrajetForm.querySelectorAll('input, select, textarea');
@@ -186,42 +186,47 @@ backBtn.addEventListener('click', function() {
 
 const addVoitureBtn = document.getElementById("add-voiture-btn");
 
-
-export function initUserVoitureBtns() {
-  const userVoituresBtns = document.querySelectorAll(".voiture-card");
-  const voitureInput =  document.getElementById('add_trajet_voiture');
-
-  userVoituresBtns.forEach(voitureBtn => {
-    voitureBtn.addEventListener('click', function(e) {
-      const currentVoitureId = voitureBtn.id;
-      userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
-      this.classList.add('selected');
-      voitureInput.value = currentVoitureId;
-      //declenche event sur voiture manuellement
-      const event = new Event("input", { bubbles: true });
-      voitureInput.dispatchEvent(event);
-
-    })
-  })
-}
-
-initUserVoitureBtns();
-
 addVoitureBtn.addEventListener('click', function() {
+  showAddVoitureForm('trajet-details');
+
+});
+
+
+// export function initUserVoitureBtns() {
+//   const userVoituresBtns = document.querySelectorAll(".voiture-card");
+//   const voitureInput =  document.querySelector('voiture-input');
+
+//   userVoituresBtns.forEach(voitureBtn => {
+//     voitureBtn.addEventListener('click', function(e) {
+//       const currentVoitureId = voitureBtn.id;
+//       userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
+//       this.classList.add('selected');
+//       voitureInput.value = currentVoitureId;
+//       //declenche event sur voiture manuellement
+//       const event = new Event("input", { bubbles: true });
+//       voitureInput.dispatchEvent(event);
+
+//     })
+//   })
+// }
+
+// initUserVoitureBtns();
+
+// addVoitureBtn.addEventListener('click', function() {
   
-  document.getElementById('trajet-details').style.display = "none";
-  const addVoitureDiv = document.getElementById('add-voiture-section');
+//   document.getElementById('trajet-details').style.display = "none";
+//   const addVoitureDiv = document.getElementById('add-voiture-section');
 
-  if (addVoitureDiv) {
-    addVoitureDiv.style.display = "flex";
-    const addVoitureForm = document.getElementById('add-voiture-form');
-    addVoitureForm.reset();
-  } else {
-    addVoiture('body-content', "trajet-details");
+//   if (addVoitureDiv) {
+//     addVoitureDiv.style.display = "flex";
+//     const addVoitureForm = document.getElementById('add-voiture-form');
+//     addVoitureForm.reset();
+//   } else {
+//     addVoiture('body-content', "trajet-details");
     
-  }
+//   }
 
-})
+// })
 
 
 

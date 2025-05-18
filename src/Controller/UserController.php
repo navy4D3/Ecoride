@@ -3,15 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Enum\Preference;
+use App\Form\DevenirChauffeurType;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 final class UserController extends AbstractController{
-    #[Route('/profil', name: 'app_user')]
+    #[Route('/profil', name: 'app_user_profil')]
     public function profil(Security $security, EntityManagerInterface $em, TrajetRepository $trajetRepository, TrajetController $trajetController): Response
     {
         $currentUserEmail = $security->getUser()->getUserIdentifier();
@@ -86,8 +91,6 @@ final class UserController extends AbstractController{
         ]);
     }
 
-
-
     #[Route('/user/{id}/photo_profil', name: 'user_profil_photo')]
     public function getPhotoProfil(User $user): Response
     {
@@ -111,6 +114,57 @@ final class UserController extends AbstractController{
             'Content-Type' => $photoExtension,
             'Content-Disposition' => 'inline',
             'Cache-Control' => 'max-age=3600',
+        ]);
+    }
+
+    #[Route('/devenir-chauffeur', name: 'app_devenir_chauffeur')]
+    public function devenirChauffeur(Request $request, Security $security, EntityManagerInterface $em, UserAuthenticatorInterface $userAuthenticatorInterface): Response 
+    {
+        $redirectRoute = $request->query->get('redirect', 'app_profil');
+
+        $preferences = Preference::cases();
+
+        $form = $this->createForm(DevenirChauffeurType::class);
+        $form->handleRequest($request);
+        $errors = $form->getErrors(true);
+
+        $currentUserEmail = $security->getUser()->getUserIdentifier();
+        $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // return new Response($form->get('preferences')->getData());
+            $preferencesArray = json_decode($form->get('preferences')->getData());
+
+            // Transformation en tableau d'Enum Preference
+            $preferencesEnumArray = [];
+
+
+            if (is_array($preferencesArray)) {
+                foreach ($preferencesArray as $preferenceValue) {
+                    $enum = Preference::tryFrom($preferenceValue);
+                    if ($enum !== null) {
+                        $preferencesEnumArray[] = $enum;
+                    }
+                }
+            }
+
+
+            $user->setPreferences($preferencesEnumArray);
+            $user->setDescription($form->get('description')->getData());
+            $user->addRole('ROLE_CHAUFFEUR');
+
+            $security->login($user);
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute($redirectRoute);
+        }
+
+        return $this->render('user/devenir_chauffeur.html.twig', [
+            'form' => $form,
+            'preferences' => $preferences,
+            'errors' => $errors
         ]);
     }
 }

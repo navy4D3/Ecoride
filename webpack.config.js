@@ -38,6 +38,7 @@ Encore
     .addEntry('addTrajet', './assets/js/addTrajet.js')
     .addEntry('addVoiture', './assets/js/addVoiture.js')
     .addEntry('resultatsRecherche', './assets/js/resultatsRecherche.js')
+    .addEntry('devenirChauffeur', './assets/js/devenirChauffeur.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
     .addStyleEntry('style-home', './assets/styles/home.scss')

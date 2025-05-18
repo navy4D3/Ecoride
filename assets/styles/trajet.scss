@@ -1,0 +1,238 @@
+
+@import 'variables.scss';
+
+.body-content.trajet {
+    
+
+    * {
+        color: $green-black;
+    }
+
+    
+
+    .details-trajet {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 20px;
+
+        &-title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            h2 {
+                white-space: nowrap;
+            }
+
+            span {
+                flex-direction: row;
+                gap: 5px;
+                opacity: 75%;
+                font-family: $nunito;
+            }
+
+        }
+
+        
+
+        .details {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            flex-grow: 1;
+            justify-content: space-between;
+            align-items: center;
+            background-color: $green-medium;
+            padding: 5px 20px;
+            border-radius: 100px;
+            box-shadow: 0px 2px 4px $green-black-25;
+            gap: 20px;
+            overflow: auto;
+
+            span {
+                white-space: nowrap;
+            }
+
+            span.ellipsis {
+                display: block;
+                text-overflow: ellipsis;
+                overflow: auto;
+                width: 100%;
+                max-width: fit-content;
+                min-width: 50px;
+            }
+
+            .heure-depart, .heure-arrivee {
+                font-family: $nunito;
+            }
+
+            > div {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                flex-grow: 1;
+                align-items: center;
+                gap: 3px;
+                opacity: 75%;
+                
+
+                .dashed-line {
+                    border-color: $green-black;
+                }
+
+                .circle {
+                    background-color: $green-black;
+                }
+                .circle.outline {
+                    background-color: unset ;
+                }
+            }
+
+
+
+            
+        }
+    }
+
+    .details-chauffeur, .details-voiture, .details-passagers {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .details-chauffeur {
+        &-datas {
+            display: flex;
+            flex-direction: row;
+
+            &-photo-prenom {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                > span {
+                    margin-top: 5px;
+                }
+
+                img {
+                    height: 40px;
+                    width: 40px;
+                    background-size: cover;
+                    background-position: center;
+                    object-fit: cover;
+                    border-radius: 50%;
+
+                }
+
+                .note {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 5px;
+                    align-items: center;
+
+                    svg {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+        }
+    }
+
+    .title {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        padding: 5px 10px;
+        border-radius: 15px;
+        border: solid 2px $green-black;
+        width: fit-content;
+        align-items: center;
+
+        svg {
+            width: 30px ;
+            height: 30px;
+        }
+
+        h3 {
+            margin-top: 3px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .body-content.trajet {
+
+        .details-trajet {
+            flex-direction: column;
+            gap: 10px;
+
+            .details {
+                display: grid;
+                grid-template-columns: auto auto auto;
+                grid-template-rows: auto auto;
+                row-gap: 5px;
+                column-gap: 10px;
+                width: 100%;
+                border-radius: 0px;
+                padding: 0px;
+                background-color: unset;
+                box-shadow: unset;
+                width: fit-content;
+
+                > * {
+                    width: fit-content;
+                }
+
+                .lieu-depart {
+                    grid-row: 1 ; /* Fusionne les deux lignes */
+                    grid-column: 3 ;    /* Se trouve dans la colonne 2 */
+                }
+
+                .heure-depart {
+                    grid-row: 1 ; /* Fusionne les deux lignes */
+                    grid-column: 1 ;    /* Se trouve dans la colonne 2 */
+                }
+                .lieu-arrivee {
+                    grid-row: 2 / 2; /* Fusionne les deux lignes */
+                    grid-column: 3 / 3;    /* Se trouve dans la colonne 2 */
+                }
+
+                .heure-arrivee {
+                    grid-row: 2 / 2; /* Fusionne les deux lignes */
+                    grid-column: 1 / 3;    /* Se trouve dans la colonne 2 */
+                }
+
+                .start-end-line {
+                    grid-row: 1 / span 2; /* Fusionne les deux lignes */
+                    grid-column: 2 / 3;    /* Se trouve dans la colonne 2 */
+                    flex-direction: column;
+                    height: 100%;
+                    opacity: 75%;
+                    padding-bottom: 5px;
+                    padding-top: 5px;
+
+                    .dashed-line {
+                        border-left: 2px dashed $green-black;
+                        border-bottom: none;
+                        width: fit-content;
+                        min-width: unset;
+                        
+                    }
+                }
+
+
+            }
+
+        }
+    }
+    
+
+}

@@ -35,15 +35,28 @@ export function checkInputs(currentForm) {
         //ignore les input hidden
         if (field.type === 'hidden') return;
 
+        if (field.type === 'checkbox') {
+            // Ne valider que les checkboxes marquées comme "required"
+            if (field.required && !field.checked) {
+                allFilled = false;
+            }
+        }
+
         if (field.value.trim() === '') {
             allFilled = false;
 
         }
+
+    
     });
+
+    
 
     if (allFilled) {
         submitBtn.classList.remove('inactive');
-    } 
+    } else {
+        submitBtn.classList.add('inactive');
+    }
 }
 
 export function showSuccessAlert(message, duration = 3000) {
