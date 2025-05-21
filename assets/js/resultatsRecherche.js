@@ -1,3 +1,4 @@
+import {hidePopup, showPopup} from '../app';
 
 document.addEventListener("DOMContentLoaded", function () {
     const mobileToggleFilter = document.getElementById('toggle-filter-mobile');
@@ -5,21 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const blurEffectDiv = document.querySelector('.blur-effect')
 
     mobileToggleFilter.addEventListener("click", function () {
-        filtersSection.classList.toggle("visible");
-        blurEffectDiv.classList.toggle('visible');
+        showPopup(filtersSection, 'flex');
     });
+
+    
 
     const mobileShowSearchForm = document.getElementById("show-form-mobile");
     const mobileHideSearchForm = document.getElementById('hide-form-btn-mobile');
     const searchFormDiv = document.querySelector('.form-div');
 
     mobileShowSearchForm.addEventListener('click', function() {
-        searchFormDiv.classList.add("visible");
-        blurEffectDiv.classList.add('visible');
+        showPopup(searchFormDiv, 'flex');
     })
     mobileHideSearchForm.addEventListener('click', function() {
-        searchFormDiv.classList.remove("visible");
-        blurEffectDiv.classList.remove('visible');
+        hidePopup(searchFormDiv);
     })
 
     const inputsLabels = document.querySelectorAll('label');
@@ -51,8 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const alternativeMessage = document.getElementById('alternative-message');
 
     seeResultsFilterBtn.addEventListener('click', function() {
-        filtersSection.classList.remove('visible');
-        blurEffectDiv.classList.remove('visible');
+        hidePopup(filtersSection);
     })
 
     resetFiltersBtn.addEventListener('click', function() {
@@ -60,8 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             input.checked = false;
         });
 
-        filtersSection.classList.remove('visible');
-        blurEffectDiv.classList.remove('visible');
+        hidePopup(filtersSection);
 
         inputsLabels.forEach((label) => {
             label.classList.remove('active');
@@ -128,16 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     return true;
                 });
             }
-
-
-            // Filtre Durée. Adapter pour trier
-            // if (visible && duree) {
-            //     visible = (
-            //         (duree === 'moins_1h' && dureeTrajet < 3600) ||
-            //         (duree === '1h_2h' && dureeTrajet >= 3600 && dureeTrajet <= 7200) ||
-            //         (duree === 'plus_2h' && dureeTrajet > 7200)
-            //     );
-            // }
 
             if (visible) {
                 isAllTrajetsHidden = false;

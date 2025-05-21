@@ -17,7 +17,7 @@
             {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
         {% endblock %}
     </head>
-    <body class="{% if app.user %}connected{% endif %}">
+    <body class="{% if app.user %}connected{% endif %} {{ pageClass|default('') }}">
         
         <nav class="navbar {{ pageClass|default('') }} {% if app.user %}connected{% endif %} ">
             {% if app.user %}

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use App\Entity\Trajet;
 use App\Entity\User;
 use App\Entity\Voiture;
+use App\Enum\Preference;
 use App\Enum\Statut;
 use App\Form\AddTrajetType;
 use App\Form\SearchTrajetType;
@@ -23,11 +25,13 @@ final class TrajetController extends AbstractController
 {
     private HttpClientInterface $client;
     private string $googleApiKey;
+    private $em;
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct(HttpClientInterface $client, EntityManagerInterface $em)
     {
         $this->client = $client;
         $this->googleApiKey = $_ENV['GOOGLE_API_KEY']; // ou directement depuis votre config
+        $this->em = $em;
     }
 
 
@@ -38,7 +42,6 @@ final class TrajetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
 
             $startAddress = $form->get('lieuDepart')->getData();
             $endAddress = $form->get('lieuArrivee')->getData();
@@ -57,12 +60,15 @@ final class TrajetController extends AbstractController
             $results = $trajetSearchService->findMatchingTrips($startCoords, $endCoords, $date, $nbPlace, $currentUserId);
             // inclure un filtre sur la date d'aujourd'hui, afficher que les trajets ultérieurs
             // faire une fonction qui met à jour les trajets à passés a partir du moment ou la date est passé
+            $session = $request->getSession();
+            $session->set('reservation_data', [
+                'nbPlaces' => $form->get('nbPlace')->getData(),
+            ]);
 
             return $this->render('trajet/results.html.twig', [
                 'trajets' => $results['trajets'],
                 'isOnDate' => $results['isOnDate'],
                 'form' => $form,
-
             ]);
 
             // Ici tu peux lancer une recherche en base, par exemple :
@@ -148,10 +154,11 @@ final class TrajetController extends AbstractController
     }
 
     #[Route('/trajet/{id}', name: 'app_trajet')]
-    public function trajet(EntityManagerInterface $em, $id): Response
+    public function trajet(EntityManagerInterface $em, Request $request, $id): Response
     {
         // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
         //regex plaque FR avant 2012 : ^\d{1,4} [A-Z]{2} \d{2,3}$
+        // $nbPlaces = $request->query->get('reservation_datas')['nb_places'];
 
         $trajet = $em->getRepository(Trajet::class)->find($id);
         $timeDatas = $this->showTrajetDateAndTime($trajet);
@@ -162,6 +169,57 @@ final class TrajetController extends AbstractController
             'timeDatas' => $timeDatas,
         ]);
     }
+
+    #[Route('/reserver/{id}', name: 'app_reserver_trajet')]
+    public function reserverTrajet(Request $request, $id): Response
+    {
+        $trajet = $this->em->getRepository(Trajet::class)->find($id);
+        $timeDatas = $this->showTrajetDateAndTime($trajet);
+
+        $session = $request->getSession();
+
+        $reservationDatas = $session->get('reservation_data');
+
+        if (!$reservationDatas) {
+            return $this->redirectToRoute('app_rechercher');
+        }
+
+
+        //recuperer le nombre de place désiré par l'utilisateur
+
+        return $this->render('trajet/reserver.html.twig', [
+            'trajet' => $trajet,
+            'timeDatas' => $timeDatas,
+            'reservationDatas' => $reservationDatas
+        ]);
+    }
+
+    #[Route('/ajouter-passagers', name: 'app_ajouter_passagers')]
+    public function ajouterPassagers(Request $request):Response
+    {
+        $userId = $request->get('user');
+        $trajetId = $request->get('trajet');
+        $places = $request->get('places');
+        $user = $this->em->getRepository(User::class)->find($userId);
+        $trajet = $this->em->getRepository(Trajet::class)->find($trajetId);
+
+        if ($user && $trajet && $places) {
+            $reservation = new Reservation();
+
+            $reservation->setUser($user);
+            $reservation->setTrajet($trajet);
+            $reservation->setNbPlaces($places);
+
+            $this->em->persist($reservation);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_user_profil');
+        }
+
+        return new Response("Erreur lors de l'ajout du passager");
+        
+    }
+
     #[Route('/publier-trajet', name: 'app_publier_trajet')]
     public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
     {

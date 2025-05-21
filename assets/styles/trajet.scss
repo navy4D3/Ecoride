@@ -1,8 +1,15 @@
 
 @import 'variables.scss';
 
+body.trajet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .body-content.trajet {
-    
+    width: 100%;
+    max-width: 1000px;
 
     * {
         color: $green-black;
@@ -49,7 +56,7 @@
             flex-grow: 1;
             justify-content: space-between;
             align-items: center;
-            background-color: $green-medium;
+            background-color: $green-white;
             padding: 5px 20px;
             border-radius: 100px;
             box-shadow: 0px 2px 4px $green-black-25;
@@ -103,47 +110,6 @@
 
     .details-chauffeur, .details-voiture, .details-passagers {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .details-chauffeur {
-        &-datas {
-            display: flex;
-            flex-direction: row;
-
-            &-photo-prenom {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-
-                > span {
-                    margin-top: 5px;
-                }
-
-                img {
-                    height: 40px;
-                    width: 40px;
-                    background-size: cover;
-                    background-position: center;
-                    object-fit: cover;
-                    border-radius: 50%;
-
-                }
-
-                .note {
-                    display: flex;
-                    flex-direction: row;
-                    gap: 5px;
-                    align-items: center;
-
-                    svg {
-                        width: 20px;
-                        height: 20px;
-                    }
-                }
-            }
-        }
     }
 
     .title {
@@ -165,6 +131,158 @@
             margin-top: 3px;
         }
     }
+
+    .details-chauffeur {
+        flex-direction: column;
+        gap: 20px;
+        
+        &-datas {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+
+            &-photo-prenom {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                > span {
+                    margin-top: 5px;
+                    font-size: 18px;
+                }
+
+                img {
+                    height: 60px;
+                    width: 60px;
+                    background-size: cover;
+                    background-position: center;
+                    object-fit: cover;
+                    border-radius: 50%;
+
+                }
+
+                .note {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 5px;
+                    align-items: center;
+
+                    svg {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            &-description {
+                background-color: $green-white;
+                border-radius: 20px 20px 20px 0px ;
+                box-shadow: 0px 2px 4px $green-black-25;
+                padding: 20px;
+
+
+                p::first-letter {
+                    text-transform: capitalize;
+                }
+
+                .preferences {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    gap: 10px 20px;
+                    width: 100%;
+
+                    .preference {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 5px;
+                        align-items: center;
+                        padding: 5px;
+                        background-color: $green-medium;
+                        // box-shadow: 0px 2px 4px $green-black-25;
+                        border-radius: 10px;
+
+                        span {
+                            font-family: $nunito;
+                            white-space : nowrap;
+                        }
+
+                        svg {
+                            width: 30px;
+                            height: 30px;
+                            min-width: 30px;
+
+                            // * {
+                            //     stroke: $green-black;
+                            // }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .details-voiture {
+        gap: 20px;
+        flex-direction: row;
+        align-items: center;
+
+        &-datas {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+
+            span {
+                font-family: $nunito;
+                white-space: nowrap;
+            }
+
+
+            &-color {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 5px;
+
+                div {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                }
+            }
+            
+        }
+    }
+
+    .details-passagers {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .prix-place {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        align-items: center;
+
+        svg {
+            width: 25px;
+            height: 25px;
+
+            * {
+                stroke: $green-black;
+                stroke-width: 3px;
+            }
+        }
+    }
+
+    .btn-green {
+        width: fit-content;
+    }
+
+    
 }
 
 @media (max-width: 768px) {
@@ -231,6 +349,38 @@
 
             }
 
+        }
+
+        .details-chauffeur {
+            &-title {
+                display: none;
+            }
+
+            &-datas {
+                flex-direction: column;
+                align-items: start;
+                
+                
+
+                &-photo-prenom {
+                    flex-direction: row;
+                    gap: 10px;
+                    justify-content: start;
+
+                    img {
+                        width: 40px;
+                        height: 40px;
+                    }
+
+                    .note {
+                        margin-top: 3px;
+                    }
+                }
+
+                &-description {
+                    border-radius: 0px 20px 20px 20px;
+                }
+            }
         }
     }
     

@@ -59,9 +59,16 @@ class Trajet
     #[ORM\JoinColumn(nullable: false)]
     private ?User $chauffeur2 = null;
 
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'trajet', orphanRemoval: true)]
+    private Collection $reservations;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -271,5 +278,35 @@ class Trajet
         return $points;
         // Fonction pour décoder les polylines Google en tableau de ['lat' => ..., 'lng' => ...]
         // => peux t’en fournir une version PHP si besoin
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setTrajet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getTrajet() === $this) {
+                $reservation->setTrajet(null);
+            }
+        }
+
+        return $this;
     }
 }

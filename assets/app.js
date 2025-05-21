@@ -79,4 +79,19 @@ export function showSuccessAlert(message, duration = 3000) {
     }, duration);
   }
 
+  export function showPopup(divToShow, displayType) {
+        const blurEffect = document.querySelector('.blur-effect');
+
+        blurEffect.style.display = "block";
+        divToShow.style.display = displayType;
+
+
+  }
+  export function hidePopup(divToHide) {
+        const blurEffect = document.querySelector('.blur-effect');
+
+        blurEffect.style.display = "none";
+        divToHide.style.display = "none";
+  }
+
 

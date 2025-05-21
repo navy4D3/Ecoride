@@ -86,11 +86,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true, enumType: Preference::class)]
     private ?array $preferences = null;
 
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $reservations;
+
+    #[ORM\Column]
+    private ?int $credits = null;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
         $this->trajetsEnTantQueChauffeur = new ArrayCollection();
         $this->trajetsAsChauffeur = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->credits = 20;
     }
 
     public function getId(): ?int
@@ -387,6 +398,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPreferences(?array $preferences): static
     {
         $this->preferences = $preferences;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(int $credits): static
+    {
+        $this->credits = $credits;
 
         return $this;
     }

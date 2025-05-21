@@ -29,7 +29,7 @@
                 {% set dateDepart = app.request.get('search_trajet')['dateDepart'] ?? '' %}
                 {% set nbPlace = app.request.get('search_trajet')['nbPlace'] ?? '' %}
                 <span class="lieu">{{ lieuDepart }}<twig:ux:icon name="lucide:arrow-up" style="rotate:90deg"/>{{ lieuArrivee }}</span>
-                <span class="date-place">{{ dateDepart }}, {{ nbPlace }} passager {% if nbPlace > 1 %}s{% endif %}</span>
+                <span class="date-place">{{ dateDepart }}, {{ nbPlace }} passager{% if nbPlace > 1 %}s{% endif %}</span>
             </div>
         </div>
         <div class="filter-section" id="toggle-filter-mobile"><twig:ux:icon name="mynaui:sort" /></div>

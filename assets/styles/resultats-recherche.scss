@@ -17,22 +17,6 @@
         display: none;
     }
 
-    .blur-effect {
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        
-        display: none;
-        backdrop-filter: blur(5px);
-        z-index: 950;
-        width: 100%;
-        height: 100%;
-    }
-
-    .blur-effect.visible {
-        display: block;
-    }
-
     p {
         color:  $green-black;
         margin-bottom: 0px;
@@ -260,12 +244,17 @@
 @media (max-width: 1024px) {
     .body-content.resultats-recherche {
         .form-div {
+            display: none;
             z-index: 1000;
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            display: none;
+            
+            flex-direction: column;
+            width: 90%;
+            align-items: center;
+            gap: 30px;
             // finir l'affichage du formulaire en mobile
 
             #hide-form-btn-mobile {
@@ -279,14 +268,6 @@
                 cursor: pointer;
             }
         }
-
-        .form-div.visible {
-            display: flex;
-            flex-direction: column;
-            width: 90%;
-            align-items: center;
-            gap: 30px;
-        }
     
         .rechercher-form-collapse {
             display: flex;
@@ -298,10 +279,6 @@
             .filters {
                 display: none;
 
-            }
-
-            .filters.visible {
-                display: flex;
                 position: absolute;
                 bottom: 0px;
                 left: 0px;

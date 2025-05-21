@@ -167,4 +167,22 @@ final class UserController extends AbstractController{
             'errors' => $errors
         ]);
     }
+
+    #[Route('/ajouter-credits', name: 'app_ajouter-credits')]
+    public function ajouterCredits(Request $request, Security $security, EntityManagerInterface $em): JsonResponse
+    {
+        $nbCreditsToAdd = $request->get('credits', 0);
+
+        $currentUserEmail = $security->getUser()->getUserIdentifier();
+        $currentUser = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+        $currentUserNbCredits = $currentUser->getCredits();
+
+        $currentUser->setCredits($currentUserNbCredits + $nbCreditsToAdd);
+
+        $em->persist($currentUser);
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success', 'credits' => $currentUser->getCredits()]);
+        // return $this->render('user/ajouter_credits.html.twig', []);
+    }
 }

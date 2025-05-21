@@ -15,18 +15,6 @@ final class HomeController extends AbstractController{
         $form = $this->createForm(SearchTrajetType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            // Ici tu peux lancer une recherche en base, par exemple :
-            // $resultats = $trajetRepository->search($data);
-
-            // Pour la démo, on va juste afficher les données
-            return $this->render('trajets.html.twig', [
-                'search' => $data,
-                // 'resultats' => $resultats,
-            ]);
-        }
         return $this->render('home/index.html.twig', [
             'form' => $form,
 

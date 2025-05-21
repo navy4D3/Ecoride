@@ -1,4 +1,5 @@
 {% set pageClass = 'trajet' %}
+{% set isCurrentUserChauffeur = (trajet.chauffeur == app.user) %}
 {% extends 'base.html.twig' %}
 
 {% block title %}Trajet{% endblock %}
@@ -8,13 +9,14 @@
 {% endblock %}
 
 {% block body %}
-    <div class="header">
+    {# <div class="header">
         <div class="back-btn">
             <twig:ux:icon name="tabler:chevron-left" id="" class="icon"/>
             <span class="pc-tablet-only">Retour</span>
         </div>
         <h1>Details trajet</h1>
-    </div>
+    </div> #}
+    {% include 'header.html.twig' with { title: 'Details trajet' } %}
 
     <div class="details-trajet">
         <div class="details-trajet-title">
@@ -36,11 +38,11 @@
             <span class="ellipsis lieu-arrivee">{{ trajet.lieuArrivee }}</span>
         </div>
     </div>
-    {% if not (trajet.chauffeur == app.user) %}
+    {% if not isCurrentUserChauffeur %}
         {% set chauffeur = trajet.chauffeur %}
         <div class="details-chauffeur">
             <div class="details-chauffeur-title title">
-                <h3>Conducteur</h3>
+                <h3>Chauffeur</h3>
                 <twig:ux:icon name="lets-icons:user" />
             </div>
 
@@ -53,19 +55,19 @@
                     {% endif %}
                     <span>{{ chauffeur.prenom }}</span>
                     {% if chauffeur.note %}
-                        <div class="note">
+                        <div class="note" style="opacity:75%">
                             <small>{{ chauffeur.note }}</small>
                             <twig:ux:icon name="mingcute:star-fill" />
                         </div>
                     {% endif %}
                 </div>
                 <div class="details-chauffeur-datas-description">
-                    <span>{{ chauffeur.description }}</span>
+                    <p>{{ chauffeur.description }}</p>
                     <div class="preferences">
                         {% for preference in chauffeur.preferences %}
                             <div class="preference">
-                                {# icone preference #}
-                                {# Texte préférence #}
+                                <span>{{ preference.label }}</span>
+                                <twig:ux:icon name="{{ preference.icon }}" />
                             </div>
                         {% endfor %}
                     </div>
@@ -75,35 +77,60 @@
     {% endif %}
     <div class="details-voiture">
         <div class="details-voiture-title title">
-            <h3>Véhicule</h3>
+            <h3 class="pc-tablet-only">Véhicule</h3>
             <twig:ux:icon name="mingcute:car-line" />
         </div>
         
-        <span>{{ trajet.voiture.surnom }}</span>
-        <span>{{ trajet.voiture.marqueLabel }}</span>
-        <span>{{ trajet.voiture.modele }}</span>
-        <span>{%  if trajet.voiture.isElectric %}Electrique{% else %}Thermique{% endif %}</span>
-
-        <div>
-            <h4>{{ trajet.placesRestante }} place{% if trajet.placesRestante > 1 %}s{% endif %} restante</h4>
+        <div class="details-voiture-datas">
+            <span>{{ trajet.voiture.marqueLabel }}</span>
+            <span>{{ trajet.voiture.modele }}</span>
+            <span class="details-voiture-datas-color">{{ trajet.voiture.couleur.label }}<div style="background-color: {{ trajet.voiture.couleur.hex}}"></div></span>
+            <span>{%  if trajet.voiture.isElectric %}Electrique{% else %}Thermique{% endif %}</span>
         </div>
+
+        {% if isCurrentUserChauffeur  %}
+            <div>
+                <h4>{{ trajet.placesRestante }} place{% if trajet.placesRestante > 1 %}s{% endif %} restante</h4>
+            </div>
+        {% endif %}  
     </div>
 
-    <div class="details-passagers">
-        <div class="details-passagers-title title">
-            <h3>Véhicule</h3>
-            <twig:ux:icon name="lucide:users" />
+    {% if isCurrentUserChauffeur  %}
+        <div class="details-passagers">
+            <div class="details-passagers-title title">
+                <h3>Passagers</h3>
+                <twig:ux:icon name="lucide:users" />
+            </div>
+            {% if trajet.participants is empty %}
+                <p>Aucun passager n'est inscrit sur ce trajet pour le moment.</p>
+            {% else %}
+                {% for passager in trajet.participants %}
+                    <div class="passager">
+
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
-        {% if trajet.participants is empty %}
-            <p>Aucun passager n'est inscrit sur ce trajet pour le moment.</p>
+
+        <button class="btn-green">Annuler le trajet</button>
+    {% else %}
+        {% set reservation = null %}
+        {% for r in trajet.reservations %}
+            {% if r.user == app.user %}
+                {% set reservation = r %}
+            {% endif %}
+        {% endfor %}
+
+        {% if reservation %}
+            <h4 class="prix-place">{{ reservation.nbPlaces }} place{{ reservation.nbPlaces > 1 ? 's' : '' }} réservée{{ reservation.nbPlaces > 1 ? 's' : '' }}
+                <twig:ux:icon name="lucide:users"/>
+            </h4>
+
+            <button>Annuler la participation</button>
         {% else %}
-            {% for passager in trajet.participants %}
-                <div class="passager">
-
-                </div>
-            {% endfor %}
+            <h4 class="prix-place">{{ trajet.prixPersonne }} crédits / place <twig:ux:icon name="lucide:users"/></h4>
+            <a href="/reserver/{{ trajet.id }}"class="btn-green">Participer</a>
         {% endif %}
-
-    </div>
+    {% endif %}
 
 {% endblock %}
