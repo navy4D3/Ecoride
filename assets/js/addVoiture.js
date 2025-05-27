@@ -1,9 +1,12 @@
 import {checkInputs} from '../app';
 import {showSuccessAlert} from '../app';
-// import {initUserVoitureBtns} from './addTrajet';
 
-export function addVoiture(previousElementId) {
-    fetch('/add-voiture', {
+export function addVoiture(previousElementId, currentCarId = null) {
+    const fetchPath = currentCarId
+        ? `/add-voiture?id=${encodeURIComponent(currentCarId)}`
+        : "/add-voiture";
+    
+    fetch(fetchPath, {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest' // important pour indiquer une requête AJAX
@@ -18,10 +21,16 @@ export function addVoiture(previousElementId) {
         if (container) {
             container.insertAdjacentHTML('beforeend',data.html);
 
-            
-
             initMarqueInputInteraction();
-            initAddVoitureFormBtns(previousElementId);
+            initAddVoitureFormBtns(previousElementId, currentCarId);
+
+            if (currentCarId) {
+                const currentVoiture = document.getElementById(currentCarId);
+
+                document.getElementById('add_voiture_marque').value = currentVoiture.querySelector('.marque').innerHTML;
+            }
+
+            
 
         } else {
             console.error('Le container cible n\'existe pas : body-content');
@@ -68,7 +77,8 @@ function initMarqueInputInteraction() {
     // });
 }
 
-export function initAddVoitureFormBtns(divToShowId) {
+export function initAddVoitureFormBtns(divToShowId, currentCarId) {
+    const currentDiv = document.getElementById('add-voiture-section');
     const addVoitureForm = document.getElementById("add-voiture-form");
     const addVoitureFormInputs = addVoitureForm.querySelectorAll('input, select, textarea');
 
@@ -140,22 +150,62 @@ export function initAddVoitureFormBtns(divToShowId) {
         }
     });
 
+    const deleteVoitureBtn = document.getElementById('delete-voiture');
+
+    if (deleteVoitureBtn) {
+        deleteVoitureBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+    
+            fetch('delete-voiture/' + currentCarId, {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur HTTP : ' + response.status);
+        
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status && data.status == "success") {
+                    document.getElementById(divToShowId).style.display="flex";
+    
+                    document.getElementById(currentCarId).remove();
+                    currentDiv.style.display="none";
+        
+                    showSuccessAlert('Voiture modifié avec succès');
+        
+                    initUserVoitureBtns(divToShowId,currentCarId);
+                }
+        
+            })
+    
+        })
+    }
+    
 
     const submitAddVoitureFormBtn = document.getElementById('add-voiture-submit');
 
     submitAddVoitureFormBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        treatAddVoitureForm(divToShowId);
+        treatAddVoitureForm(divToShowId, currentCarId);
     })
 }
 
-function treatAddVoitureForm(divToShowId) {
+function treatAddVoitureForm(divToShowId, currentCarId = null) {
     const form = document.getElementById("add-voiture-form");
     const formData = new FormData(form);
     const currentDiv = document.getElementById('add-voiture-section');
+
+    const fetchPath = currentCarId
+        ? `/add-voiture?id=${encodeURIComponent(currentCarId)}`
+        : "/add-voiture";
     
     
-    fetch('/add-voiture', {
+    fetch(fetchPath, {
         method: 'POST',
         body: formData,
         headers: {
@@ -175,25 +225,45 @@ function treatAddVoitureForm(divToShowId) {
             currentDiv.style.display="none";
 
             const voituresListDiv = document.getElementById('user-voitures');
-            const newVoitureDiv = document.createElement('div');
-            newVoitureDiv.classList.add("voiture-card");
-            newVoitureDiv.id = data.voiture.id;
 
-            newVoitureDiv.innerHTML = `
-                <span>${data.voiture.surnom}</span>
-                <div>
-                    <span>${data.voiture.marque}</span>
-                    <span>${data.voiture.modele}</span>
-                    <span>${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
-                    <span class="fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
-                </div>
-            `
+            if (!currentCarId) {
+                const newVoitureDiv = document.createElement('div');
+                newVoitureDiv.classList.add("voiture-card");
+                newVoitureDiv.id = data.voiture.id;
 
-            voituresListDiv.insertAdjacentElement('afterbegin',newVoitureDiv);
-            showSuccessAlert('Voiture ajouté avec succès');
+                newVoitureDiv.innerHTML = `
+                    <span>${data.voiture.surnom}</span>
+                    <div>
+                        <span class="marque">${data.voiture.marque}</span>
+                        <span class="modele">${data.voiture.modele}</span>
+                        <span>${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
+                        <span class="fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
+                    </div>
+                `
 
-            initUserVoitureBtns();
+                voituresListDiv.insertAdjacentElement('afterbegin',newVoitureDiv);
+                showSuccessAlert('Voiture ajouté avec succès');
 
+            } else {
+                const currentVoitureDiv = document.getElementById(currentCarId);
+
+                currentVoitureDiv.innerHTML = `
+                    <span>${data.voiture.surnom}</span>
+                    <div>
+                        <span class="marque">${data.voiture.marque}</span>
+                        <span class="modele">${data.voiture.modele}</span>
+                        <span>${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
+                        <span class="fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
+                    </div>
+                `;
+
+                showSuccessAlert('Voiture modifié avec succès');
+            }
+
+            initUserVoitureBtns(divToShowId, currentCarId);
+
+
+            //lignes de code applicable a la page devenir chauffeur
             const hasVoitureInput = document.getElementById('devenir_chauffeur_hasVoiture');
             const voitureCards = document.querySelectorAll('.voiture-card');
 
@@ -210,83 +280,67 @@ function treatAddVoitureForm(divToShowId) {
 
             currentDiv.remove();
             currentParentDiv.insertAdjacentHTML('beforeend',data.html);
-            initAddVoitureFormBtns('trajet-details');
+            initAddVoitureFormBtns(divToShowId, currentCarId);
             initMarqueInputInteraction();
         }
     })
 }
 
-export function initUserVoitureBtns() {
+export function initUserVoitureBtns(divToShowId, currentCarId = null) {
     const userVoituresBtns = document.querySelectorAll(".voiture-card");
     const voitureInput =  document.querySelector('.voiture-input');
+
+    if (!currentCarId) {
+        userVoituresBtns.forEach(voitureBtn => {
+            if (voitureBtn.dataset.listenerAttached === 'true') {
+                return; // Ne rien faire si déjà attaché
+            }
+
+            voitureBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+              const currentVoitureId = voitureBtn.id;
+              userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
+
+
+              this.classList.add('selected');
+              voitureInput.value = currentVoitureId;
+              //declenche event sur voiture manuellement
+              const event = new Event("input", { bubbles: true });
+              voitureInput.dispatchEvent(event);
+
+              showAddVoitureForm(divToShowId, voitureBtn.id);
+
+              voitureBtn.dataset.listenerAttached = 'true';
+        
+            })
+          })
+    } 
   
-    userVoituresBtns.forEach(voitureBtn => {
-      voitureBtn.addEventListener('click', function(e) {
-        const currentVoitureId = voitureBtn.id;
-        userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
-        this.classList.add('selected');
-        voitureInput.value = currentVoitureId;
-        //declenche event sur voiture manuellement
-        const event = new Event("input", { bubbles: true });
-        voitureInput.dispatchEvent(event);
-  
-      })
-    })
+    
 }
 
-// const addVoitureBtn = document.getElementById("add-voiture-btn");
-
-
-  // export function initUserVoitureBtns() {
-  //   const userVoituresBtns = document.querySelectorAll(".voiture-card");
-  //   const voitureInput =  document.querySelector('voiture-input');
-  
-  //   userVoituresBtns.forEach(voitureBtn => {
-  //     voitureBtn.addEventListener('click', function(e) {
-  //       const currentVoitureId = voitureBtn.id;
-  //       userVoituresBtns.forEach(voitureBtn => voitureBtn.classList.remove('selected'));
-  //       this.classList.add('selected');
-  //       voitureInput.value = currentVoitureId;
-  //       //declenche event sur voiture manuellement
-  //       const event = new Event("input", { bubbles: true });
-  //       voitureInput.dispatchEvent(event);
-  
-  //     })
-  //   })
-  // }
-  
-initUserVoitureBtns();
-
-// addVoitureBtn.addEventListener('click', function() {
-
-// document.getElementById('trajet-details').style.display = "none";
-// // const addVoitureDiv = document.getElementById('add-voiture-section');
-
-// addVoiture('body-content', "trajet-details");
-
-// // if (addVoitureDiv) {
-// //     addVoitureDiv.style.display = "flex";
-// //     const addVoitureForm = document.getElementById('add-voiture-form');
-// //     addVoitureForm.reset();
-// // } else {
-    
-    
-// // }
-
-// })
-
-export function showAddVoitureForm(divToHideId) {
+export function showAddVoitureForm(divToHideId, currentCarId = null) {
     const addVoitureDiv = document.getElementById('add-voiture-section');
 
     if (addVoitureDiv) {
-        addVoitureDiv.style.display = "flex";
-        const addVoitureForm = document.getElementById('add-voiture-form');
-        document.getElementById(divToHideId).style.display = "none";
-        addVoitureForm.reset();
-    } else {
-        addVoiture(divToHideId);
-        
+        addVoitureDiv.remove();
     }
+    
+    addVoiture(divToHideId, currentCarId);
+    //     } else {
+            
+    //         const addVoitureForm = document.getElementById('add-voiture-form');
+    //         addVoitureForm.reset();
+    //         alert('test');
+    //         addVoitureDiv.style.display = "flex";
+
+    //         document.getElementById(divToHideId).style.display = "none";
+            
+    //     }
+        
+    // } else {
+    //     addVoiture(divToHideId, currentCarId);
+        
     
 
 

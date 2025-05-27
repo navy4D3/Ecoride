@@ -7,7 +7,7 @@
             {# icone #}
         </div>
 
-        <h1>Ajouter un véhicule</h1>
+        <h1>{% if isEdit is defined %}Modifier{% else %}Ajouter{% endif %} un véhicule</h1>
 
         <div style="opacity: 0%;">Retour</div>
     </div>
@@ -65,8 +65,13 @@
             </div>
         </div>
         
-        {# voir comment gerer les boutons pour que le formulaire soit soumis et enregistre toutes les données, itineraire inclus #}
-        <button id="add-voiture-submit" type="button" class="btn-green-black submit-btn inactive">Ajouter</button>
+        
+        <div class="buttons">
+            {% if (isEdit is defined) and (app.user.voitures|length > 1 ) %}
+                <button id="delete-voiture" type="button" class="btn-green">Supprimer</button>
+            {% endif %}
+            <button id="add-voiture-submit" type="button" class="btn-green-black submit-btn inactive">{% if isEdit is defined %}Modifier{% else %}Ajouter{% endif %}</button>
+        </div>
     {{ form_end(form) }}
 
 

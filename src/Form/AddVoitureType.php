@@ -26,13 +26,23 @@ class AddVoitureType extends AbstractType
         $brands = array_map(fn($case) => $case->value, Marque::cases());
 
         $builder
-            ->add('immatriculation', TextType::class)
-            ->add('date_premiere_immatriculation', DateType::class)
+            ->add('immatriculation', TextType::class, [
+                'attr' => [
+                    'placeholder' => "XX-XXX-XX"
+                ]
+            ])
+            ->add('date_premiere_immatriculation', DateType::class, [
+                'attr' => [
+                    'placeholder' => "dd/mm/aaaa",
+                    'max' => (new \DateTime())->modify('-1 day')->format('Y-m-d')
+                ]
+            ])
             ->add('marque', TextType::class, [
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'off',
-                    'data-marque-list' => json_encode($brands)
+                    'data-marque-list' => json_encode($brands),
+                    'placeholder' => 'Selectionner'
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -42,7 +52,11 @@ class AddVoitureType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('modele', TextType::class)
+            ->add('modele', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Mon modèle'
+                ]
+            ])
             ->add('couleur', EnumType::class, [
                 'class' => Couleur::class,
                 'choice_label' => fn(Couleur $choice) => $choice->value,

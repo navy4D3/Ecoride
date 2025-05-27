@@ -40,6 +40,7 @@ Encore
     .addEntry('resultatsRecherche', './assets/js/resultatsRecherche.js')
     .addEntry('devenirChauffeur', './assets/js/devenirChauffeur.js')
     .addEntry('reserver', './assets/js/reserver.js')
+    .addEntry('profil', './assets/js/profil.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
     .addStyleEntry('style-home', './assets/styles/home.scss')

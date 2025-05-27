@@ -6,14 +6,185 @@
     gap:20px;
     padding-bottom: 40px;
     flex-direction: column;
+    justify-content:  start;
 
-    h2, p {
-        color: $green-black;
+    .profil-navbar {
+        width: fit-content;
+        background-color: $green-medium;
+        padding: 10px;
+        box-shadow: 0px 4px 10px $green-black-25;
+        border-radius: 100px;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
+
+        svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .parametres-icon * {
+            stroke: $green-black;
+            stroke-width: 0.5px;
+        }
+
+        > div {
+            padding: 5px 10px;
+            border-radius: 100px;
+            cursor: pointer;
+
+            span {
+                text-align: center;
+            }
+        }
+
+        .selected {
+            background-color: $green-btn;
+            cursor: default;
+            pointer-events: none;
+        }
+
     }
 
-    .icon {
-        height: 20px;
-        width: 20px;
+    .trajets-section, .mes-informations-section, .espace-chauffeur-section, .parametres-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+
+        .trajets-a-venir, .trajets-passes {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            .icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+        
+        .trajets-a-venir {
+            width: 100%;
+    
+            .trajets {
+                display: flex;
+                flex-direction: row;
+                gap:20px;
+                padding: 15px;
+                overflow-x: auto;
+                margin: -15px;
+    
+    
+                .trajet {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10px 0px;
+                    background-color: $green-white;
+                    box-shadow: 0px 4px 10px $green-black-25;
+                    border-radius: 15px;
+                    gap: 5px;
+                    cursor: pointer;
+                    height: fit-content;
+    
+                    * {
+                        color: $green-black;
+                        font-family: $nunito;
+                    }
+    
+                    &-date-type {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        padding: 0px 10px;
+    
+                    }
+    
+                    &-data {
+                        display: inherit;
+                        flex-direction: column;
+                        gap: 10px;
+    
+                        &-hour {
+                            background-color: $green-black;
+                            display: flex;
+                            flex-direction: row;
+                            gap: 10px;
+                            width: 100%;
+                            padding: 5px 10px;
+    
+                            * {
+                                color: $green-white;
+                                border-color: $green-white;
+    
+                            }
+    
+                            &-duree {
+                                display: inherit;
+                                flex-direction: row;
+                                gap: 2px;
+                                align-items: center;
+                                opacity: 60%;
+                                flex-grow: 1;
+    
+                                
+                            }
+    
+                        }
+    
+                    }
+    
+                    &-lieu {
+                       display: inherit; 
+                       flex-direction: row;
+                       gap: 20px;
+                       padding: 0px 10px;
+                       justify-content: space-between;
+    
+                    }
+    
+                    &-chauffeur-price {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 20px;
+                        align-items: center;
+                        padding: 0px 10px;
+    
+                        .chauffeur {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 10px;
+                            align-items: center;
+                            background-color: $green-medium;
+                            border-radius: 20px;
+                            padding: 10px;
+    
+                            &-note {
+                                display: flex;
+                                align-items: center;
+                                gap: 3px;
+                                opacity: 75%;
+                            }
+                            img {
+                                width: 30px;
+                                height: 30px;
+                            }
+    
+                            svg {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
+    
+                        > span {
+                            font-family: $josefin-sans;
+                            font-size: 18px;
+                        }
+                        
+                    }
+                }
+            }
+        }
     }
 
     .profil-header {
@@ -62,101 +233,227 @@
                 flex-direction: row;
                 gap: 20px;
 
+                * {
+                    cursor: pointer;
+                }
+
                 span {
                     font-family: $nunito;
                 }
             }
+        }
+
+        > svg {
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            border-radius: 100px;
+            background-color: $green-btn;
+            color: $green-black;
+
+            * {
+                stroke: $green-black;
+                stroke-width: 0.5px;
+            }
+
+        }
+
+
+
+    }
+
+    .mes-informations-section {
+        align-items: center;
+
+        .form-green-column {
+            max-width: 800px;
+            width: 100%;
+            align-items: center;
+
+            .row-inputs {
+                flex-wrap: wrap;
+                
+                > div {
+                    flex: 1;
+
+                    input {
+                        min-width: 150px;
+                    }}
+            }
+
+            > div {
+                width: 100%;
+            }
+
+            button {
+                width: fit-content;
+            }
+        }
+
+        .profil-picture-div {
+            flex-direction: column-reverse;
+
+            .profil-picture-img {
+                position: relative;
+
+                .edit-icon {
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+    
+                    border-radius: 100px;
+                    background-color: $green-btn;
+                    padding: 5px;
+                    width: 30px;
+                    height: 30px;
+
+                    cursor: pointer;
+                }
+
+                img {
+                    height: 80px;
+                    width: 80px;
+                    border-radius: 100px;
+
+                }
+            }
 
             
 
             
-
         }
 
     }
 
-    .trajets-a-venir, .trajets-passes {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+    .espace-chauffeur-section {
+        align-items: center;
+
+        #devenir-chauffeur-form {
+            width: 100%;
+
+            > div {
+                align-items: center;
+            }
+
+            .user-voitures-list .voiture-card {
+                pointer-events: all;
+                cursor: pointer;
+            }
+
+            .user-voitures-list .voiture-card.selected {
+                background-color: $green-black;
+                border-color: $green-black;
+                outline: none;
+
+                > span {
+                    color: $green-white;
+                }
+
+            }
+
+        }
     }
-    
-    .trajets-a-venir {
-        overflow-x: auto;
-        width: 100%;
 
-        .trajets {
+    .parametres-section {
+        align-items: center;
+
+        &-btns {
             display: flex;
-            flex-direction: row;
-            gap:20px;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
 
-
-            .trajet {
-                display: flex;
-                flex-direction: column;
-                padding: 10px 0px;
-                background-color: $green-white;
-                box-shadow: 0px 4px 10px $green-black-25;
+            span, a {
+                padding: 10px 15px;
+                border: solid 2px $green-black;
                 border-radius: 15px;
-                gap: 5px;
+                text-align: center;
+                font-family: $nunito;
+                cursor: pointer;
+                color: $green-black;
+            }
 
-                * {
-                    color: $green-black;
-                    font-family: $nunito;
-                }
+            .logout-btn {
+                border-color: red;
+                color: red;
+            }
 
-                &-date-type {
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    padding: 0px 10px;
+        }
+    }
 
-                }
 
-                &-data {
-                    display: inherit;
-                    flex-direction: column;
-                    gap: 10px;
 
-                    &-hour {
-                        background-color: $green-black;
-                        display: flex;
-                        flex-direction: row;
-                        gap: 10px;
-                        width: 100%;
-                        padding: 5px 10px;
+    
+}
 
-                        * {
-                            color: $green-white;
-                            border-color: $green-white;
+@media (max-width:1024px) {
+    .body-content.profil {
+        .espace-chauffeur-section {
+            align-items: start;
 
-                        }
+            #devenir-chauffeur-form {
 
-                        &-duree {
-                            display: inherit;
-                            flex-direction: row;
-                            gap: 2px;
-                            align-items: center;
-                            opacity: 60%;
-                            flex-grow: 1;
+                > div {
+                    align-items: start;
 
-                            
-                        }
-
+                    .preferences-list {
+                        justify-content: start;
                     }
-
                 }
 
-                &-lieu {
-                   display: inherit; 
-                   flex-direction: row;
-                   gap: 20px;
-                   padding: 0px 10px;
-                   justify-content: space-between;
-
+                .user-voitures-list {
+                    justify-content: start;
                 }
             }
         }
     }
     
+}
+
+@media (max-width:512px) {
+    .body-content.profil {
+
+        .profil-navbar {
+            width: 80%;
+            justify-content: space-between;
+            border-radius: 20px;
+
+            .selected {
+                padding: 10px;
+                border-radius: 10px;
+            }
+        }
+
+        .profil-header {
+            .photo-profil {
+                width: 80px;
+                height: 80px;
+            }
+
+            .user-details-and-btns {
+                gap: 8px;
+
+                .btns, .user-details {
+                    flex-direction: column;
+                    gap: 8px;
+
+                    
+
+                    .btn-green-black {
+                        padding: 5px 10px;
+                        border-radius: 10px;
+                        width: fit-content;
+                    }
+                }
+
+                .user-details {
+                    > span {
+                        font-size: 24px;
+                    }
+                }
+            }
+        }
+
+    }
 }

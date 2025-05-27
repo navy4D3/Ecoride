@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Reservation;
 use App\Entity\User;
 use App\Enum\Preference;
 use App\Form\DevenirChauffeurType;
+use App\Form\RegistrationFormType;
+use App\Form\RegistrationStepTwoType;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +18,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
-final class UserController extends AbstractController{
+final class UserController extends AbstractController {
+
+    private $em;
+    private $security;
+
+    public function __construct(EntityManagerInterface $em, Security $security)
+    {
+        $this->em = $em;
+        $this->security = $security;
+    }
+
     #[Route('/profil', name: 'app_user_profil')]
     public function profil(Security $security, EntityManagerInterface $em, TrajetRepository $trajetRepository, TrajetController $trajetController): Response
     {
@@ -26,10 +39,26 @@ final class UserController extends AbstractController{
         //faire une requete dans le repository pour avoir tous les trajets concernant l'utilisateur connecté ordonné par datetime
 
         // $trajetsAVenir = $currentUser->getTrajetsAsChauffeur();
-        $trajetsAVenir = $trajetRepository->findAllTrajetsByUser($currentUser->getId(), 'Planifié');
+        // $trajetsAVenir = $trajetRepository->findAllTrajetsByUser($currentUser->getId(), 'Planifié');
         //inclure condition si vide
 
+        $userReservations = $currentUser->getReservations();
+        $trajetsAVenirPassager = [];
+
+        foreach ($userReservations as $reservation) {
+            $trajetsAVenirPassager[] = $reservation->getTrajet();
+        }
+
+        $trajetsAVenirChauffeur = $currentUser->getTrajetsEnTantQueChauffeur();
+
         $trajetAVenirDatasToDisplay = [];
+
+        $trajetsAVenir = array_merge($trajetsAVenirChauffeur->toArray(), $trajetsAVenirPassager);
+
+        // Trier par heureDépart (ordre croissant)
+        usort($trajetsAVenir, function ($a, $b) {
+            return $a->getHeureDepart() <=> $b->getHeureDepart();
+        });
 
         //inclure condition si vide
         foreach ($trajetsAVenir as $trajet) {
@@ -39,22 +68,22 @@ final class UserController extends AbstractController{
             if ($trajet->getChauffeur() == $currentUser) {
                 $isChauffeur = true;
             }
+            
+            $timeDatas = $trajetController->showTrajetDateAndTime($trajet);
+            $reservations = $trajet->getReservations();
+            $currentReservation = new Reservation();
 
-            $timeDatasToShow = $trajetController->showTrajetDateAndTime($trajet);
+            foreach ($reservations as $reservation) {
+                if ($reservation->getUser() == $currentUser) {
+                    $currentReservation = $reservation;
+                    $data['reservation'] = $currentReservation;
+                }
+            }
+
 
             // Formatage final pour le front
-            $data = [
-                'dateDepart' => $timeDatasToShow['dateDepart'],
-                'heureDepart' => $timeDatasToShow['heureDepart'],
-                'lieuDepart' => $trajet->getLieuDepart(),
-                'duree' => $timeDatasToShow['duree'],
-                'heureArrivee' => $timeDatasToShow['heureArrivee'],
-                'lieuArrivee' => $trajet->getLieuArrivee(),
-                'plusUn' => $timeDatasToShow['isNextDay'],
-                'isChauffeur' => $isChauffeur,
-                'chauffeur' => $trajet->getChauffeur(),
-                'voiture' => $trajet->getVoiture()
-            ];
+            $data['datas'] = $trajet;
+            $data['timeDatas'] = $timeDatas;
 
             array_push($trajetAVenirDatasToDisplay, $data);
         }
@@ -63,31 +92,29 @@ final class UserController extends AbstractController{
         $trajetsPassesDatasToDisplay = [];
 
         foreach ($trajetsPasses as $trajet) {
-            $departureDateTime = $trajet->getHeureDepart();
-            $durationInSeconds = $trajet->getDureeInSeconds(); // exemple : 5h40 = 20400 sec
-
-            $arrivalDateTime = $departureDateTime->modify("+$durationInSeconds seconds");
-
-            $isNextDay = $departureDateTime->format('Y-m-d') !== $arrivalDateTime->format('Y-m-d');
-
-            $hours = floor($durationInSeconds / 3600);
-            $minutes = floor(($durationInSeconds % 3600) / 60);
-
+            $timeDatas = $trajetController->showTrajetDateAndTime($trajet);
 
             // Formatage final pour le front
             $data = [
-                'dateDepart' => $timeDatasToShow['dateDepart'],
-                'lieuDepart' => $trajet->getLieuDepart(),
-                'lieuArrivee' => $trajet->getLieuArrivee(),
-                'prix' => $trajet->getPrixPersonne()
+                'datas' => $trajet,
+                'timeDatas' => $timeDatas,
             ];
 
             array_push($trajetsPassesDatasToDisplay, $data);
         }
 
+        $myDataForm = $this->createForm(RegistrationStepTwoType::class, $currentUser);
+        $driverSpaceForm = $this->createForm(DevenirChauffeurType::class, $currentUser);
+        $mailAndPasswordForm = $this->createForm(RegistrationFormType::class, $currentUser);
+        $preferences = Preference::cases();
+
         return $this->render('user/profil.html.twig', [
             'trajetsAVenir' =>  $trajetAVenirDatasToDisplay,
-            'trajetsPasses' => $trajetsPassesDatasToDisplay
+            'trajetsPasses' => $trajetsPassesDatasToDisplay,
+            'myDataForm' => $myDataForm,
+            'driverSpaceForm' =>$driverSpaceForm,
+            'mailAndPasswordForm' => $mailAndPasswordForm,
+            'preferences' => $preferences
         ]);
     }
 
@@ -168,7 +195,7 @@ final class UserController extends AbstractController{
         ]);
     }
 
-    #[Route('/ajouter-credits', name: 'app_ajouter-credits')]
+    #[Route('/ajouter-credits', name: 'app_ajouter_credits')]
     public function ajouterCredits(Request $request, Security $security, EntityManagerInterface $em): JsonResponse
     {
         $nbCreditsToAdd = $request->get('credits', 0);
@@ -184,5 +211,121 @@ final class UserController extends AbstractController{
 
         return new JsonResponse(['status' => 'success', 'credits' => $currentUser->getCredits()]);
         // return $this->render('user/ajouter_credits.html.twig', []);
+    }
+
+    #[Route('/user/update-data', name: 'app_user_update_data')]
+    public function updateUserData(Request $request): JsonResponse
+    {
+        
+        // $data = json_decode($request->getContent(), true);
+        
+        $currentUserEmail = $this->security->getUser()->getUserIdentifier();
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+
+        $form = $this->createForm(RegistrationStepTwoType::class, $user);
+        $form->handleRequest($request);
+
+        // $form->submit($data);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            
+            $photoProfilUploaded = $form->get('photo_profil')->getData();
+
+            if ($photoProfilUploaded ) {
+                // Ouvre le fichier et lis son contenu en binaire
+                $photoData = file_get_contents($photoProfilUploaded->getRealPath());
+                $user->setPhotoProfil($photoData);
+            }
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            $data = [
+                'status' => 'success',
+            ];
+
+        } else {
+            $errors = [];
+
+            foreach ($form->getErrors(true) as $error) {
+                $formField = $error->getOrigin(); // champ du formulaire (FormInterface)
+                $errors[] = [
+                    'field' => $formField->getName(),
+                    'message' => $error->getMessage(),
+                ];
+            }
+
+            $data = [
+                'status' => 'error',
+                'errors' => $errors
+            ];
+            
+        }
+
+        return new JsonResponse($data);
+    }
+
+    #[Route('/user/update-chauffeur-data', name: 'app_user_update_chauffeur_data')]
+    public function updateUserChauffeurData(Request $request): JsonResponse
+    {
+        
+        // $data = json_decode($request->getContent(), true);
+        
+        $currentUserEmail = $this->security->getUser()->getUserIdentifier();
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+
+        $form = $this->createForm(DevenirChauffeurType::class, $user);
+        $form->handleRequest($request);
+
+        // $form->submit($data);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $preferencesArray = json_decode($form->get('preferences')->getData());
+
+            // Transformation en tableau d'Enum Preference
+            $preferencesEnumArray = [];
+
+
+            if (is_array($preferencesArray)) {
+                foreach ($preferencesArray as $preferenceValue) {
+                    $enum = Preference::tryFrom($preferenceValue);
+                    if ($enum !== null) {
+                        $preferencesEnumArray[] = $enum;
+                    }
+                }
+            }
+
+
+            $user->setPreferences($preferencesEnumArray);
+            $user->setDescription($form->get('description')->getData());
+            
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            $data = [
+                'status' => 'success',
+            ];
+
+        } else {
+            $errors = [];
+
+            foreach ($form->getErrors(true) as $error) {
+                $formField = $error->getOrigin(); // champ du formulaire (FormInterface)
+                $errors[] = [
+                    'field' => $formField->getName(),
+                    'message' => $error->getMessage(),
+                ];
+            }
+
+            $data = [
+                'status' => 'error',
+                'errors' => $errors
+            ];
+            
+        }
+
+        return new JsonResponse($data);
     }
 }

@@ -18,6 +18,10 @@
     display: none !important;
 }
 
+.mobile-small-only {
+    display: none !important;
+}
+
 body {
     background: $blue-background;
     margin: 0px;
@@ -303,6 +307,7 @@ form {
     border: none;
     font-family: $josefin-sans;
     text-decoration: none;
+    font-size: 18px;
     
 }
 
@@ -556,6 +561,7 @@ form {
 
         label {
             color: $green-black;
+            text-wrap: nowrap;
             
         }
 
@@ -571,6 +577,17 @@ form {
 
         input:focus {
             outline-color: $green-black;
+        }
+
+        
+    }
+
+    .buttons {
+        width: 100%;
+        gap: 20px;
+
+        button {
+            flex-grow: 1;
         }
     }
 }
@@ -721,7 +738,13 @@ input[type='radio'], input[type='checkbox'] {
     }
 
     .mobile-only {
-        display: flex;
+        display: flex !important;
+    }
+
+    
+
+    .pc-tablet-mobile-large-only {
+        display: flex !important;
     }
 
     .alert {
@@ -849,7 +872,14 @@ input[type='radio'], input[type='checkbox'] {
 }
 
 @media (max-width: 512px) {
-    
+
+    .pc-tablet-mobile-large-only {
+        display: none !important;
+    }
+
+    .mobile-small-only {
+        display: flex !important;
+    }
 
     .form-green-column {
         label {

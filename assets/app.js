@@ -65,8 +65,9 @@ export function showSuccessAlert(message, duration = 3000) {
     alert.role = 'alert';
     alert.innerHTML = `
       ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      
     `;
+    // <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   
     // Ajoute l'alerte en haut du body (ou ailleurs selon ton design)
     document.body.prepend(alert);
@@ -77,21 +78,37 @@ export function showSuccessAlert(message, duration = 3000) {
       alert.classList.add('hide'); // si besoin
       setTimeout(() => alert.remove(), 300); // laisse le temps à la transition de s'effectuer
     }, duration);
-  }
+}
 
-  export function showPopup(divToShow, displayType) {
-        const blurEffect = document.querySelector('.blur-effect');
+export function showErrors(alerts) {
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-error alert-dismissible fade show';
+    alert.role = 'alert';
+    
 
-        blurEffect.style.display = "block";
-        divToShow.style.display = displayType;
+    let message = ""
+
+    alerts.forEach((alert) => {
+        message = message + "<br>" + alert.message
+    });
+
+    alert.innerHTML = message;
+
+}
+
+export function showPopup(divToShow, displayType) {
+    const blurEffect = document.querySelector('.blur-effect');
+
+    blurEffect.style.display = "block";
+    divToShow.style.display = displayType;
 
 
-  }
-  export function hidePopup(divToHide) {
-        const blurEffect = document.querySelector('.blur-effect');
+}
+export function hidePopup(divToHide) {
+    const blurEffect = document.querySelector('.blur-effect');
 
-        blurEffect.style.display = "none";
-        divToHide.style.display = "none";
-  }
+    blurEffect.style.display = "none";
+    divToHide.style.display = "none";
+}
 
 

@@ -1,16 +1,21 @@
+
+
 const datepicker = document.querySelector(".datepicker");
 const dateInput = document.querySelector(".date-input");
-const yearInput = datepicker.querySelector(".year-input");
+// const yearInput = datepicker.querySelector(".year-input");
 const monthInput = datepicker.querySelector(".month-input");
 const cancelBtn = datepicker.querySelector(".cancel");
 const applyBtn = datepicker.querySelector(".apply");
 const nextBtn = datepicker.querySelector(".next");
 const prevBtn = datepicker.querySelector(".prev");
 const dates = datepicker.querySelector(".dates");
+let monthLabel = datepicker.querySelector(".month-input-label");
 
 let selectedDate = new Date();
 let year = selectedDate.getFullYear();
 let month = selectedDate.getMonth();
+
+monthLabel.innerText = monthInput.options[month].text;
 
 
 // show datepicker
@@ -18,7 +23,7 @@ dateInput.addEventListener("click", (e) => {
     e.preventDefault();
   datepicker.hidden = false;
   datepicker.scrollIntoView();
-  
+
 });
 
 // hide datepicker
@@ -71,15 +76,18 @@ monthInput.addEventListener("change", (e) => {
 });
 
 // handle year input change event
-yearInput.addEventListener("change", (e) => {
-    e.preventDefault();
-  year = yearInput.value;
-  displayDates();
-});
+// yearInput.addEventListener("change", (e) => {
+//     e.preventDefault();
+//   year = yearInput.value;
+//   displayDates();
+// });
 
 const updateYearMonth = () => {
   monthInput.selectedIndex = month;
-  yearInput.value = year;
+  monthLabel.innerText = monthInput.options[month].text;
+
+
+  // yearInput.value = year;
 };
 
 const handleDateClick = (e) => {
@@ -138,6 +146,19 @@ const displayDates = () => {
     const button = createButton(text, true, 1);
     dates.appendChild(button);
   }
+  const allBtns = datepicker.querySelector(".dates").querySelectorAll("button");
+  let isAllBtnsDisabled = true;
+  prevBtn.style.opacity = "0%";
+
+  for (const btn of allBtns) {
+    if (!btn.disabled) {
+      isAllBtnsDisabled = false;
+      prevBtn.style.opacity = "100%";
+      return;
+    } 
+  }
+
+  
 };
 
 const createButton = (text, isDisabled = false, type = 0) => {
@@ -145,6 +166,16 @@ const createButton = (text, isDisabled = false, type = 0) => {
 
   // determine the date to compare based on the button type
   let comparisonDate = new Date(year, month + type, text);
+
+  // desactive bouton si date inferieur a ajourd'hui
+  const currentDate00 = new Date(currentDate);
+  const comparisonDate00 = new Date(comparisonDate);
+
+  currentDate00.setHours(0, 0, 0, 0);
+  comparisonDate00.setHours(0, 0, 0, 0);
+  if (comparisonDate00.getTime() < currentDate00.getTime()) {
+    isDisabled = true;
+  }
 
   // check if the current button is the date today
   const isToday =

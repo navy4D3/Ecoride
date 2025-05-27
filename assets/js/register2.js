@@ -20,4 +20,6 @@ profilPictureInput.addEventListener('change', function () {
 })
 
 
+//rajouter boucle pour checkInputs
+
 

@@ -18,7 +18,16 @@ final class VoitureController extends AbstractController{
     #[Route('/add-voiture', name: 'app_add_voiture')]
     public function addVoiture(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        $voiture = new Voiture();
+        
+
+        $voitureId = $request->get('id');
+
+        if ($voitureId) {
+            $voiture = $em->getRepository(Voiture::class)->find($voitureId);
+        } else {
+            $voiture = new Voiture();
+        }
+
         $form = $this->createForm(AddVoitureType::class, $voiture);
         $form->handleRequest($request);
         $errors = $form->getErrors(true);
@@ -44,11 +53,6 @@ final class VoitureController extends AbstractController{
                 'places' => $voiture->getPlaces(),
                 'id' => $voiture->getId(),
             ];
-            // $voiture->setModele($form->get('modele')->getData());
-            // $voiture->setIsElectric($form->get('isElectric')->getData());
-
-
-            
 
             return new JsonResponse([
                 'status' => 'success',
@@ -56,14 +60,20 @@ final class VoitureController extends AbstractController{
 
             ]);
 
-            // return $this->redirectToRoute('app_home');
+        }
+
+        $datas = [
+            'form' => $form->createView(),
+            'errors' => $errors,
+            // 'isEdit' => true
+        ];
+
+        if ($voitureId) {
+            $datas['isEdit'] = true;
         }
 
         // Rendre le formulaire dans un template
-        $html = $this->renderView('voiture/add_voiture_form.html.twig', [
-            'form' => $form->createView(),
-            'errors' => $errors
-        ]);
+        $html = $this->renderView('voiture/add_voiture_form.html.twig', $datas);
         // return $this->render('voiture/add_voiture_form.html.twig', [
         //     'form' => $form->createView(),
         //     'errors' => $errors
@@ -78,5 +88,23 @@ final class VoitureController extends AbstractController{
         // return $this->render('voiture/index.html.twig', [
         //     'controller_name' => 'VoitureController',
         // ]);
+    }
+
+    #[Route('/delete-voiture/{id}', name: 'app_delete_voiture')]
+    public function deleteVoiture(Request $request, EntityManagerInterface $em, Security $security, $id): Response
+    {
+
+
+        $voiture = $em->getRepository(Voiture::class)->find($id);
+
+        $em->remove($voiture);
+        $em->flush();
+
+        // gerer les errus si la voiture est lié a des trajets
+
+        return new JsonResponse([
+            'status' => 'success',
+        ]);
+
     }
 }

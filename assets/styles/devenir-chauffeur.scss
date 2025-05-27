@@ -1,6 +1,6 @@
 @import 'variables.scss';
 
-.body-content.devenir-chauffeur {
+.body-content.devenir-chauffeur, .body-content.profil {
     align-items: center;
 
     #devenir-chauffeur-base {
@@ -39,6 +39,7 @@
             border: solid 2px $green-black;
             border-radius: 100px;
             cursor: pointer;
+            font-family: $nunito;
         }
 
         .preference.active {

@@ -19,6 +19,7 @@ class RegistrationStepTwoType extends AbstractType
     {
         $builder
             ->add('photo_profil', FileType::class, [
+                'label' => "Photo de profil",
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
@@ -37,9 +38,11 @@ class RegistrationStepTwoType extends AbstractType
             ])
             ->add('date_naissance', DateType::class, [
                 
+                'label' => 'Date de naissance',
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'picker'
+                    'class' => 'picker',
+                    'max' => (new \DateTime())->modify('-1 day')->format('Y-m-d')
                 ]
 
             ])

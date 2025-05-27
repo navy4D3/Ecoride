@@ -4,8 +4,8 @@
             
             <span>{{ voiture.surnom }}</span>
             <div>
-                <span>{{ voiture.marqueLabel }}</span>
-                <span>{{ voiture.modele }}</span>
+                <span class="marque">{{ voiture.marqueLabel }}</span>
+                <span class="modele">{{ voiture.modele }}</span>
                 {% if voiture.isElectric %}
                     <span>Electrique</span> {% else %} <span>Thermique</span>
                 {% endif %}

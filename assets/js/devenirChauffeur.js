@@ -1,11 +1,12 @@
 import {checkInputs} from '../app';
 import {showAddVoitureForm} from './addVoiture';
+import { initPreferencesBtnsEvents } from './initPreferencesBtnsEvents';
 
-const preferencesBtns = document.querySelectorAll('.preference');
-const selectedPreferences = [];
-const preferencesInput = document.getElementById('devenir_chauffeur_preferences');
 
-preferencesInput.value = "";
+
+
+
+// preferencesInput.value = "";
 
 const devenirChauffeurForm = document.getElementById("devenir-chauffeur-form");
 const fields = devenirChauffeurForm.querySelectorAll('input, select, textarea');
@@ -15,26 +16,11 @@ fields.forEach(field => {
 
 });
 
-preferencesBtns.forEach((preference) => {
-    preference.addEventListener('click', function() {
-        this.classList.toggle('active');
 
-        const index = selectedPreferences.indexOf(preference.id);
 
-        if (index === -1) {
-            // Ajout si pas encore sélectionné
-            selectedPreferences.push(preference.id);
-        } else {
-            // Retrait si déjà présent
-            selectedPreferences.splice(index, 1);
-        }
-        
-        preferencesInput.value = selectedPreferences.length ? JSON.stringify(selectedPreferences) : "";
+const selectedPreferences = [];
+initPreferencesBtnsEvents(selectedPreferences);
 
-        
-        preferencesInput.dispatchEvent(new Event('input', { bubbles: true }));
-    })
-})
 
 const hasVoitureInput = document.getElementById('devenir_chauffeur_hasVoiture');
 
