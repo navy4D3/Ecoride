@@ -23,7 +23,7 @@ class Avis
     #[ORM\Column]
     private ?int $note = null;
 
-    #[ORM\OneToOne(inversedBy: 'avisPublies', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'avisPublies', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
 

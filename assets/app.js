@@ -59,6 +59,37 @@ export function checkInputs(currentForm) {
     }
 }
 
+export function treatFormAlert(form, successAlert, jsonData) {
+        let errorsContainer = form.querySelector('.errors-container');
+
+        if (jsonData.status == "success") {
+            showSuccessAlert(successAlert);
+
+            if (errorsContainer) {
+                errorsContainer.remove();
+            }
+            
+        } else {
+            
+            if (!errorsContainer) {
+                errorsContainer = document.createElement("div");
+                errorsContainer.classList.add('errors-container');
+
+                form.insertAdjacentElement('afterBegin', errorsContainer);
+            }
+
+            let newHtml = '';
+            jsonData.errors.forEach(error => {
+                newHtml += `
+                <div class="alert alert-danger">
+                    ${error.message}
+                </div>
+                `
+            });
+            errorsContainer.innerHTML = newHtml;
+        }
+}
+
 export function showSuccessAlert(message, duration = 3000) {
     const alert = document.createElement('div');
     alert.className = 'alert alert-success alert-dismissible fade show';

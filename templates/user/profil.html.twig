@@ -6,6 +6,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('profil') }}
+    {# {{ encore_entry_script_tags('registerLogin') }} #}
 
     {% include 'google_autocomplete.html.twig' %}
 {% endblock %}
@@ -29,6 +30,7 @@
             </div>
 
             <div id="espace-chauffeur">
+                {# rediriger vers la page devenir chauffeur si premiere fois #}
                 <span class="pc-tablet-mobile-large-only">Espace chauffeur</span>
                 <twig:ux:icon name="mingcute:car-line" id="trajets-icon" class="trajets-icon mobile-small-only"/>
             </div>
@@ -144,40 +146,6 @@
             </div>
         </div>
     </div>
-        {# <div class="profil-header">
-            {% if app.user.photoProfil %}
-            <img src="{{ path('user_profil_photo', { id: app.user.id }) }}" class="photo-profil" alt="Photo de profil">
-            {% else %}
-                <img src="/images/default-photo-profil.png" class="photo-profil">
-            {% endif %}
-            <div  class="user-details-and-btns">
-                <div class="user-details">
-                    <span>{{ app.user.prenom }} {{ app.user.nom }}</span>
-                    <div class="btn-green-black">
-                        {% if app.user.isChauffeur %}
-                            <span >Chauffeur</span>
-                            <twig:ux:icon name="mingcute:car-line" class="icon"/>
-                        {% else %}
-                            <span>Passager</span>
-                            <twig:ux:icon name="lucide:users" class="icon"/>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="btns">
-                    <span id="my-data-btn">Mes informations</span>
-                    {% if app.user.isChauffeur %}
-                        <span href="/user/mes-vehicules" class="my-car-btn">Espace chauffeur</span>
-                    {% else %}
-                        <a href="{{ path('app_devenir_chauffeur', { redirect: 'app_profil' }) }}">Devenir chauffeur</a>
-                    {% endif %}
-                    <span class="parameters-btn pc-tablet-mobile-large-only">Paramètres</span>
-                </div>
-                
-            </div>
-            <twig:ux:icon class="parameters-btn mobile-small-only" name="weui:setting-outlined" />
-        </div> #}
-
-    
 
      <div class="mes-informations-section" style="display:none">
 
@@ -256,25 +224,92 @@
 
      <div class="parametres-section" style="display:none">
         <div class="parametres-section-btns">
-            <span class="btn-outline">Avis</span>
-            <span class="btn-outline">Mail et mot de passe</span>
+            <span class="btn-outline" id="avis-btn">Avis</span>
+            <span class="btn-outline" id="mail-and-password-btn">Mail et mot de passe</span>
             <a href="/cgu" class="btn-outline">Conditions Générales d'Utilisation</a>
             <a href="/mentions-legales" class="btn-outline">Mentions légales</a>
             <a href="/logout"class="logout-btn">Deconnexion</a>
         </div>
 
         <div class="parametres-section-avis" style="display:none">
-            <div>
-                <span>Avis recus</span>
-                <span>Avis transmis</span>
+            {# {% include 'header.html.twig' with { title : "Avis", 'isHistoryBackTrue' : false } %} #}
+            <div class="labels">
+                <twig:ux:icon name="tabler:chevron-left" id="" class="back-btn"/>
+                <h3 class="selected" id="avis-recus-btn">Avis recus</h3>
+                <h3 class="" id="avis-publies-btn">Avis publiés</h3>
+                <twig:ux:icon name="tabler:chevron-left" style="opacity: 0%"/>
+            </div>
+            
+            <div class="avis-recus-section" >
+                {% if avisRecus is empty %}
+                    <p class="empty-message">Aucun avis reçus</p>
+                {% else %}
+                    <div class="global-note">
+                        <span class="global-note-note">{{ app.user.note }}/5</span>
+                        <twig:ux:icon name="mingcute:star-fill" />
+                        <span class="global-note-nb">{{ avisRecus|length }} avis</span>
+                    </div>
+                    {% for avis in avisRecus %}
+                        <div class="avis {% if not avis.isPositive %}negative{% endif %}">
+                            <div class="avis-user-infos">
+                                {% if avis.creator.photoProfil %}
+                                    <img src="{{ path('user_profil_photo', { id: avis.creator.id }) }}" class="photo-profil" alt="Photo">
+                                {% else %}
+                                    <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                {% endif %}
+                                <span>{{ avis.creator.prenom }}</span>
+                            </div>
+                            
+                            <div class="avis-note-infos">
+                                <div class="avis-note-infos-note">
+                                    <span>{{ avis.note }}</span>
+                                    <twig:ux:icon name="mingcute:star-fill" />
+                                </div>
+                                
+                                <p>{{ avis.commentaire }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
 
-            {# {% for avis in app.user.avis %}
-            {% endfor %} #}
+            <div class="avis-publies-section" style="display:none";>
+                {% if avisPublies is empty %}
+                    <p class="empty-message">Aucun avis publié</p>
+                {% else %}
+                    {% for avis in avisPublies %}
+                        <div class="avis {% if not avis.isPositive %}negative{% endif %}">
+                            <div class="avis-user-infos">
+                                {% if avis.user.photoProfil %}
+                                    <img src="{{ path('user_profil_photo', { id: avis.user.id }) }}" class="photo-profil" alt="Photo">
+                                {% else %}
+                                    <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                {% endif %}
+                                <span>{{ avis.user.prenom }}</span>
+                            </div>
+                            
+                            <div class="avis-note-infos">
+                                <div class="avis-note-infos-note">
+                                    <span>{{ avis.note }}</span>
+                                    <twig:ux:icon name="mingcute:star-fill" />
+                                </div>
+                                
+                                <p>{{ avis.commentaire }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
 
         <div class="parametres-section-mail-password" style="display:none">
-            {% include 'registration/register_form.html.twig' with { 'registrationForm': mailAndPasswordForm } %}
+            <div class="labels">
+                <twig:ux:icon name="tabler:chevron-left" id="" class="back-btn"/>
+                <h3 style="opacity:100%">Mail et mot de passe</h3>
+                <twig:ux:icon name="tabler:chevron-left" style="opacity: 0%"/>
+            </div>
+            
+            {% include 'registration/register_form.html.twig' with { 'registrationForm': mailAndPasswordForm} %}
         </div>
 
      </div>

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'header.html.twig' with { title: 'Réserver un trajet' } %}
+    {% include 'header.html.twig' with { title: 'Réserver un trajet' , 'isHistoryBackTrue' : true } %}
 
     <div class="recap-1" id="recap-1">
         <strong class="nb-places">{{ reservationDatas.nbPlaces }} place{% if reservationDatas.nbPlaces > 1 %}s{% endif %} <twig:ux:icon name="lucide:users"/></strong>

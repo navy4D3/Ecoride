@@ -51,117 +51,16 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
                         pointer-events: none;
                         cursor: none;
                 }
-
-                
-            
             
             }
 
-            .form-container {
-                .register-form, .login-form {
-
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-    
-                    > div {
-                        display: flex;
-                        flex-direction: column;
-                        gap:5px;
-    
-                        label {
-                            color: $green-black;
-                        }
-    
-                        input {
-                            border-radius: 10px;
-                            border: none;
-                            background-color: $green-white;
-                            padding: 10px 5px;
-                            outline-color: $green-black;
-                        }
-    
-                        input:focus {
-                            outline-color: $green-black;
-                        }
-    
-                        #password-criteria  {
-                            display: flex;
-                            flex-direction: row;
-                            flex-wrap: wrap;
-                            gap: 10px;
-                            height: fit-content;
-                            
-        
-                            span {
-                                
-                                font-size: 12px;
-                                transition: color 0.3s ease;
-                                border : solid;
-                                padding: 0px 5px;
-                                width: fit-content;
-                                border-radius: 20px;
-                                font-family: $nunito;
-                                border-color: $green-black;
-                            }
-                            
-                            .valid {
-                                color: $green-white;
-                                background-color: $green-black;
-                              }
-                              
-                            .invalid {
-                                color: $green-black;
-                                
-                            
-                            }
-                        }
-    
-                        
-                    }
-    
-                    
-                      
-                      
-    
-                    .cgu-section {
-                        display: flex;
-                        flex-direction: row;
-                        gap: 5px;
-                        * {
-                            color: $green-black;
-                        }
-    
-                        svg {
-                            width: 25px;
-                            height: 25px;
-                        }
-    
-                        span {
-                            font-family: $nunito;
-    
-                            a {
-                                text-decoration: underline;
-                            }
-    
-                        }
-                    }
-    
-                    button {
-                        font-size: 20px;
-                    }
-    
-                }
-
-            }
+            
             
         }
 
-        
-
-        
-
     }
+
+    
 
     .image-section {
         // position: relative;
@@ -181,6 +80,96 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
     
 
     
+}
+
+.register-form, .login-form {
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    
+
+    > div {
+        display: flex;
+        flex-direction: column;
+        gap:5px;
+
+        input {
+            border-radius: 10px;
+            border: none;
+            background-color: $green-white;
+            padding: 10px 5px;
+            outline-color: $green-black;
+        }
+
+        input:focus {
+            outline-color: $green-black;
+        }
+
+        #password-criteria  {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 10px;
+            height: fit-content;
+            
+
+            span {
+                
+                font-size: 12px;
+                transition: color 0.3s ease;
+                border : solid;
+                padding: 0px 5px;
+                width: fit-content;
+                border-radius: 20px;
+                font-family: $nunito;
+                border-color: $green-black;
+            }
+            
+            .valid {
+                color: $green-white;
+                background-color: $green-black;
+              }
+              
+            .invalid {
+                color: $green-black;
+                
+            
+            }
+        }
+
+        
+    }
+      
+
+    .cgu-section {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        * {
+            color: $green-black;
+        }
+
+        svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        span {
+            font-family: $nunito;
+
+            a {
+                text-decoration: underline;
+            }
+
+        }
+    }
+
+    button {
+        font-size: 20px;
+    }
+
 }
 
 @media (max-width: 1024px) {

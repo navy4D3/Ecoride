@@ -66,7 +66,17 @@ body {
     }
 }
 
+.errors-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .alert {
+    margin-bottom: 0px !important;
+}
+
+.alert-success {
     position: absolute;
     top: 100px;
     width: 90%;
@@ -165,7 +175,7 @@ span {
 }
 
 form {
-    .alert{
+    .alert-success{
         position: relative;
         top:unset;
         left: unset;
@@ -288,11 +298,6 @@ form {
     z-index: 950;
     width: 100%;
     height: 100%;
-}
-
-.alert {
-    margin-bottom: 0px !important;
-    
 }
 
 .josefin-sans-title {
@@ -747,7 +752,7 @@ input[type='radio'], input[type='checkbox'] {
         display: flex !important;
     }
 
-    .alert {
+    .alert-success {
         top: 20px;
     }
     

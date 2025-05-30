@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\MailAndPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationStepTwoType;
 use App\Security\EmailVerifier;
+use App\Service\FormService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -36,7 +39,9 @@ class RegistrationController extends AbstractController
         if ($connectType == 'register') {
              // get the login error if there is one
              
-             $form = $this->createForm(RegistrationFormType::class);
+             $form = $this->createForm(RegistrationFormType::class, null, [
+                'validation_groups' => ['Default', 'registration']
+             ]);
              $errors = $form->getErrors(true);
 
              if ($form->isSubmitted() ) {
@@ -71,7 +76,9 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class);
+        $form = $this->createForm(RegistrationFormType::class, null,[
+            'validation_groups' => ['Default', 'registration']
+        ]);
         $form->handleRequest($request);
         $errors = $form->getErrors(true);
 
@@ -187,6 +194,67 @@ class RegistrationController extends AbstractController
             'errors' => $errors
         ]);
 
+    }
+
+    #[Route('/edit-mail-password', name: 'app_edit_mail_password')]
+    public function editMailPassword(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security, FormService $formService)
+    {
+        $userEmail = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+
+        $originalUser = clone $security->getUser();
+        $form = $this->createForm(MailAndPasswordType::class, $originalUser, [
+            'validation_groups' => ['Default']
+        ]);
+
+        $form->handleRequest($request);
+        // $errors = $form->getErrors(true);
+
+        if ($form->isSubmitted()) {
+
+            if ($form->isValid()) {
+                /** @var string $plainPassword */
+                $plainPassword = $form->get('password')->getData();
+                $email = $form->get('email')->getData();
+
+                $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
+
+                $user->setPassword($hashedPassword);
+                $user->setEmail($email);
+
+                // $entityManager->persist($user);
+                $entityManager->flush();
+                $security->login($user);
+
+                
+
+                return new JsonResponse(['status' => 'success']);
+
+
+
+            }  else {
+                $errors = $formService->convertFormErrorsToJson($form);
+                
+                $html =  $this->renderView('registration/connect.html.twig', [
+                    'errors' => $errors,
+                    'registrationForm' => $form->createView(),
+                    'formType' => 'register'
+                ]);
+
+                return new JsonResponse([
+                    'status' => 'error',
+                    'errors' => $errors
+                    // 'html' => $html
+                ]);
+
+            }
+        }
+
+        return $this->render('registration/register_form.html.twig', [
+            'formType' => 'register',
+            'registrationForm' => $form->createView(),
+        ]);
+        
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

@@ -1,4 +1,4 @@
-const { checkInputs, showErrors, showSuccessAlert } = require("../app");
+const { checkInputs, showErrors, showSuccessAlert, treatFormAlert } = require("../app");
 import { showAddVoitureForm } from './addVoiture';
 // const { initPreferencesBtnsEvent } = require("./devenirChauffeur");
 // import {initPreferencesBtnsEvent} from './devenirChauffeur';
@@ -191,4 +191,131 @@ addVoitureBtn.addEventListener('click', function(e) {
     e.preventDefault();
 
     showAddVoitureForm(espaceChauffeurSection.id);
+})
+
+const parametresSection = document.querySelector(".parametres-section");
+const avisSection = document.querySelector('.parametres-section-avis');
+const mailAndPasswordSection = document.querySelector('.parametres-section-mail-password');
+const parametresSectionBtns = document.querySelector('.parametres-section-btns');
+const avisBtn = document.getElementById('avis-btn');
+const mailAndPasswordBtn = document.getElementById('mail-and-password-btn');
+
+avisBtn.addEventListener('click', function() {
+    avisSection.style.display = "flex";
+    parametresSectionBtns.style.display = "none";
+})
+
+mailAndPasswordBtn.addEventListener('click', function() {
+    mailAndPasswordSection.style.display = "flex";
+    parametresSectionBtns.style.display = "none";
+})
+
+const parametresSectionBackBtns = parametresSection.querySelectorAll(".back-btn");
+
+parametresSectionBackBtns.forEach((backBtn) => {
+    backBtn.addEventListener('click', function() {
+        const currentSubSection = backBtn.parentElement.parentElement;
+
+        currentSubSection.style.display = "none";
+        parametresSectionBtns.style.display = "flex";
+    })
+})
+
+const avisRecusBtn = document.getElementById('avis-recus-btn');
+const avisPubliesBtn = document.getElementById('avis-publies-btn');
+const avisRecusSection = avisSection.querySelector('.avis-recus-section');
+const avisPubliesSection = avisSection.querySelector('.avis-publies-section');
+
+avisRecusBtn.addEventListener('click', function() {
+    avisPubliesSection.style.display =  "none";
+    avisRecusSection.style.display =  "flex";
+
+    avisRecusBtn.classList.add('selected');
+    avisPubliesBtn.classList.remove('selected');
+})
+
+avisPubliesBtn.addEventListener('click', function() {
+    avisRecusSection.style.display =  "none";
+    avisPubliesSection.style.display =  "flex";
+    
+    avisRecusBtn.classList.remove('selected');
+    avisPubliesBtn.classList.add('selected');
+})
+
+const editMailPasswordForm = document.querySelector('.register-form');
+const submitEditMailPasswordFormBtn = editMailPasswordForm.querySelector('.submit-btn');
+const editMailPasswordFormInputs = editMailPasswordForm.querySelectorAll('input, select, textarea');
+
+editMailPasswordFormInputs.forEach((input) => [
+    input.addEventListener('input', function(e){
+        checkInputs(editMailPasswordForm);
+    })
+])
+
+submitEditMailPasswordFormBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    submitEditMailPasswordFormBtn.classList.add('inactive');
+
+    const formData = new FormData(editMailPasswordForm);
+
+    fetch('/edit-mail-password', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // important pour indiquer une requête AJAX
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // data.html contient ton formulaire rendu
+
+        treatFormAlert(editMailPasswordForm, 'Informations mises à jour avec succès', data);
+        // let errorsContainer = editMailPasswordForm.querySelector('.errors-container');
+
+        // if (data.status == "success") {
+        //     showSuccessAlert('Informations mises à jour avec succès');
+
+        //     if (errorsContainer) {
+        //         errorsContainer.remove();
+        //     }
+            
+        // } else {
+            
+        //     if (!errorsContainer) {
+        //         errorsContainer = document.createElement("div");
+        //         errorsContainer.classList.add('errors-container');
+
+        //         editMailPasswordForm.insertAdjacentElement('afterBegin', errorsContainer);
+        //     }
+
+        //     let newHtml = '';
+        //     data.errors.forEach(error => {
+        //         newHtml += `
+        //         <div class="alert alert-danger">
+        //             ${error.message}
+        //         </div>
+        //         `
+        //     });
+        //     errorsContainer.innerHTML = newHtml;
+
+        //     // const parser = new DOMParser();
+        //     // const doc = parser.parseFromString(data.html, 'text/html');
+        //     // const newForm = doc.querySelector('form');
+
+        //     // editMailPasswordForm.replaceWith(newForm);
+
+        //     // data.errors.forEach((error) => {
+        //     //     alert(error.message)
+        //     // })
+            
+        //     // showErrors(data.errors);
+        // }
+    })
+    .catch(error => console.error('Erreur:', error));
 })

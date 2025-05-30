@@ -9,14 +9,8 @@
 {% endblock %}
 
 {% block body %}
-    {# <div class="header">
-        <div class="back-btn">
-            <twig:ux:icon name="tabler:chevron-left" id="" class="icon"/>
-            <span class="pc-tablet-only">Retour</span>
-        </div>
-        <h1>Details trajet</h1>
-    </div> #}
-    {% include 'header.html.twig' with { title: 'Details trajet' } %}
+
+    {% include 'header.html.twig' with { title: 'Details trajet', 'isHistoryBackTrue' : true  } %}
 
     <div class="details-trajet">
         <div class="details-trajet-title">

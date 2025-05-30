@@ -6,9 +6,11 @@ use App\Entity\Reservation;
 use App\Entity\User;
 use App\Enum\Preference;
 use App\Form\DevenirChauffeurType;
+use App\Form\MailAndPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationStepTwoType;
 use App\Repository\TrajetRepository;
+use App\Service\FormService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -105,8 +107,12 @@ final class UserController extends AbstractController {
 
         $myDataForm = $this->createForm(RegistrationStepTwoType::class, $currentUser);
         $driverSpaceForm = $this->createForm(DevenirChauffeurType::class, $currentUser);
-        $mailAndPasswordForm = $this->createForm(RegistrationFormType::class, $currentUser);
+        $mailAndPasswordForm = $this->createForm(MailAndPasswordType::class, $currentUser);
         $preferences = Preference::cases();
+
+        $avisRecus = $currentUser->getAvisRecus();
+        $avisPublies = $currentUser->getAvisPublies();
+
 
         return $this->render('user/profil.html.twig', [
             'trajetsAVenir' =>  $trajetAVenirDatasToDisplay,
@@ -114,7 +120,9 @@ final class UserController extends AbstractController {
             'myDataForm' => $myDataForm,
             'driverSpaceForm' =>$driverSpaceForm,
             'mailAndPasswordForm' => $mailAndPasswordForm,
-            'preferences' => $preferences
+            'preferences' => $preferences,
+            'avisRecus' => $avisRecus,
+            'avisPublies' => $avisPublies
         ]);
     }
 
@@ -214,7 +222,7 @@ final class UserController extends AbstractController {
     }
 
     #[Route('/user/update-data', name: 'app_user_update_data')]
-    public function updateUserData(Request $request): JsonResponse
+    public function updateUserData(Request $request, FormService $formService): JsonResponse
     {
         
         // $data = json_decode($request->getContent(), true);
@@ -246,15 +254,15 @@ final class UserController extends AbstractController {
             ];
 
         } else {
-            $errors = [];
+            $errors = $formService->convertFormErrorsToJson($form);
 
-            foreach ($form->getErrors(true) as $error) {
-                $formField = $error->getOrigin(); // champ du formulaire (FormInterface)
-                $errors[] = [
-                    'field' => $formField->getName(),
-                    'message' => $error->getMessage(),
-                ];
-            }
+            // foreach ($form->getErrors(true) as $error) {
+            //     $formField = $error->getOrigin(); // champ du formulaire (FormInterface)
+            //     $errors[] = [
+            //         'field' => $formField->getName(),
+            //         'message' => $error->getMessage(),
+            //     ];
+            // }
 
             $data = [
                 'status' => 'error',

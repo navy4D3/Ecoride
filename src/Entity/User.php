@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'Cette adresse mail est déja utilisée.')]
+#[UniqueEntity(fields: ['email'], message: 'Cette adresse mail est déja utilisée.', groups: ['registration'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -95,6 +95,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $credits = null;
 
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Avis::class, cascade: ['persist', 'remove'])]
+    private Collection $avisPublies;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Avis::class, orphanRemoval: true)]
+    private Collection $avisRecus;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
@@ -102,6 +108,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->trajetsAsChauffeur = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->credits = 20;
+        $this->avisRecus = new ArrayCollection();
+        $this->avisPublies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -442,6 +450,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->credits = $credits;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvisPublies(): Collection
+    {
+        return $this->avisPublies;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvisRecus(): Collection
+    {
+        return $this->avisRecus;
     }
 
 }

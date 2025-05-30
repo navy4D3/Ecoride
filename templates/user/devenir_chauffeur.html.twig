@@ -25,7 +25,7 @@
                 </div>
         {% endif %}
 
-        {% include 'header.html.twig' with { title: 'Devenir chauffeur' } %}
+        {% include 'header.html.twig' with { title: 'Devenir chauffeur', 'isHistoryBackTrue' : true } %}
 
         {{ form_start(form, {attr: { class:'', id:"devenir-chauffeur-form"}}) }}
             <div class="section-preferences section">
