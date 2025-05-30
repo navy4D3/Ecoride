@@ -1,6 +1,27 @@
 {{ form_start(registrationForm, {'attr': {'class':'register-form'}}) }}
-    {{ form_row(registrationForm.email) }}
-    {# {{ form_row(registrationForm.password.first) }} #}
+    {% if errors is defined %}
+        <div class="errors-container">
+            {% for error in errors %}
+                <div class="alert alert-danger">
+                    {{ error.message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div>
+        {{ form_label(registrationForm.email) }}
+        {{ form_widget(registrationForm.email) }}
+    </div>
+
+    {% if not registrationForm.agreeTerms is defined %}
+        <div>
+            {{ form_label(registrationForm.currentPassword) }}
+            {{ form_widget(registrationForm.currentPassword) }}
+        </div>
+        
+    {% endif %}
+
     <div>
         {{ form_label(registrationForm.password.first) }}
         
@@ -14,14 +35,26 @@
         </div>
     </div>
     
-    {{ form_row(registrationForm.password.second) }}
-    <div class="cgu-section">
-        <twig:ux:icon name="mingcute:checkbox-line" id="cgu-uncheck-icon" />
-        <twig:ux:icon name="mingcute:checkbox-fill" id="cgu-check-icon" style="display:none;"/>
-        <span>J'accepte les <a href="/cgu">conditions d'utilisations</a></span>
+    <div>
+        {{ form_label(registrationForm.password.second) }}
+        {{ form_widget(registrationForm.password.second) }}
     </div>
-    {{ form_widget(registrationForm.agreeTerms)  }}
+    
+    
 
-    <button type="submit" formaction="/register" class="btn btn-green inactive" id="submit-btn">S'inscrire</button>
+    {% if registrationForm.agreeTerms is defined %}
+        <div class="cgu-section">
+            <twig:ux:icon name="mingcute:checkbox-line" id="cgu-uncheck-icon" />
+            <twig:ux:icon name="mingcute:checkbox-fill" id="cgu-check-icon" style="display:none;"/>
+            <span>J'accepte les <a href="/cgu">conditions d'utilisations</a></span>
+        </div>
+
+        {{ form_widget(registrationForm.agreeTerms)  }}
+        <button type="submit" formaction="/register" class="btn btn-green inactive" id="submit-btn">S'inscrire</button>
+    {% else %}
+        <button type="button" class="btn btn-green inactive submit-btn" id="submit-btn">Modifier</button>
+    {% endif %}
+
+    
     {# {{ form_errors(registrationForm) }} #}
 {{ form_end(registrationForm) }}
