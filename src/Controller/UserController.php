@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Reservation;
+use App\Entity\Trajet;
 use App\Entity\User;
 use App\Enum\Preference;
+use App\Enum\Statut;
+use App\Form\AvisType;
 use App\Form\DevenirChauffeurType;
 use App\Form\MailAndPasswordType;
 use App\Form\RegistrationFormType;
@@ -32,8 +36,17 @@ final class UserController extends AbstractController {
     }
 
     #[Route('/profil', name: 'app_user_profil')]
-    public function profil(Security $security, EntityManagerInterface $em, TrajetRepository $trajetRepository, TrajetController $trajetController): Response
+    public function profil(Request $request, Security $security, EntityManagerInterface $em, TrajetRepository $trajetRepository, TrajetController $trajetController): Response
     {
+        $userId = $request->query->get('id');
+
+        if ($userId) {
+            $user = $this->em->getRepository(User::class)->find($userId);
+
+            return $this->render('user/autre_profil.html.twig', [
+                'user' => $user
+            ]);
+        }
         $currentUserEmail = $security->getUser()->getUserIdentifier();
 
         $currentUser = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
@@ -45,31 +58,31 @@ final class UserController extends AbstractController {
         //inclure condition si vide
 
         $userReservations = $currentUser->getReservations();
-        $trajetsAVenirPassager = [];
+        $trajetsPassager = [];
 
         foreach ($userReservations as $reservation) {
-            $trajetsAVenirPassager[] = $reservation->getTrajet();
+            $trajetsPassager[] = $reservation->getTrajet();
         }
 
-        $trajetsAVenirChauffeur = $currentUser->getTrajetsEnTantQueChauffeur();
+        $trajetsChauffeur = $currentUser->getTrajetsEnTantQueChauffeur();
 
-        $trajetAVenirDatasToDisplay = [];
+        $trajetsAVenirDatasToDisplay = [];
+        $trajetsPassesDatasToDisplay = [];
 
-        $trajetsAVenir = array_merge($trajetsAVenirChauffeur->toArray(), $trajetsAVenirPassager);
+        $trajets = array_merge($trajetsChauffeur->toArray(), $trajetsPassager);
 
         // Trier par heureDépart (ordre croissant)
-        usort($trajetsAVenir, function ($a, $b) {
-            return $a->getHeureDepart() <=> $b->getHeureDepart();
+        usort($trajets, function ($a, $b) {
+            return $b->getHeureDepart() <=> $a->getHeureDepart();
         });
 
         //inclure condition si vide
-        foreach ($trajetsAVenir as $trajet) {
-            
+        foreach ($trajets as $trajet) {
 
-            $isChauffeur = false;
-            if ($trajet->getChauffeur() == $currentUser) {
-                $isChauffeur = true;
-            }
+            // $isChauffeur = false;
+            // if ($trajet->getChauffeur() == $currentUser) {
+            //     $isChauffeur = true;
+            // }
             
             $timeDatas = $trajetController->showTrajetDateAndTime($trajet);
             $reservations = $trajet->getReservations();
@@ -82,28 +95,36 @@ final class UserController extends AbstractController {
                 }
             }
 
-
             // Formatage final pour le front
             $data['datas'] = $trajet;
             $data['timeDatas'] = $timeDatas;
 
-            array_push($trajetAVenirDatasToDisplay, $data);
+            if ($trajet->getStatut() == Statut::Termine) {
+                array_push($trajetsPassesDatasToDisplay, $data);
+            } else {
+                array_push($trajetsAVenirDatasToDisplay, $data);
+            }
+
+            
         }
 
-        $trajetsPasses = $trajetRepository->findAllTrajetsByUser($currentUser->getId(), 'Terminé');
-        $trajetsPassesDatasToDisplay = [];
+        // $trajetsPasses = $trajetRepository->findAllTrajetsByUser($currentUser->getId());
+        
 
-        foreach ($trajetsPasses as $trajet) {
-            $timeDatas = $trajetController->showTrajetDateAndTime($trajet);
+        // return new Response($trajetsPasses[0]->getId());
 
-            // Formatage final pour le front
-            $data = [
-                'datas' => $trajet,
-                'timeDatas' => $timeDatas,
-            ];
+        // foreach ($trajetsPasses as $trajet) {
+            
+        //     $timeDatas = $trajetController->showTrajetDateAndTime($trajet);
 
-            array_push($trajetsPassesDatasToDisplay, $data);
-        }
+        //     // Formatage final pour le front
+        //     $data = [
+        //         'datas' => $trajet,
+        //         'timeDatas' => $timeDatas,
+        //     ];
+
+        //     array_push($trajetsPassesDatasToDisplay, $data);
+        // }
 
         $myDataForm = $this->createForm(RegistrationStepTwoType::class, $currentUser);
         $driverSpaceForm = $this->createForm(DevenirChauffeurType::class, $currentUser);
@@ -115,7 +136,7 @@ final class UserController extends AbstractController {
 
 
         return $this->render('user/profil.html.twig', [
-            'trajetsAVenir' =>  $trajetAVenirDatasToDisplay,
+            'trajetsAVenir' =>  $trajetsAVenirDatasToDisplay,
             'trajetsPasses' => $trajetsPassesDatasToDisplay,
             'myDataForm' => $myDataForm,
             'driverSpaceForm' =>$driverSpaceForm,
@@ -335,5 +356,51 @@ final class UserController extends AbstractController {
         }
 
         return new JsonResponse($data);
+    }
+
+    #[Route('/user/add-avis', name: 'app_add_avis')]
+    public function addAvis(Request $request): Response
+    {
+        $avis = new Avis();
+        $form = $this->createForm(AvisType::class);
+        $errors = $form->getErrors(true);
+
+        $trajetLinkedId = $request->query->get('trajet');
+        $userId = $request->query->get('user');
+
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $currentUser = $this->security->getUser();
+                $userNoted = $this->em->getRepository(User::class)->find($userId);
+                $trajet = $this->em->getRepository(Trajet::class)->find($trajetLinkedId);
+
+                $avis = $form->getData();
+
+                $avis->setUser($userNoted);
+                $avis->setCreator($currentUser);
+                $avis->setTrajet($trajet);
+
+                $this->em->persist($avis);
+                $this->em->flush();
+
+                return $this->redirectToRoute('app_trajet', [
+                    'id' => $trajetLinkedId
+                ]);
+            } else {
+                return $this->render('user/add_avis.html.twig', [
+                    'form' => $form,
+                    'errors' => $errors
+                ]); 
+            }
+
+        }
+
+        return $this->render('user/add_avis.html.twig', [
+            'form' => $form,
+            'errors' => $errors
+        ]); 
     }
 }

@@ -41,12 +41,14 @@ Encore
     .addEntry('devenirChauffeur', './assets/js/devenirChauffeur.js')
     .addEntry('reserver', './assets/js/reserver.js')
     .addEntry('profil', './assets/js/profil.js')
+    .addEntry('trajet', './assets/js/trajet.js')
+    .addEntry('addAvis', './assets/js/addAvis.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
-    .addStyleEntry('style-home', './assets/styles/home.scss')
-    .addStyleEntry('style-datepicker', './assets/styles/datepicker.scss')
-    .addStyleEntry('style-register-login', './assets/styles/register-login.scss')
-    .addStyleEntry('style-register-2', './assets/styles/register2.scss')
+    // .addStyleEntry('style-home', './assets/styles/home.scss')
+    // .addStyleEntry('style-datepicker', './assets/styles/datepicker.scss')
+    // .addStyleEntry('style-register-login', './assets/styles/register-login.scss')
+    // .addStyleEntry('style-register-2', './assets/styles/register2.scss')
     // .addStyleEntry('style-publier-trajet', './assets/styles/publier-trajet.scss')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

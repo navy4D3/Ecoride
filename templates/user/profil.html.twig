@@ -130,16 +130,25 @@
                     <p>Aucun trajet.</p>
                 {% else %}
                     {% for trajet in trajetsPasses %}
-                        <div>
-                            <span>{{ trajet.datas.dateDepart }}</span>
-                            <div>
+                        {% set isChauffeur = (trajet.datas.chauffeur == app.user) %}
+                        <a href="{{ path('app_trajet', { id: trajet.datas.id }) }}" class="trajet-passe">
+                            <span class="date-depart">{{ trajet.timeDatas.dateDepart }}</span>
+                            <div class="lieux">
                                 <span>{{ trajet.datas.lieuDepart }}</span>
-                                {# icone fleche #}
                                 <twig:ux:icon name="lucide:arrow-up" class="icon" style="rotate: 90deg;"/>
-                                <span>{{ trajet.datas.lieuArrivee }}</span>
+                                <span style="text-align:end">{{ trajet.datas.lieuArrivee }}</span>
                             </div>
-                            <span>{{ trajet.datas.prixPersonne }}</span>
-                        </div>
+                            {# <span>{% if isChauffeur %}{{ trajet.datas.prixPersonne }} crédits</span> #}
+
+                            <span>
+                                {% if isChauffeur %}
+                                    <twig:ux:icon name="mingcute:car-line" id="" class="icon trajet-type-icon"/>
+                                    
+                                {% else %}
+                                    <twig:ux:icon name="lucide:users" class="icon trajet-type-icon"/>
+                                {% endif %}
+                            </span>
+                        </a>
                     {% endfor %}
                 {% endif %}
 

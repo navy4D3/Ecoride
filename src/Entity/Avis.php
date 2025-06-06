@@ -31,6 +31,10 @@ class Avis
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Trajet $trajet = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +96,18 @@ class Avis
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTrajet(): ?Trajet
+    {
+        return $this->trajet;
+    }
+
+    public function setTrajet(?Trajet $trajet): static
+    {
+        $this->trajet = $trajet;
 
         return $this;
     }

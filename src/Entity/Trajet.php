@@ -29,8 +29,8 @@ class Trajet
 
 
 
-    #[ORM\Column(enumType: Statut::class)]
-    private ?Statut $statut = null;
+    // #[ORM\Column(enumType: Statut::class)]
+    // private ?Statut $statut = null;
 
     #[ORM\Column]
     private ?int $prixPersonne = null;
@@ -65,10 +65,17 @@ class Trajet
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'trajet', orphanRemoval: true)]
     private Collection $reservations;
 
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'trajet')]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,6 +114,7 @@ class Trajet
 
     public function setLieuArrivee(string $lieuArrivee): static
     {
+
         $this->lieuArrivee = $lieuArrivee;
 
         return $this;
@@ -114,15 +122,30 @@ class Trajet
 
     public function getStatut(): ?Statut
     {
-        return $this->statut;
+        $currentTime = new \DateTime();
+        $heureDepart = $this->getHeureDepart(); // DateTimeImmutable
+        $duree = $this->getDureeInSeconds(); // int, durée en secondes
+        $arrivalDateTimeStamp = $heureDepart->getTimestamp() + $duree;
+        $arrivalDateTime = new \DateTime();
+        $arrivalDateTime->setTimestamp($arrivalDateTimeStamp)->setTimezone($currentTime->getTimezone());
+
+        if ($currentTime > $arrivalDateTime) {
+            $statut = Statut::Termine;
+        } else if ($currentTime > $heureDepart) {
+            $statut = Statut::EnCours;
+        } else {
+            $statut = Statut::Planifie;
+        }
+
+        return $statut;
     }
 
-    public function setStatut(Statut $statut): static
-    {
-        $this->statut = $statut;
+    // public function setStatut(Statut $statut): static
+    // {
+    //     $this->statut = $statut;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getPrixPersonne(): ?int
     {
@@ -304,6 +327,36 @@ class Trajet
             // set the owning side to null (unless already changed)
             if ($reservation->getTrajet() === $this) {
                 $reservation->setTrajet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setTrajet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getTrajet() === $this) {
+                $avi->setTrajet(null);
             }
         }
 

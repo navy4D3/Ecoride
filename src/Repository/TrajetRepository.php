@@ -17,8 +17,11 @@ class TrajetRepository extends ServiceEntityRepository
         parent::__construct($registry, Trajet::class);
     }
 
-    public function findAllTrajetsByUser(int $userId, string $statut): array
+    public function findAllTrajetsByUser(int $userId, 
+    // string $statut
+    ): array
     {
+        
         return $this->createQueryBuilder('t')
             ->leftJoin('t.chauffeur', 'chauffeur')
             ->leftJoin('t.chauffeur2', 'chauffeur2')
@@ -26,18 +29,18 @@ class TrajetRepository extends ServiceEntityRepository
             ->where('chauffeur.id = :userId')
             ->orWhere('chauffeur2.id = :userId')
             ->orWhere('participant.id = :userId')
-            ->andWhere('t.statut = :statut')
+            // ->andWhere('t.statut = :statut')
             ->setParameter('userId', $userId)
-            ->setParameter('statut', $statut)
+            // ->setParameter('statut', $statut)
             ->orderBy('t.heureDepart', 'DESC') // colonne représentant l'heure de départ
             ->getQuery()
             ->getResult();
     }
     public function findByDateStatutAndPlaces(
         string $dateString, 
-        string $statut, 
+        // string $statut, 
         int $nbPassagers, 
-        string $chauffeurId, 
+        string $chauffeurId = "", 
         bool $isOnDate
     ): array 
     {
@@ -66,13 +69,13 @@ class TrajetRepository extends ServiceEntityRepository
             ->addSelect('v')
             ->addSelect('p')
             ->where('t.heureDepart BETWEEN :start AND :end')
-            ->andWhere('t.statut = :statut')
+            // ->andWhere('t.statut = :statut')
             ->andWhere('c.id != :chauffeurId')
             ->groupBy('t.id', 'v.id')
             ->having('(v.places - 1 - COUNT(p.id)) >= :placesMin')
             ->setParameter('start', $startOfDate)
             ->setParameter('end', $endOfDate)
-            ->setParameter('statut', $statut)
+            // ->setParameter('statut', $statut)
             ->setParameter('placesMin', $nbPassagers)
             ->setParameter('chauffeurId', $chauffeurId);
     

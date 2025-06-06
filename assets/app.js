@@ -33,7 +33,7 @@ export function checkInputs(currentForm) {
     let allFilled = true;
     fields.forEach(field => {
         //ignore les input hidden
-        if (field.type === 'hidden') return;
+        if (field.type === 'hidden' || !field.required) return;
 
         if (field.type === 'checkbox') {
             // Ne valider que les checkboxes marquées comme "required"
@@ -141,5 +141,74 @@ export function hidePopup(divToHide) {
     blurEffect.style.display = "none";
     divToHide.style.display = "none";
 }
+
+export function checkPasswordValidity(passwordInputId) {
+
+    const lengthCriteria = document.getElementById('length');
+    const lowercaseCriteria = document.getElementById('lowercase');
+    const uppercaseCriteria = document.getElementById('uppercase');
+    const numberCriteria = document.getElementById('number');
+    const specialCriteria = document.getElementById('special');
+  
+    const passwordInput = document.getElementById(passwordInputId);
+    // const confirmPasswordInput = document.getElementById(confirmPasswordInputIdd);
+  
+    const password = passwordInput.value;
+  
+    function toggleValidity(element, isValid) {
+      if (isValid) {
+        element.classList.remove('invalid');
+        element.classList.add('valid');
+        
+      } else {
+        element.classList.remove('valid');
+        element.classList.add('invalid');
+        
+      }
+    }
+
+    // Longueur >= 8
+  toggleValidity(lengthCriteria, password.length >= 8);
+    
+  // Contient une minuscule
+  toggleValidity(lowercaseCriteria, /[a-z]/.test(password));
+
+  // Contient une majuscule
+  toggleValidity(uppercaseCriteria, /[A-Z]/.test(password));
+
+  // Contient un chiffre
+  toggleValidity(numberCriteria, /\d/.test(password));
+
+  // Contient un caractère spécial
+  toggleValidity(specialCriteria, /[^A-Za-z0-9]/.test(password));
+
+  // checkRegisterFormValidity();
+}
+
+export function checkRegisterFormValidity(form, passwordInput, confirmPasswordInput, emailInput, cguInput = null, currentPasswordInput = null) {
+    const password = passwordInput.value;
+    const confirm = confirmPasswordInput.value;
+    const submitBtn = form.querySelector('.submit-btn');
+    
+
+    const isPasswordMatch = password && confirm && password === confirm;
+    const passwordInputValidity = document.querySelectorAll('.valid').length == document.getElementById('password-criteria').children.length;
+
+    let cguCheck = true;
+    if (cguInput) {
+        cguCheck = cguInput.checked;
+    }
+
+    let currentPasswordCheck = true;
+    if (currentPasswordInput) {
+        currentPasswordCheck = currentPasswordInput.value;
+    }
+
+    if (isPasswordMatch && emailInput.value && cguCheck && passwordInputValidity && currentPasswordCheck) {
+      submitBtn.classList.remove('inactive');
+    } else {
+      submitBtn.classList.add('inactive');
+    }
+  }
 
 

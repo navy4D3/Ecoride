@@ -1,7 +1,7 @@
 import {checkInputs} from '../app';
 import '../styles/publier-trajet.scss';
 import '../styles/add-voiture.scss';
-import {showAddVoitureForm} from './addVoiture';
+import {initUserVoitureBtns, showAddVoitureForm} from './addVoiture';
 
 const addTrajetForm = document.getElementById("add-trajet-form");
 const fields = addTrajetForm.querySelectorAll('input, select, textarea');
@@ -210,7 +210,7 @@ addVoitureBtn.addEventListener('click', function() {
 //   })
 // }
 
-// initUserVoitureBtns();
+initUserVoitureBtns();
 
 // addVoitureBtn.addEventListener('click', function() {
   

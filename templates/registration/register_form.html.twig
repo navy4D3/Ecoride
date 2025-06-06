@@ -1,12 +1,14 @@
 {{ form_start(registrationForm, {'attr': {'class':'register-form'}}) }}
     {% if errors is defined %}
-        <div class="errors-container">
-            {% for error in errors %}
-                <div class="alert alert-danger">
-                    {{ error.message }}
-                </div>
-            {% endfor %}
-        </div>
+        {% if errors|length > 0 %}
+            <div class="errors-container">
+                {% for error in errors %}
+                    <div class="alert alert-danger">
+                        {{ error.message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endif %}
 
     <div>
@@ -40,8 +42,6 @@
         {{ form_widget(registrationForm.password.second) }}
     </div>
     
-    
-
     {% if registrationForm.agreeTerms is defined %}
         <div class="cgu-section">
             <twig:ux:icon name="mingcute:checkbox-line" id="cgu-uncheck-icon" />
@@ -50,7 +50,7 @@
         </div>
 
         {{ form_widget(registrationForm.agreeTerms)  }}
-        <button type="submit" formaction="/register" class="btn btn-green inactive" id="submit-btn">S'inscrire</button>
+        <button type="submit" formaction="/register" class="btn btn-green inactive submit-btn" id="submit-btn">S'inscrire</button>
     {% else %}
         <button type="button" class="btn btn-green inactive submit-btn" id="submit-btn">Modifier</button>
     {% endif %}

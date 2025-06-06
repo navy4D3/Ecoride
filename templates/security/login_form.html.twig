@@ -1,7 +1,7 @@
 <form method="post" class="login-form">
-    {# {% if errors %}
-        <div class="alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
-    {% endif %} #}
+    {% if errors %}
+        <div class="errors-container alert alert-danger">{{ errors.messageKey|trans(errors.messageData, 'security') }}</div>
+    {% endif %}
 
     {% if app.user %}
         <div class="mb-3">

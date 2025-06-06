@@ -27,11 +27,14 @@ final class TrajetController extends AbstractController
     private string $googleApiKey;
     private $em;
 
-    public function __construct(HttpClientInterface $client, EntityManagerInterface $em)
+    private $security;
+
+    public function __construct(HttpClientInterface $client, EntityManagerInterface $em, Security $security)
     {
         $this->client = $client;
         $this->googleApiKey = $_ENV['GOOGLE_API_KEY']; // ou directement depuis votre config
         $this->em = $em;
+        $this->security = $security;
     }
 
 
@@ -52,8 +55,13 @@ final class TrajetController extends AbstractController
             $startCoords = $this->geocode($startAddress, $client);
             $endCoords = $this->geocode($endAddress, $client);
 
-            $currentUserEmail = $security->getUser()->getUserIdentifier();
-            $currentUserId = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail])->getId();
+            $currentUser = $security->getUser();
+            
+            $currentUserId = "";
+            if ($currentUser) {
+                $currentUserId = $em->getRepository(User::class)->findOneBy(['email' => $currentUser->getUserIdentifier()])->getId();
+            }
+            
 
 
             // Appel au service de recherche
@@ -81,7 +89,7 @@ final class TrajetController extends AbstractController
             // ]);
         }
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('trajet/rechercher.html.twig', [
             'form' => $form,
         ]);
     }
@@ -173,6 +181,13 @@ final class TrajetController extends AbstractController
     #[Route('/reserver/{id}', name: 'app_reserver_trajet')]
     public function reserverTrajet(Request $request, $id): Response
     {
+
+        $user = $this->security->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_connect');
+        }
+
         $trajet = $this->em->getRepository(Trajet::class)->find($id);
         $timeDatas = $this->showTrajetDateAndTime($trajet);
 
@@ -224,6 +239,11 @@ final class TrajetController extends AbstractController
     public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
     {
         $user = $security->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_connect');
+        }
+        
         $userObject = $em->getRepository(User::class)->findOneBy(['email' => $user->getUserIdentifier()]);
 
         if (!$userObject->isChauffeur()) {
@@ -278,12 +298,12 @@ final class TrajetController extends AbstractController
             // return new Response($voitureObject->get);
 
             $trajet->setVoiture($voitureObject);
-            $trajet->setStatut(Statut::from('Planifié'));
+            // $trajet->setStatut(Statut::from('Planifié'));
 
             $em->persist($trajet);
             $em->flush();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_user_profil');
         }
 
         return $this->render('trajet/publier.html.twig', [
@@ -406,6 +426,20 @@ final class TrajetController extends AbstractController
         return number_format($kilometers, 1, '.', '') . ' km'; // 1 chiffre après la virgule
     }
 
+
+    #[Route('/delete-trajet/{id}', name: 'app_delete_trajet')]
+    public function deleteTrajet($id): Response
+    {
+        $trajetToDelete = $this->em->getRepository(Trajet::class)->find($id);
+
+        $this->em->remove($trajetToDelete);
+
+        $this->em->flush();
+
+        return $this->redirectToRoute('app_user_profil');
+    }
+
+    
 
     
 

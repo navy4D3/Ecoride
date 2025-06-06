@@ -1,8 +1,9 @@
-const { checkInputs, showErrors, showSuccessAlert, treatFormAlert } = require("../app");
+const { checkInputs, showErrors, showSuccessAlert, treatFormAlert, checkPasswordValidity, checkRegisterFormValidity } = require("../app");
 import { showAddVoitureForm } from './addVoiture';
 // const { initPreferencesBtnsEvent } = require("./devenirChauffeur");
 // import {initPreferencesBtnsEvent} from './devenirChauffeur';
 import { initPreferencesBtnsEvents } from './initPreferencesBtnsEvents';
+// import { checkPasswordValidity } from './registerLogin';
 
 const trajetsBtn = document.getElementById('trajets');
 const myDataBtn = document.getElementById('mes-informations');
@@ -245,12 +246,76 @@ avisPubliesBtn.addEventListener('click', function() {
 const editMailPasswordForm = document.querySelector('.register-form');
 const submitEditMailPasswordFormBtn = editMailPasswordForm.querySelector('.submit-btn');
 const editMailPasswordFormInputs = editMailPasswordForm.querySelectorAll('input, select, textarea');
+const passwordInput = document.getElementById('mail_and_password_password_first');
+const confirmPasswordInput = document.getElementById('mail_and_password_password_second');
+const emailInput = document.getElementById('mail_and_password_email');
+const currentPasswordInput = document.getElementById('mail_and_password_currentPassword');
 
-editMailPasswordFormInputs.forEach((input) => [
-    input.addEventListener('input', function(e){
-        checkInputs(editMailPasswordForm);
-    })
-])
+
+
+emailInput.addEventListener('input', function(){
+    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
+})
+
+currentPasswordInput.addEventListener('input', function(){
+    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
+})
+
+passwordInput.addEventListener('input', function() {
+    checkPasswordValidity('mail_and_password_password_first');
+    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
+})
+
+confirmPasswordInput.addEventListener('input', function() {
+    checkPasswordValidity('mail_and_password_password_first');
+    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
+})
+
+// function checkPasswordValidity(passwordInputId) {
+
+//     const lengthCriteria = document.getElementById('length');
+//     const lowercaseCriteria = document.getElementById('lowercase');
+//     const uppercaseCriteria = document.getElementById('uppercase');
+//     const numberCriteria = document.getElementById('number');
+//     const specialCriteria = document.getElementById('special');
+  
+//     const passwordInput = document.getElementById(passwordInputId);
+//     // const confirmPasswordInput = document.getElementById(confirmPasswordInputIdd);
+  
+//     const password = passwordInput.value;
+  
+//     function toggleValidity(element, isValid) {
+//       if (isValid) {
+//         element.classList.remove('invalid');
+//         element.classList.add('valid');
+        
+//       } else {
+//         element.classList.remove('valid');
+//         element.classList.add('invalid');
+        
+//       }
+//     }
+  
+//     // Longueur >= 8
+//     toggleValidity(lengthCriteria, password.length >= 8);
+      
+//     // Contient une minuscule
+//     toggleValidity(lowercaseCriteria, /[a-z]/.test(password));
+  
+//     // Contient une majuscule
+//     toggleValidity(uppercaseCriteria, /[A-Z]/.test(password));
+  
+//     // Contient un chiffre
+//     toggleValidity(numberCriteria, /\d/.test(password));
+  
+//     // Contient un caractère spécial
+//     toggleValidity(specialCriteria, /[^A-Za-z0-9]/.test(password));
+  
+//     // checkRegisterFormValidity();
+  
+// }
+
+
 
 submitEditMailPasswordFormBtn.addEventListener('click', function(e) {
     e.preventDefault();
@@ -276,46 +341,13 @@ submitEditMailPasswordFormBtn.addEventListener('click', function(e) {
         // data.html contient ton formulaire rendu
 
         treatFormAlert(editMailPasswordForm, 'Informations mises à jour avec succès', data);
-        // let errorsContainer = editMailPasswordForm.querySelector('.errors-container');
+        editMailPasswordForm.reset();
+        const event = new Event('input', {
+            bubbles: true,
+        });
+          
+        passwordInput.dispatchEvent(event);
 
-        // if (data.status == "success") {
-        //     showSuccessAlert('Informations mises à jour avec succès');
-
-        //     if (errorsContainer) {
-        //         errorsContainer.remove();
-        //     }
-            
-        // } else {
-            
-        //     if (!errorsContainer) {
-        //         errorsContainer = document.createElement("div");
-        //         errorsContainer.classList.add('errors-container');
-
-        //         editMailPasswordForm.insertAdjacentElement('afterBegin', errorsContainer);
-        //     }
-
-        //     let newHtml = '';
-        //     data.errors.forEach(error => {
-        //         newHtml += `
-        //         <div class="alert alert-danger">
-        //             ${error.message}
-        //         </div>
-        //         `
-        //     });
-        //     errorsContainer.innerHTML = newHtml;
-
-        //     // const parser = new DOMParser();
-        //     // const doc = parser.parseFromString(data.html, 'text/html');
-        //     // const newForm = doc.querySelector('form');
-
-        //     // editMailPasswordForm.replaceWith(newForm);
-
-        //     // data.errors.forEach((error) => {
-        //     //     alert(error.message)
-        //     // })
-            
-        //     // showErrors(data.errors);
-        // }
     })
     .catch(error => console.error('Erreur:', error));
 })

@@ -10,19 +10,19 @@ class TrajetSearchService
 {
     public function __construct(private TrajetRepository $trajetRepository, private TrajetController $trajetController) {}
 
-    public function findMatchingTrips(array $startCoords, array $endCoords, $date, $nbPlace, string $currentUserId): array
+    public function findMatchingTrips(array $startCoords, array $endCoords, $date, $nbPlace, string $currentUserId = ""): array
     {
 
         // $trips = $this->trajetRepository->findBy(['statut' => Statut::from('Planifié')]); // ou mieux : les trajets à venir seulement
         
         $isOnDate = true;
-        $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId, $isOnDate);
+        $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, $nbPlace, $currentUserId, $isOnDate);
         if (empty($trips)) {
             // chercher date sur 3 jours glissant
             // $trips = $this->trajetRepository->findByRangeDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId);
             
             $isOnDate = false;
-            $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId, $isOnDate);
+            $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, $nbPlace, $currentUserId, $isOnDate);
 
         }
         
@@ -31,6 +31,7 @@ class TrajetSearchService
 
         foreach ($trips as $trip) {
             $points = $trip->getGpsPoints(); // À implémenter : decode JSON et extraire les lat/lng
+
             if (
                 $this->isCloseToRoute($startCoords, $points) &&
                 $this->isCloseToRoute($endCoords, $points) &&

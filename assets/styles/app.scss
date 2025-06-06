@@ -8,11 +8,13 @@
 @import 'publier-trajet.scss';
 @import 'add-voiture.scss';
 @import 'profil.scss';
+@import 'autre-profil.scss';
 @import 'resultats-recherche.scss';
 @import 'rechercher-form.scss';
 @import 'trajet.scss';
 @import 'devenir-chauffeur.scss';
 @import 'reserver-trajet.scss';
+@import 'add-avis.scss';
 
 .mobile-only {
     display: none !important;
@@ -27,7 +29,7 @@ body {
     margin: 0px;
 }
 
-.body-content.connected {
+.body-content {
     padding-top : 100px;
     display: flex;
     flex-direction: column;
@@ -85,6 +87,14 @@ body {
     z-index: 1000;
 }
 
+.popup.center {
+    z-index: 1000;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .body-content {
     padding-left: 20px;
     padding-right: 20px;
@@ -123,6 +133,10 @@ span {
     font-size: 16px;
     font-family: $josefin-sans ;
     font-weight: 600;
+}
+
+small {
+    font-size: 14px;
 }
 
 .circle {
@@ -305,7 +319,7 @@ form {
     font-weight: 700;
 }
 
-.btn-green-black, .btn-blue, .btn-green {
+.btn-green-black, .btn-blue, .btn-green, .btn-outline {
     padding: 10px 20px;
     text-align: center;
     border-radius: 100px;
@@ -330,6 +344,11 @@ form {
 .btn-blue {
     background-color: $blue-btn;
     color: $blue-background;
+}
+
+.btn-outline {
+    border: solid 2px $green-black;
+    background-color: unset;
 }
 
 .inactive {

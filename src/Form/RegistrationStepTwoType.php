@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class RegistrationStepTwoType extends AbstractType
 {
@@ -24,7 +25,23 @@ class RegistrationStepTwoType extends AbstractType
                 'mapped' => false,
                 'attr' => [
                     'hidden' => 'true'
-                ]
+                ],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
+                            'image/webp',
+                            'image/heic',
+                            'image/heif',
+                            'image/bmp',
+                            'image/tiff',
+                        ],
+                        'mimeTypesMessage' => 'Merci d\'uploader une image valide (JPEG, PNG, HEIC...)',
+                    ]),
+                ],
             ])
             ->add('nom', TextType::class, [
                 'attr' => [

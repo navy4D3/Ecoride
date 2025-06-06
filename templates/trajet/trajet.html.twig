@@ -6,10 +6,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('trajet') }}
 {% endblock %}
 
 {% block body %}
-
+    <div class="blur-effect"></div>
     {% include 'header.html.twig' with { title: 'Details trajet', 'isHistoryBackTrue' : true  } %}
 
     <div class="details-trajet">
@@ -41,7 +42,7 @@
             </div>
 
             <div class="details-chauffeur-datas">
-                <div class="details-chauffeur-datas-photo-prenom">
+                <a href="{{ path('app_user_profil', { id: trajet.chauffeur.id }) }}"class="details-chauffeur-datas-photo-prenom">
                     {% if trajet.chauffeur.photoProfil %}
                         <img src="{{ path('user_profil_photo', { id: trajet.chauffeur.id }) }}" class="photo-profil-conducteur" alt="Photo">
                     {% else %}
@@ -50,11 +51,11 @@
                     <span>{{ chauffeur.prenom }}</span>
                     {% if chauffeur.note %}
                         <div class="note" style="opacity:75%">
-                            <small>{{ chauffeur.note }}</small>
+                            <span style="margin-top:3px">{{ chauffeur.note }}</span>
                             <twig:ux:icon name="mingcute:star-fill" />
                         </div>
                     {% endif %}
-                </div>
+                </a>
                 <div class="details-chauffeur-datas-description">
                     <p>{{ chauffeur.description }}</p>
                     <div class="preferences">
@@ -96,7 +97,7 @@
                 <twig:ux:icon name="lucide:users" />
             </div>
             {% if trajet.participants is empty %}
-                <p>Aucun passager n'est inscrit sur ce trajet pour le moment.</p>
+                <p>Aucun passager n'est inscrit sur ce trajet.</p>
             {% else %}
                 {% for passager in trajet.participants %}
                     <div class="passager">
@@ -106,7 +107,17 @@
             {% endif %}
         </div>
 
-        <button class="btn-green">Annuler le trajet</button>
+        {% if trajet.statut.label == "Planifié" %}
+            <button class="btn-green" id="delete-trajet-btn">Annuler le trajet</button>
+            <div class="delete-trajet-popup popup center" id="delete-trajet-popup" style="display: none">
+                <h4>Souhaitez-vous réellement annuler ce trajet ?</h4>
+                <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                    <a href="{{ path('app_delete_trajet', { id: trajet.id}) }}" class="btn-green" id="confirm-delete-trajet-btn">Supprimer</a>
+                    
+                    <button class="btn-underline" id="hide-delete-trajet-popup-btn">Annuler</button>
+                </div>
+            </div>
+        {% endif %}
     {% else %}
         {% set reservation = null %}
         {% for r in trajet.reservations %}
@@ -119,8 +130,33 @@
             <h4 class="prix-place">{{ reservation.nbPlaces }} place{{ reservation.nbPlaces > 1 ? 's' : '' }} réservée{{ reservation.nbPlaces > 1 ? 's' : '' }}
                 <twig:ux:icon name="lucide:users"/>
             </h4>
+            {% if reservation.trajet.statut.label == "Planifié" %}
+                <button  id="cancel-reservation-btn" class="btn-green" style="width:fit-content">Annuler la réservation</button>
+                <div class="cancel-reservation-popup popup center" id="cancel-reservation-popup" style="display: none">
+                    <h4>Souhaitez-vous réellement annuler cette reservation ?</h4>
+                    <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                        <a href="{{ path('app_cancel_reservation', { id: reservation.id}) }}" class="btn-green" id="confirm-cancel-reservation-btn">Confirmer</a>
+                        
+                        <button class="btn-underline" id="hide-cancel-reservation-popup-btn">Annuler</button>
+                    </div>
+                </div>
+            {% elseif reservation.trajet.statut.label == "En cours" %}
+                {# definir logique #}
+            {% else %}
+                {% set avis = null %}
+                {% for a in reservation.trajet.avis %}
+                    {% if a.creator == app.user %}
+                        {% set avis =  a %}
+                    {% endif %}
+                {% endfor %}
 
-            <button>Annuler la participation</button>
+                {% if avis is null %}
+                    <a href="{{ path('app_add_avis', { user: reservation.trajet.chauffeur.id, trajet:reservation.trajet.id }) }}" class="btn-green" id="add-avis-btn" style="width:fit-content">Laisser un avis</a>
+                {% endif %}
+                {# <a href="{{ path('app_add_reclamation', { id: reservation.trajet.id}) }}" class="btn-green" id="add-avis-btn" style="width:fit-content">Signaler un problème</a> #}
+                {# bouton reclamation #}
+                {# faire passer l'avis dans un état qui sera visible par l'employé #}
+            {% endif %}
         {% else %}
             <h4 class="prix-place">{{ trajet.prixPersonne }} crédits / place <twig:ux:icon name="lucide:users"/></h4>
             <a href="/reserver/{{ trajet.id }}"class="btn-green">Participer</a>
