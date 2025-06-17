@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\Preference;
+use App\Enum\StatutReservation;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
@@ -450,6 +451,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->credits = $credits;
 
         return $this;
+    }
+
+    public function getCreditsReserve(): int
+    {
+        $creditsEnAttente = 0;
+        $reservations = $this->getReservations();
+
+        foreach ($reservations as $reservation) {
+            if ($reservation->getStatut() == StatutReservation::Enregistre) {
+                $creditsEnAttente += $reservation->getNbPlaces() * $reservation->getTrajet()->getPrixPersonne();
+            }
+        }
+
+        return $creditsEnAttente;
+        
+    }
+
+    public function getCreditsDisponible(): int
+    {
+        return $this->getCredits() - $this->getCreditsReserve();
     }
 
     /**

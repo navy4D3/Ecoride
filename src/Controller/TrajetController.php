@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Voiture;
 use App\Enum\Preference;
 use App\Enum\Statut;
+use App\Enum\StatutReservation;
 use App\Form\AddTrajetType;
 use App\Form\SearchTrajetType;
 use App\Service\TrajetSearchService;
@@ -177,6 +178,32 @@ final class TrajetController extends AbstractController
             'timeDatas' => $timeDatas,
         ]);
     }
+    #[Route('/update-trajet-statut/{id}', name: 'app_trajet_update_statut')]
+    public function updateTrajetStatut(EntityManagerInterface $em, Request $request, $id): Response
+    {
+        // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
+        //regex plaque FR avant 2012 : ^\d{1,4} [A-Z]{2} \d{2,3}$
+        // $nbPlaces = $request->query->get('reservation_datas')['nb_places'];
+
+        $trajet = $em->getRepository(Trajet::class)->find($id);
+
+        $currentStatut = $trajet->getStatut();
+
+        if ($currentStatut == Statut::Planifie) {
+            $newStatut = Statut::EnCours;
+        } else {
+            $newStatut = Statut::Termine;
+        }
+
+        $trajet->setStatut($newStatut);
+
+        $this->em->flush();
+        
+        return $this->redirectToRoute('app_trajet', [
+            'id' => $trajet->getId()
+        ]);
+    }
+
 
     #[Route('/reserver/{id}', name: 'app_reserver_trajet')]
     public function reserverTrajet(Request $request, $id): Response
@@ -209,31 +236,7 @@ final class TrajetController extends AbstractController
         ]);
     }
 
-    #[Route('/ajouter-passagers', name: 'app_ajouter_passagers')]
-    public function ajouterPassagers(Request $request):Response
-    {
-        $userId = $request->get('user');
-        $trajetId = $request->get('trajet');
-        $places = $request->get('places');
-        $user = $this->em->getRepository(User::class)->find($userId);
-        $trajet = $this->em->getRepository(Trajet::class)->find($trajetId);
-
-        if ($user && $trajet && $places) {
-            $reservation = new Reservation();
-
-            $reservation->setUser($user);
-            $reservation->setTrajet($trajet);
-            $reservation->setNbPlaces($places);
-
-            $this->em->persist($reservation);
-            $this->em->flush();
-
-            return $this->redirectToRoute('app_user_profil');
-        }
-
-        return new Response("Erreur lors de l'ajout du passager");
-        
-    }
+    
 
     #[Route('/publier-trajet', name: 'app_publier_trajet')]
     public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
@@ -298,7 +301,7 @@ final class TrajetController extends AbstractController
             // return new Response($voitureObject->get);
 
             $trajet->setVoiture($voitureObject);
-            // $trajet->setStatut(Statut::from('Planifié'));
+            $trajet->setStatut(Statut::Planifie);
 
             $em->persist($trajet);
             $em->flush();

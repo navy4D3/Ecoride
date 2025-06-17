@@ -1,0 +1,47 @@
+{% set pageClass = 'admin' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# {{ encore_entry_script_tags('profil') }} #}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="header">
+        <div>
+            <h2>XXXX</h2>
+            <h4>CREDITS ACQUIS</h4>
+        </div>
+
+        <div>
+            <h2>XXXX</h2>
+            <h4>CREDITS EN ATTENTE</h4>
+        </div>
+
+        <div>
+            <h2>XXXX</h2>
+            <h4>UTILISATEURS</h4>
+        </div>
+    </div>
+
+    <div class="prochains-trajet-section">
+        <h3>Prochains trajets (Nb)</h3>
+        <p>graphe</p>
+    </div>
+
+    <div class="credits-a-venir-section">
+        <h3>Credits à venir</h3>
+        <p>graphe</p>
+    </div>
+
+    <div class="utilisateurs-section">
+        <h3>Credits à venir</h3>
+        <p>graphe</p>
+    </div>
+{% endblock %}

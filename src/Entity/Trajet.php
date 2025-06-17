@@ -29,8 +29,8 @@ class Trajet
 
 
 
-    // #[ORM\Column(enumType: Statut::class)]
-    // private ?Statut $statut = null;
+    #[ORM\Column(enumType: Statut::class)]
+    private ?Statut $statut = null;
 
     #[ORM\Column]
     private ?int $prixPersonne = null;
@@ -122,30 +122,30 @@ class Trajet
 
     public function getStatut(): ?Statut
     {
-        $currentTime = new \DateTime();
-        $heureDepart = $this->getHeureDepart(); // DateTimeImmutable
-        $duree = $this->getDureeInSeconds(); // int, durée en secondes
-        $arrivalDateTimeStamp = $heureDepart->getTimestamp() + $duree;
-        $arrivalDateTime = new \DateTime();
-        $arrivalDateTime->setTimestamp($arrivalDateTimeStamp)->setTimezone($currentTime->getTimezone());
+        // $currentTime = new \DateTime();
+        // $heureDepart = $this->getHeureDepart(); // DateTimeImmutable
+        // $duree = $this->getDureeInSeconds(); // int, durée en secondes
+        // $arrivalDateTimeStamp = $heureDepart->getTimestamp() + $duree;
+        // $arrivalDateTime = new \DateTime();
+        // $arrivalDateTime->setTimestamp($heureDepart->getTimestamp() + 86400)->setTimezone($currentTime->getTimezone());
 
-        if ($currentTime > $arrivalDateTime) {
-            $statut = Statut::Termine;
-        } else if ($currentTime > $heureDepart) {
-            $statut = Statut::EnCours;
-        } else {
-            $statut = Statut::Planifie;
-        }
+        // if ($currentTime > $arrivalDateTime) {
+        //     $statut = Statut::Termine;
+        // } else if ($currentTime > $heureDepart) {
+        //     $statut = Statut::EnCours;
+        // } else {
+        //     $statut = Statut::Planifie;
+        // }
 
-        return $statut;
+        return $this->statut;
     }
 
-    // public function setStatut(Statut $statut): static
-    // {
-    //     $this->statut = $statut;
+    public function setStatut(Statut $statut): static
+    {
+        $this->statut = $statut;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getPrixPersonne(): ?int
     {

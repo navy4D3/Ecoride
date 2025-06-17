@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\MailAndPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationStepTwoType;
+use App\Service\ImageService;
 use App\Security\EmailVerifier;
 use App\Service\FormService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -134,7 +135,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register2', name: 'app_register2')]
-    public function register2(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session, Security $security): Response 
+    public function register2(Request $request, ImageService $imageService, EntityManagerInterface $entityManager, SessionInterface $session, Security $security): Response 
     {
         $user = new User();
         $form = $this->createForm(RegistrationStepTwoType::class);
@@ -170,6 +171,9 @@ class RegistrationController extends AbstractController
             if ($photoProfilUploaded ) {
                 // Ouvre le fichier et lis son contenu en binaire
                 $photoData = file_get_contents($photoProfilUploaded->getRealPath());
+
+                $imageService->resize($photoData);
+
                 $user->setPhotoProfil($photoData);
             }
 

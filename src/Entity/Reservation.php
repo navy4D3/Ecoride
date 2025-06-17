@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\StatutReservation;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +24,9 @@ class Reservation
 
     #[ORM\Column]
     private ?int $nbPlaces = null;
+
+    #[ORM\Column(enumType: StatutReservation::class)]
+    private ?StatutReservation $statut = null;
 
     public function getId(): ?int
     {
@@ -61,6 +65,18 @@ class Reservation
     public function setNbPlaces(int $nbPlaces): static
     {
         $this->nbPlaces = $nbPlaces;
+
+        return $this;
+    }
+
+    public function getStatut(): ?StatutReservation
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(StatutReservation $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }

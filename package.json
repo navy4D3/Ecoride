@@ -16,6 +16,7 @@
     "webpack-notifier": "^1.15.0"
   },
   "dependencies": {
-    "core-js": "^3.42.0"
+    "core-js": "^3.42.0",
+    "heic2any": "^0.0.4"
   }
 }

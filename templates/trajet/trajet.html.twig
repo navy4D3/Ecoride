@@ -19,7 +19,7 @@
             <span class="mobile-only"><twig:ux:icon name="ion:time-outline" />{{ timeDatas.duree }}</span>
         </div>
         
-        <div class="details">
+        <div class="trajet-datas">
             <span class="ellipsis lieu-depart">{{ trajet.lieuDepart }}</span>
             <span class="heure-depart">{{ timeDatas.heureDepart }}</span>
             <div class="start-end-line">
@@ -96,19 +96,39 @@
                 <h3>Passagers</h3>
                 <twig:ux:icon name="lucide:users" />
             </div>
-            {% if trajet.participants is empty %}
-                <p>Aucun passager n'est inscrit sur ce trajet.</p>
+            {% if trajet.reservations is empty %}
+                <p class="mb-0">Aucun passager n'est inscrit sur ce trajet.</p>
             {% else %}
-                {% for passager in trajet.participants %}
-                    <div class="passager">
+                <div class="passagers">
+                    {% for reservation in trajet.reservations %}
+                        <a href="{{ path('app_user_profil', { id: reservation.user.id }) }}" class="passager">
+                            {% if reservation.user.photoProfil %}
+                                <img src="{{ path('user_profil_photo', { id: reservation.user.id }) }}" class="photo-profil" alt="Photo">
+                            {% else %}
+                                <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                            {% endif %}
+                            <div class="prenom-note">
+                                <span class="prenom">{{ reservation.user.prenom }}</span>
+                                {% if reservation.user.note %}
+                                    <div class="note">
+                                        <span>{{ trajet.datas.chauffeur.note }}</span>
+                                        <twig:ux:icon name="mingcute:star-fill" class="icon"/>
+                                    </div>
+                                {% endif %}
+                            </div>
 
-                    </div>
-                {% endfor %}
+                        </a>
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
-
+        
+        
         {% if trajet.statut.label == "Planifié" %}
-            <button class="btn-green" id="delete-trajet-btn">Annuler le trajet</button>
+            <div class="d-flex flex-row gap-3 flex-wrap">
+                <a href="{{ path('app_trajet_update_statut', { id: trajet.id}) }}" class="btn-green-black" >Demarrer le trajet</a>
+                <button class="btn-green" id="delete-trajet-btn">Annuler le trajet</button>
+            </div>
             <div class="delete-trajet-popup popup center" id="delete-trajet-popup" style="display: none">
                 <h4>Souhaitez-vous réellement annuler ce trajet ?</h4>
                 <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
@@ -117,6 +137,25 @@
                     <button class="btn-underline" id="hide-delete-trajet-popup-btn">Annuler</button>
                 </div>
             </div>
+        {% elseif trajet.statut.label == "En cours" %}
+            <a href="{{ path('app_trajet_update_statut', { id: trajet.id}) }}" class="btn-green" >Arreter le trajet</a>
+        {% else %}
+            <h4>Trajet terminé</h4>
+            {% set creditsEnAttente = 0 %}
+            {% set creditsAcquis = 0 %}
+            {% for reservation in trajet.reservations %}
+                {% if reservation.statut.label == "Payé" %}
+                    {% set creditsAcquis = creditsAcquis + ( trajet.prixPersonne * reservation.nbPlaces ) %}
+                {% elseif reservation.statut.label == "Enregistré" %}
+                    {% set creditsEnAttente = creditsEnAttente + ( trajet.prixPersonne * reservation.nbPlaces ) %}
+                {% endif %}
+            {% endfor %}
+
+            {% if creditsEnAttente > 0 %}
+                <h5>{{ creditsEnAttente }} crédits en attente de validation</h5>
+            {% endif %}
+
+            <h5>{{ creditsAcquis }} crédits acquis</h5>
         {% endif %}
     {% else %}
         {% set reservation = null %}
@@ -128,6 +167,7 @@
 
         {% if reservation %}
             <h4 class="prix-place">{{ reservation.nbPlaces }} place{{ reservation.nbPlaces > 1 ? 's' : '' }} réservée{{ reservation.nbPlaces > 1 ? 's' : '' }}
+                ({{ (reservation.trajet.prixPersonne + 2) * reservation.nbPlaces }} crédits)
                 <twig:ux:icon name="lucide:users"/>
             </h4>
             {% if reservation.trajet.statut.label == "Planifié" %}
@@ -140,9 +180,10 @@
                         <button class="btn-underline" id="hide-cancel-reservation-popup-btn">Annuler</button>
                     </div>
                 </div>
-            {% elseif reservation.trajet.statut.label == "En cours" %}
-                {# definir logique #}
+            {% elseif trajet.statut.label == "En cours" %}
+                <h4>Trajet en cours</h4>
             {% else %}
+                <h4>Trajet terminé</h4>
                 {% set avis = null %}
                 {% for a in reservation.trajet.avis %}
                     {% if a.creator == app.user %}
@@ -158,7 +199,7 @@
                 {# faire passer l'avis dans un état qui sera visible par l'employé #}
             {% endif %}
         {% else %}
-            <h4 class="prix-place">{{ trajet.prixPersonne }} crédits / place <twig:ux:icon name="lucide:users"/></h4>
+            <h4 class="prix-place">{{ trajet.prixPersonne + 2 }} crédits / place <twig:ux:icon name="lucide:users"/></h4>
             <a href="/reserver/{{ trajet.id }}"class="btn-green">Participer</a>
         {% endif %}
     {% endif %}

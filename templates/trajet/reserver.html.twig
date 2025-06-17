@@ -1,6 +1,6 @@
 {% set pageClass = 'reserver' %}
-{% set totalCredits = (trajet.prixPersonne * reservationDatas.nbPlaces) %}
-{% set creditsSuffisant = (totalCredits <= app.user.credits) %}
+{% set totalCredits = ((trajet.prixPersonne + 2) * reservationDatas.nbPlaces) %}
+{% set creditsSuffisant = (totalCredits <= app.user.creditsDisponible) %}
 {% extends 'base.html.twig' %}
 
 {% block title %}Reserver un trajet{% endblock %}
@@ -15,9 +15,9 @@
 
     <div class="recap-1" id="recap-1">
         <strong class="nb-places">{{ reservationDatas.nbPlaces }} place{% if reservationDatas.nbPlaces > 1 %}s{% endif %} <twig:ux:icon name="lucide:users"/></strong>
-        <span><strong>{{ trajet.prixPersonne }}¢</strong> / passager</span>
+        <span><strong>{{ trajet.prixPersonne + 2 }}¢</strong> / passager</span>
         <span>Crédits nécessaires : <strong id="credits-needed">{{ totalCredits }}¢</strong></span>
-        <span>Crédits disponibles : <strong {% if not creditsSuffisant %}style="color:red"{% endif %} id="user-credits">{{ app.user.credits }}¢</strong></span>
+        <span>Crédits disponibles : <strong {% if not creditsSuffisant %}style="color:red"{% endif %} id="user-credits">{{ app.user.creditsDisponible }}¢</strong></span>
         {% if creditsSuffisant %}
             <button class="btn-green" id="continue-btn">Continuer</button>
         {% else %}
@@ -53,6 +53,7 @@
         <h4>Pour</h4>
         <span class="credits-passager">{{ totalCredits }} crédits ({{ reservationDatas.nbPlaces }} passager{% if reservationDatas.nbPlaces > 1 %}s{% endif %})</span>
         <a href="{{ path('app_ajouter_passagers', { user: app.user.id , trajet: trajet.id , places:reservationDatas.nbPlaces }) }}" class="btn-green w-100">Confirmer</a>
+        
 
         {# afficher une laerte de succès après validation ajout #}
     </div>
@@ -67,6 +68,7 @@
             {% endfor %}
         </select>
         <button class="btn-green" id="add-credits-btn">Ajouter</button>
+        <span class="close-popup-btn" style="text-decoration:underline">Annuler</button>
     </div>
 
 

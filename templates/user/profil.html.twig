@@ -29,9 +29,8 @@
                 <twig:ux:icon name="majesticons:data-line" id="trajets-icon" class="espace-chauffeur-icon mobile-small-only"/>
             </div>
 
-            <div id="espace-chauffeur">
-                {# rediriger vers la page devenir chauffeur si premiere fois #}
-                <span class="pc-tablet-mobile-large-only">Espace chauffeur</span>
+            <div id="espace-chauffeur" data-is-chauffeur="{{ app.user.isChauffeur }}">
+                <span class="pc-tablet-mobile-large-only">{% if app.user.isChauffeur %}Espace chauffeur{% else %}Devenir chauffeur{% endif %}</span>
                 <twig:ux:icon name="mingcute:car-line" id="trajets-icon" class="trajets-icon mobile-small-only"/>
             </div>
 
@@ -81,8 +80,8 @@
                             </div>
                                 
                             <div class="trajet-lieu">
-                                <span>{{ trajet.datas.lieuDepart }}</span>
-                                <span>{{ trajet.datas.lieuArrivee }}</span>
+                                <span class="depart">{{ trajet.datas.lieuDepart }}</span>
+                                <span class="arrivee">{{ trajet.datas.lieuArrivee }}</span>
                                 
                             </div>
                             
@@ -112,7 +111,7 @@
                                             
                                         {% endif %}
                                     </div>
-                                    <span>{{ trajet.datas.prixPersonne * trajet.reservation.nbPlaces }} crédits</span>
+                                    <span>{{ (trajet.datas.prixPersonne + 2) * trajet.reservation.nbPlaces }} crédits</span>
                                     {# integrer dans le calcul le prix* le nombre de passagers #}
                                 </div>
                             {% endif %}
@@ -138,7 +137,6 @@
                                 <twig:ux:icon name="lucide:arrow-up" class="icon" style="rotate: 90deg;"/>
                                 <span style="text-align:end">{{ trajet.datas.lieuArrivee }}</span>
                             </div>
-                            {# <span>{% if isChauffeur %}{{ trajet.datas.prixPersonne }} crédits</span> #}
 
                             <span>
                                 {% if isChauffeur %}

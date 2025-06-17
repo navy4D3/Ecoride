@@ -28,7 +28,7 @@ class RegistrationStepTwoType extends AbstractType
                 ],
                 'constraints' => [
                     new File([
-                        'maxSize' => '5M',
+                        'maxSize' => '20M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/jpg',

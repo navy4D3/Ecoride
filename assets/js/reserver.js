@@ -6,12 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCreditsSection = document.querySelector('.add-credits');
     const addCreditsBtn = document.getElementById('add-credits-btn');
     const creditsSelect = document.getElementById('credits-select');
+    const hidePopupBtn = addCreditsSection.querySelector('.close-popup-btn')
 
     // Afficher le popup
     if (showPopupBtn) {
         showPopupBtn.addEventListener('click', () => {
             showPopup(addCreditsSection, "flex");
         });
+    }
+
+    if (hidePopupBtn) {
+        hidePopupBtn.addEventListener('click', function() {
+            hidePopup(addCreditsSection);
+        })
     }
     
 
@@ -32,15 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             alert(`Succès : ${selectedCredits} crédits ajoutés !`);
 
-            hidePopup(addCreditsSection);
-            const userCreditsLabel = document.getElementById('user-credits')
-            userCreditsLabel.innerText = data.credits + "¢";
+            window.location.reload();
+            // hidePopup(addCreditsSection);
+            // const userCreditsLabel = document.getElementById('user-credits')
+            // userCreditsLabel.innerText = data.credits + "¢";
 
-            const creditsNeeded = parseInt(document.getElementById('credits-needed').innerText.replace(/\D/g, ''), 10);
+            // const creditsNeeded = parseInt(document.getElementById('credits-needed').innerText.replace(/\D/g, ''), 10);
 
-            if (parseInt(data.credits, 10) >= creditsNeeded) {
-                userCreditsLabel.style.color = "#386150";
-            }
+            // if (parseInt(data.credits, 10) >= creditsNeeded) {
+            //     userCreditsLabel.style.color = "#386150";
+            // }
             // Tu peux mettre à jour le solde ici si tu veux
         })
         .catch(error => {

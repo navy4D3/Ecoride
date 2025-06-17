@@ -1,4 +1,5 @@
 const { checkInputs, showErrors, showSuccessAlert, treatFormAlert, checkPasswordValidity, checkRegisterFormValidity } = require("../app");
+import heic2any from 'heic2any';
 import { showAddVoitureForm } from './addVoiture';
 // const { initPreferencesBtnsEvent } = require("./devenirChauffeur");
 // import {initPreferencesBtnsEvent} from './devenirChauffeur';
@@ -19,6 +20,11 @@ const profilNavbarBtns = profilNavbar.querySelectorAll('div');
 
 profilNavbarBtns.forEach((btn) => {
     btn.addEventListener('click', function() {
+        if (btn.id == "espace-chauffeur" && btn.dataset.isChauffeur == "") {
+            window.location.href = "/devenir-chauffeur";
+            return;
+        }
+        
         profilNavbarBtns.forEach((btn) => {
             btn.classList.remove('selected');
         })
@@ -27,6 +33,10 @@ profilNavbarBtns.forEach((btn) => {
         currentSection.style.display = "none";
         currentSection.classList.toggle('current-section');
 
+        //gere la redirection de l'espace chauffeur en fonction de si user deja chauffeur ou non
+
+
+        // cache la sectionr ajouté add-voiture liée a espace chauffeur
         const addvoitureSection = document.getElementById('add-voiture-section');
         if (addvoitureSection && addvoitureSection.style.display =="flex") {
             addvoitureSection.style.display = "none";
@@ -71,17 +81,92 @@ editProfilPictureBtn.addEventListener('click', function () {
 });
 
 profilPictureInput.addEventListener('change', function () {
-    const imageUrl = URL.createObjectURL(this.files[0]);
     const profilPictureImg = document.getElementById('profil-picture-img');
-
-    profilPictureImg.src = imageUrl;
+    profilPictureImg.style.opacity = "75%";
+    editProfilPictureBtn.style.display = "none";
+    submitMyDataFormBtn.classList.add('inactive');
     
-    // profilPictureBtn.style.backgroundImage = `url(${imageUrl})`;
-    // profilPictureBtn.style.backgroundSize = 'cover'; // optionnel
-    // profilPictureBtn.style.backgroundPosition = 'center'; // optionnel
-    // profilePicturePlusIcon.style.opacity = "0";
+    const file = this.files[0];
+    if (!file) return;
 
-})
+    const maxWidth = 1024;
+    const quality = 0.5;
+
+    const mimeType = file.type.toLowerCase();
+
+
+
+    // Si HEIC/HEIF, on convertit en JPEG d'abord
+    if (mimeType === 'image/heic' || mimeType === 'image/heif') {
+        heic2any({ blob: file, toType: "image/jpeg", quality: quality })
+            .then(blob => compressAndResizeImage(blob, maxWidth, quality))
+            .then(processCompressedBlob)
+            .then( () => {
+                profilPictureImg.style.opacity = "100%";
+                editProfilPictureBtn.style.display = "block";
+                submitMyDataFormBtn.classList.remove('inactive');
+            })
+            .catch(console.error);
+    } else {
+        compressAndResizeImage(file, maxWidth, quality)
+            .then(processCompressedBlob)
+            .then( () => {
+                profilPictureImg.style.opacity = "100%";
+                editProfilPictureBtn.style.display = "block";
+                submitMyDataFormBtn.classList.remove('inactive');
+            })
+            .catch(console.error);
+    }
+
+    function processCompressedBlob(blob) {
+        const imageUrl = URL.createObjectURL(blob);
+        const profilPictureImg = document.getElementById('profil-picture-img');
+
+        profilPictureImg.src = imageUrl;
+
+        // Remplace le fichier dans l'input par le blob compressé
+        const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(compressedFile);
+        profilPictureInput.files = dataTransfer.files;
+    }
+});
+
+
+function compressAndResizeImage(file, maxWidth, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            img.src = event.target.result;
+        };
+
+        img.onload = () => {
+            const ratio = maxWidth / img.width;
+            const width = Math.min(img.width, maxWidth);
+            const height = img.height * ratio;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+                if (blob) resolve(blob);
+                else reject(new Error("Compression de l'image a échoué"));
+            }, 'image/jpeg', quality);
+        };
+
+        reader.onerror = (e) => reject(e);
+        reader.readAsDataURL(file);
+    });
+}
+
+
 
 const submitMyDataFormBtn = document.getElementById('submit-my-data-form-btn');
 
@@ -101,19 +186,21 @@ submitMyDataFormBtn.addEventListener('click', function(e) {
     .then(response => response.json())
     .then(data => {
         // data.html contient ton formulaire rendu
+
+        treatFormAlert(myDataForm, 'Données mises à jour avec succès', data);
         
-        if (data.status == "success") {
-            showSuccessAlert('Informations mises à jour avec succès');
+        // if (data.status == "success") {
+        //     showSuccessAlert('Informations mises à jour avec succès');
             
-        } else {
-            alert(data.errors);
-            data.errors.forEach((error) => {
-                alert(error.message)
-            })
+        // } else {
+        //     alert(data.errors);
+        //     data.errors.forEach((error) => {
+        //         alert(error.message)
+        //     })
             
-            //completer pour bien maitriser les erreurs
-            showErrors(data.errors);
-        }
+        //     //completer pour bien maitriser les erreurs
+        //     showErrors(data.errors);
+        // }
     })
     .catch(error => console.error('Erreur:', error));
 })

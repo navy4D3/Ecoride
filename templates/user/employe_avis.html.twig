@@ -1,0 +1,136 @@
+{% set pageClass = 'employe' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace employé{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('employe') }}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% include 'header.html.twig'  with {title : 'Avis', isHistoryBackTrue : true }  %}
+
+    <div class="trajet-section">
+        {% set trajet = avis.trajet %}
+        <div class="trajet-section-date-id">
+            <h3>{{ trajetTimeDatas.dateDepart }}</h3>
+            <span>Trajet N° {{ avis.trajet.id }}</span>
+        </div>
+
+        <div class="trajet-datas">
+            <span class="ellipsis lieu-depart">{{ trajet.lieuDepart }}</span>
+            <span class="heure-depart">{{ trajetTimeDatas.heureDepart }}</span>
+            <div class="start-end-line">
+                <div class="circle outline"></div>
+                <div class="dashed-line"></div>
+                <span class="pc-tablet-only">{{ trajetTimeDatas.duree }}</span>
+                <div class="dashed-line pc-tablet-only"></div>
+                <div class="circle"></div>
+            </div>
+            <span class="heure-arrivee">{{ trajetTimeDatas.heureArrivee }}</span>
+            <span class="ellipsis lieu-arrivee">{{ trajet.lieuArrivee }}</span>
+        </div>
+    </div>
+
+    <div class="reservation-section">
+        <h4 id="cout-total-reservation">{{ reservation.nbPlaces * trajet.prixPersonne }} crédits</h4>
+        <h4>{{ reservation.nbPlaces }} passager{% if reservation.nbPlaces > 1 %}s{% endif %}</h4>
+        <span>Reservation N° {{ reservation.id }}</span>
+    </div>
+
+    <div class="users-btns-section">
+        <div class="users-section">
+            <div class="emetteur-section">
+                <h4>Passager</h4>
+                <div class="user-infos">
+                    {% set photoProfilPath = "/default-profil-picture.png" %}
+                    {% if  avis.creator.photoProfil %}
+                        {% set photoProfilPath = path('user_profil_photo', { id: avis.creator.id }) %}
+                    {% endif %}
+                    <img src="{{ photoProfilPath }}" class="photo-profil" alt="Photo">
+
+                    <h5>{{ avis.creator.prenom }} {{ avis.creator.nom }}</h5>
+                    
+                    {% if  avis.creator.note %}
+                        <div class="user-infos-note">
+                            <span>{{ avis.creator.note }}</span>
+                            <twig:ux:icon name="mingcute:star-fill" class="icon"/>
+                        </div>
+                    {% endif %}
+
+                    <span>{{ avis.creator.email }}</span>
+                    <span>{{ avis.creator.telephone }}</span>
+                </div>
+                <div class="avis">
+                    <p class="commentaire">{{ avis.commentaire }}</p>
+                    <div class="note">
+                        <span>{{ avis.note }}</span>
+                        <twig:ux:icon name="mingcute:star-fill" />      
+                    </div>
+                </div>
+                
+            </div>
+            <div class="chauffeur-section">
+                <h4>Chauffeur</h4>
+                <div class="user-infos">
+                    {% set photoProfilPath = "/default-profil-picture.png" %}
+                    {% if  avis.user.photoProfil %}
+                        {% set photoProfilPath = path('user_profil_photo', { id: trajet.datas.chauffeur.id }) %}
+                    {% endif %}
+                    <img src="{{ photoProfilPath }}" class="photo-profil" alt="Photo">
+
+                    <h5>{{ avis.user.prenom }} {{ avis.user.nom }}</h5>
+
+                    <div class="user-infos-note">
+                        <span>{{ avis.user.note }}</span>
+                        <twig:ux:icon name="mingcute:star-fill" class="icon"/>
+                    </div>
+
+                    <span>{{ avis.user.email }}</span>
+                    <span>{{ avis.user.telephone }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="btns-section">
+            <button id="valider" class="btn-green-black">Valider la facturation</button>
+            <button id="equilibrer" class="btn-blue">Equilibrer</button>
+            <button id="rembourser" class="btn-green">Emettre un remboursement</button>
+        </div>
+    </div>
+
+    <div class="blur-effect"></div>
+    <div class="popup center " id="treat-paiement-popup" style="display:none">
+        <h4>Confirmation du traitement</h4>
+        <span>Vous avez décidé <strong class="traitement-type"></strong> la facturation.</span>
+        <span>Le chauffeur recevra : <strong class="chauffeur-paiement"></strong></span>
+        <span>Le passager récupérera : <strong class="passager-paiement"></strong></span>
+
+        <div class="btns">
+            <button class="valider-traitement btn-green-black">Valider</button>
+            <button class="close-popup-btn btn-outline">Annuler</button>
+        </div>
+    </div>
+    
+    <div class="popup center " id="avis-visibility-popup" style="display:none">
+        <h4>Pour finir, souhaitez-vous que le commentaire soit visible ?</h4>
+
+        <div class="avis">
+            <p class="commentaire">{{ avis.commentaire }}</p>
+            <div class="note">
+                <span>{{ avis.note }}</span>
+                <twig:ux:icon name="mingcute:star-fill" />      
+            </div>
+        </div>
+        <div class="btns">
+            <a class="finaliser-traitement-btn btn-green-black" href="{{path('app_traiter_reservation', { id: reservation.id, avis_visible: true, avis: avis.id  })}}">OUI</a>
+            <a class="finaliser-traitement-btn btn-green" href="{{path('app_traiter_reservation', { id: reservation.id, avis_visible: false, avis: avis.id })}}">NON</a>
+        </div>
+    </div>
+
+{% endblock %}

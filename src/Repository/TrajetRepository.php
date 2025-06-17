@@ -103,6 +103,40 @@ class TrajetRepository extends ServiceEntityRepository
         return $timestamp;
     }
 
+    public function countTrajetsAVenirByDay(int $days): array
+{
+    $qb = $this->createQueryBuilder('t')
+        ->select("DATE(t.dateDepart) as date, COUNT(t.id) as count")
+        ->where('t.dateDepart >= :start')
+        ->setParameter('start', new \DateTimeImmutable("-0 days"))
+        ->andWhere('t.dateDepart <= :end')
+        ->setParameter('end', new \DateTimeImmutable("+$days days"))
+        ->groupBy('date')
+        ->orderBy('date', 'ASC');
+
+    $results = $qb->getQuery()->getResult();
+
+    // Remplir les jours sans trajets
+    $filledResults = [];
+    $start = new \DateTimeImmutable('today');
+    for ($i = 0; $i < $days; $i++) {
+        $date = $start->modify("+$i days")->format('Y-m-d');
+        $filledResults[$date] = 0;
+    }
+
+    foreach ($results as $row) {
+        $filledResults[$row['date']] = (int) $row['count'];
+    }
+
+    // Reformater pour le front
+    $final = [];
+    foreach ($filledResults as $date => $count) {
+        $final[] = ['date' => $date, 'count' => $count];
+    }
+
+    return $final;
+}
+
 //    /**
 //     * @return Trajet[] Returns an array of Trajet objects
 //     */

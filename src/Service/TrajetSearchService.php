@@ -32,10 +32,12 @@ class TrajetSearchService
         foreach ($trips as $trip) {
             $points = $trip->getGpsPoints(); // À implémenter : decode JSON et extraire les lat/lng
 
+            $tripIsPlan = $trip->getStatut() == Statut::Planifie;
             if (
                 $this->isCloseToRoute($startCoords, $points) &&
                 $this->isCloseToRoute($endCoords, $points) &&
-                $this->isSameDirection($startCoords, $endCoords, $points)
+                $this->isSameDirection($startCoords, $endCoords, $points) &&
+                $tripIsPlan
             ) {
                 $nearestStartPoint = $this->findNearestPoint($startCoords, $points);
                 $nearestEndPoint = $this->findNearestPoint($endCoords, $points);

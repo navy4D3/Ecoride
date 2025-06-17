@@ -10,11 +10,14 @@ import './styles/app.scss';
 const navbarMenuIcon = document.getElementById('navbar-menu-icon');
 const navbarBtns = document.getElementById('navbar-btns');
 const navbarCloseMobileMenuBtn = document.getElementById('navbar-close-mobile-menu');
+const navbarLogo = document.querySelector('.navbar_logo');
 
 if (navbarMenuIcon) {
     navbarMenuIcon.addEventListener('click', function() {
         navbarBtns.style.display = "flex";
         navbarCloseMobileMenuBtn.style.display = "block";
+        navbarMenuIcon.style.display = "none";
+        navbarLogo.style.display ="none";
     })
 }
 
@@ -22,6 +25,8 @@ if (navbarMenuIcon) {
 if (navbarCloseMobileMenuBtn) {
     navbarCloseMobileMenuBtn.addEventListener('click', function() {
         navbarBtns.style.display ="none";
+        navbarMenuIcon.style.display = "flex";
+        navbarLogo.style.display ="flex";
     })
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\StatutAvis;
 use App\Repository\AvisRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,6 +35,9 @@ class Avis
     #[ORM\ManyToOne(inversedBy: 'avis')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trajet $trajet = null;
+
+    #[ORM\Column(enumType: StatutAvis::class)]
+    private ?StatutAvis $statut = null;
 
     public function getId(): ?int
     {
@@ -108,6 +112,18 @@ class Avis
     public function setTrajet(?Trajet $trajet): static
     {
         $this->trajet = $trajet;
+
+        return $this;
+    }
+
+    public function getStatut(): ?StatutAvis
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(StatutAvis $statut): static
+    {
+        $this->statut = $statut;
 
         return $this;
     }

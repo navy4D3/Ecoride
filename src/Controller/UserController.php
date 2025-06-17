@@ -358,49 +358,6 @@ final class UserController extends AbstractController {
         return new JsonResponse($data);
     }
 
-    #[Route('/user/add-avis', name: 'app_add_avis')]
-    public function addAvis(Request $request): Response
-    {
-        $avis = new Avis();
-        $form = $this->createForm(AvisType::class);
-        $errors = $form->getErrors(true);
 
-        $trajetLinkedId = $request->query->get('trajet');
-        $userId = $request->query->get('user');
-
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $currentUser = $this->security->getUser();
-                $userNoted = $this->em->getRepository(User::class)->find($userId);
-                $trajet = $this->em->getRepository(Trajet::class)->find($trajetLinkedId);
-
-                $avis = $form->getData();
-
-                $avis->setUser($userNoted);
-                $avis->setCreator($currentUser);
-                $avis->setTrajet($trajet);
-
-                $this->em->persist($avis);
-                $this->em->flush();
-
-                return $this->redirectToRoute('app_trajet', [
-                    'id' => $trajetLinkedId
-                ]);
-            } else {
-                return $this->render('user/add_avis.html.twig', [
-                    'form' => $form,
-                    'errors' => $errors
-                ]); 
-            }
-
-        }
-
-        return $this->render('user/add_avis.html.twig', [
-            'form' => $form,
-            'errors' => $errors
-        ]); 
-    }
+    
 }

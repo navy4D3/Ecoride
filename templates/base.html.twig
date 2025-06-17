@@ -6,7 +6,6 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
             {{ encore_entry_link_tags('style-app') }}
-            {# <link rel="stylesheet" href="{{ asset('styles/app.scss') }}"> #}
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
@@ -14,56 +13,91 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
-            {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
         {% endblock %}
     </head>
     <body class="{% if app.user %}connected{% endif %} {{ pageClass|default('') }}">
         
         <nav class="navbar {{ pageClass|default('') }} {% if app.user %}connected{% endif %} ">
             {% if app.user %}
-                <div class="navbar_buttons" id="navbar-btns">
-                    <a href="/publier-trajet" class="btn-secondary publier-trajet-btn pc-only">
-                        <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
-                        <label class="">Publier un trajet</label>
-                    </a>
+                {% if  "ROLE_ADMIN"  in app.user.roles %}
+                    <div class="navbar_buttons" id="navbar-btns">
+                        <a href="/admin" class="josefin-sans-title navbar_logo pc-only">
+                            <img src="/ecoride-logo.svg" alt="ecoride-logo">
+                        </a>
 
-                    <div class="right-btns">
-                        <a href="/rechercher" class="right-btns-rechercher">
-                            <twig:ux:icon name="iconamoon:search" class="icon"/>
-                        </a>
-                        <a href="/publier-trajet" class="mobile-only right-btns-publier-trajet publier-trajet-btn">
-                            <twig:ux:icon name="flowbite:plus-outline" class="icon"/>
-                            
-                        </a>
-                        <a href="/profil" class="right-btns-profil">
-                            <twig:ux:icon name="lets-icons:user" class="icon"/>
-                        </a>
-                        <a href="/logout" class="right-btns-logout pc-only">
-                            <twig:ux:icon name="tabler:logout" class="icon"/>
-                        </a>
+                        <div class="right-btns">
+                            <a class="right-btns-rechercher">
+                                <span class="pc-only" >Indicateurs</span>
+                                <twig:ux:icon name="famicons:stats-chart" class="mobile-only"/>
+                            </a>
+                            <a class=" right-btns-liste-utilisateurs publier-trajet-btn">
+                                <span class="pc-only" >Liste des utilisateurs</span>
+                                <twig:ux:icon name="lucide:users" class="mobile-only"/> 
+                            </a>
+                            <a href="/admin/creer-compte" class="right-btns-creer-compte">
+                                <span class="btn-green-black pc-only">Créer un compte</span>
+                                <twig:ux:icon name="lucide:user-plus" class="mobile-only"/> 
+                            </a>
+                            <a href="/logout" class="right-btns-logout">
+                                <twig:ux:icon name="tabler:logout" class="icon"/>
+                            </a>
+                        </div>
+                        
                     </div>
-                    
-                    
-                </div>
+                {% elseif  "ROLE_EMPLOYE"  in app.user.roles %}
+                    <div class="navbar_buttons" id="navbar-btns">
+                        <div class="navbar_buttons" id="navbar-btns">
+                            <a href="/employe" class="josefin-sans-title navbar_logo">
+                                <img src="/ecoride-logo.svg" alt="ecoride-logo">
+                            </a>
 
+                            <h1>Espace employé</h1>
+
+                            <a href="/logout" class="right-btns-logout">
+                                <twig:ux:icon name="tabler:logout" class="icon"/>
+                            </a>
+                            
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="navbar_buttons" id="navbar-btns">
+                        <a href="/publier-trajet" class="btn-secondary publier-trajet-btn pc-only">
+                            <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
+                            <label class="">Publier un trajet</label>
+                        </a>
+
+                        <div class="right-btns">
+                            <a href="/rechercher" class="right-btns-rechercher">
+                                <twig:ux:icon name="iconamoon:search" class="icon"/>
+                            </a>
+                            <a href="/publier-trajet" class="mobile-only right-btns-publier-trajet publier-trajet-btn">
+                                <twig:ux:icon name="flowbite:plus-outline" class="icon"/>
+                            </a>
+                            <a href="/profil" class="right-btns-profil">
+                                <twig:ux:icon name="lets-icons:user" class="icon"/>
+                            </a>
+                            <a href="/logout" class="right-btns-logout pc-only">
+                                <twig:ux:icon name="tabler:logout" class="icon"/>
+                            </a>
+                        </div> 
+                    </div>
+                {% endif %}
             {% else %}
                 <a href="/" class="josefin-sans-title navbar_logo">
-                    <img src="../ecoride-logo.svg" alt="ecoride-logo">
+                    <img src="/ecoride-logo.svg" alt="ecoride-logo">
                     <label>EcoRide</label>
                 </a>
 
                 <div class="navbar_buttons" id="navbar-btns">
-                    <twig:ux:icon name="maki:cross" class="navbar_mobile_icon" id="navbar-close-mobile-menu" display="none" style="width:20px; height:20px;"/>
+                    <twig:ux:icon name="maki:cross" class="navbar_mobile_icon" id="navbar-close-mobile-menu" display="none" />
                     <a href="/rechercher" class="btn-secondary">
                         <twig:ux:icon name="iconamoon:search" class="icon"/>
-
-                            <label>Rechercher</label>
+                        <label>Rechercher</label>
 
                     </a>
                     <a href="/publier-trajet" class="btn-secondary">
                         <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
                         <label>Publier un trajet</label>
-                        {# icon plus #}
                     </a>
 
                         <a href="/connect" class="btn-green-black">Se connecter</a>

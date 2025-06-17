@@ -1,0 +1,43 @@
+{% set pageClass = 'employe' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace employé{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('employe') }}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h2>Avis à traiter</h2>
+    <div class="avis-section">
+        {% if avisATraiter is empty %}
+            <p>Aucun avis à traiter.</p>
+        {% else %}
+            {% for avis in avisATraiter %}
+                <div class="avis {% if not avis.isPositive %}negative{% endif %}" id="{{ avis.id }}">
+                    <p>{{ avis.commentaire }}</p>
+                    <div class="right-div">
+                        <div class="note">
+                            <span>{{ avis.note }}</span>
+                            <twig:ux:icon name="mingcute:star-fill" />      
+                        </div>
+
+                        <a href="{{ path('app_employe_avis', { id: avis.id }) }}"><twig:ux:icon id="plus-icon" class="plus-icon" name="bi:plus" /></a>
+                        {% if avis.isPositive %}
+                            <twig:ux:icon id="check-icon" class="check-icon visible edit-avis-statut-btn" data-avis-id="{{ avis.id }}" name="mingcute:check-fill" />
+                            <twig:ux:icon id="cross-icon" class="cross-icon edit-avis-statut-btn" data-avis-id="{{ avis.id }}" name="maki:cross" />
+                        {% endif %}
+                        
+                        
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -74,6 +74,7 @@
                 padding: 15px;
                 overflow-x: auto;
                 margin: -15px;
+                width: 100%;
     
     
                 .trajet {
@@ -86,6 +87,7 @@
                     gap: 5px;
                     cursor: pointer;
                     height: fit-content;
+                    max-width: 300px;
     
                     * {
                         color: $green-black;
@@ -140,6 +142,10 @@
                        gap: 20px;
                        padding: 0px 10px;
                        justify-content: space-between;
+
+                       .arrivee {
+                        text-align: end;
+                       }
     
                     }
     
@@ -179,6 +185,7 @@
                         > span {
                             font-family: $josefin-sans;
                             font-size: 18px;
+                            white-space: nowrap;
                         }
                         
                     }
@@ -291,6 +298,10 @@
 
     .mes-informations-section {
         align-items: center;
+
+        .errors-container {
+            justify-content: center;
+        }
 
         .form-green-column {
             max-width: 800px;
