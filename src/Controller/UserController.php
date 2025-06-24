@@ -358,6 +358,39 @@ final class UserController extends AbstractController {
         return new JsonResponse($data);
     }
 
+    #[Route('/user/reset-photo-profil', name: 'app_user_reset-photo-profil')]
+    public function resetProfilPicture(Request $request): JsonResponse
+    {
+        $id= $request->query->get('id');
+        $user =  $this->em->getRepository(User::class)->find($id);
+
+        $user->setPhotoProfil(null);
+
+        $this->em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
+    #[Route('/user/delete-account', name: 'app_user_delete_account')]
+    public function deleteAccount(Request $request, Security $security): Response
+    {
+        $id= $request->query->get('id');
+        $userToDelete = $this->em->getRepository(User::class)->find($id);
+
+        $currentUserEmail = $security->getUser()->getUserIdentifier();
+        $currentUser = $this->em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+
+        $this->em->remove($userToDelete);
+
+        $this->em->flush();
+
+        if (in_array('ROLE_ADMIN', $currentUser->getRoles())) {
+            return $this->redirectToRoute('app_admin_users_list');
+        } else {
+            return $this->redirectToRoute('app_home');
+        }
+    }
+
 
     
 }

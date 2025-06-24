@@ -39,9 +39,10 @@ class TrajetRepository extends ServiceEntityRepository
     public function findByDateStatutAndPlaces(
         string $dateString, 
         // string $statut, 
-        int $nbPassagers, 
+        int $nbPassagers,
+        bool $isOnDate,
         string $chauffeurId = "", 
-        bool $isOnDate
+        
     ): array 
     {
 
@@ -103,29 +104,106 @@ class TrajetRepository extends ServiceEntityRepository
         return $timestamp;
     }
 
+    public function countCreditsAVenirByDay(int $days): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('t')
+            ->where('t.heureDepart >= :start')
+            ->andWhere('t.heureDepart <= :end')
+            ->setParameter('start', new \DateTimeImmutable('today'))
+            ->setParameter('end', new \DateTimeImmutable("+$days days"))
+            ->orderBy('t.heureDepart', 'ASC');
+
+        // Ajout de la fonction DATE manuellement si besoin
+
+        $results = $qb->getQuery()->getResult();
+
+        $formatter = new \IntlDateFormatter(
+            'fr_FR',
+            \IntlDateFormatter::LONG,
+            \IntlDateFormatter::NONE,
+            null,
+            null,
+            'd MMMM' // Exemple : "2 juin"
+        );
+
+        // Remplir les jours sans trajets
+        $filledResults = [];
+        $start = new \DateTimeImmutable('today');
+        for ($i = 0; $i < $days; $i++) {
+            $date = $start->modify("+$i days");
+            $formattedDate = $formatter->format($date);
+            $filledResults[$formattedDate] = 0;
+        }
+
+        
+
+        // Regrouper les trajets par date
+        foreach ($results as $trajet) {
+            /** @var \DateTimeInterface $dateTime */
+            $dateTime = $trajet->getHeureDepart();
+            $reservations = $trajet->getReservations();
+            $formattedDate = $formatter->format($dateTime);
+            if (isset($filledResults[$formattedDate])) {
+                $count = 0;
+                foreach($reservations as $reservation) {
+                    $count += $reservation->getNbPlaces() * 2;
+                }
+                
+                $filledResults[$formattedDate]+= $count;
+            }
+        }
+
+        // Reformater pour le front
+        $final = [];
+        foreach ($filledResults as $date => $count) {
+            $final[] = ['date' => $date, 'count' => $count];
+        }
+
+        return $final;
+    }
     public function countTrajetsAVenirByDay(int $days): array
-{
+    {
     $qb = $this->createQueryBuilder('t')
-        ->select("DATE(t.dateDepart) as date, COUNT(t.id) as count")
-        ->where('t.dateDepart >= :start')
-        ->setParameter('start', new \DateTimeImmutable("-0 days"))
-        ->andWhere('t.dateDepart <= :end')
+        ->select('t.heureDepart', 't.id')
+        ->where('t.heureDepart >= :start')
+        ->andWhere('t.heureDepart <= :end')
+        ->setParameter('start', new \DateTimeImmutable('today'))
         ->setParameter('end', new \DateTimeImmutable("+$days days"))
-        ->groupBy('date')
-        ->orderBy('date', 'ASC');
+        ->orderBy('t.heureDepart', 'ASC');
+
+    // Ajout de la fonction DATE manuellement si besoin
 
     $results = $qb->getQuery()->getResult();
+
+    $formatter = new \IntlDateFormatter(
+        'fr_FR',
+        \IntlDateFormatter::LONG,
+        \IntlDateFormatter::NONE,
+        null,
+        null,
+        'd MMMM' // Exemple : "2 juin"
+    );
 
     // Remplir les jours sans trajets
     $filledResults = [];
     $start = new \DateTimeImmutable('today');
     for ($i = 0; $i < $days; $i++) {
-        $date = $start->modify("+$i days")->format('Y-m-d');
-        $filledResults[$date] = 0;
+        $date = $start->modify("+$i days");
+        $formattedDate = $formatter->format($date);
+        $filledResults[$formattedDate] = 0;
     }
 
-    foreach ($results as $row) {
-        $filledResults[$row['date']] = (int) $row['count'];
+    
+
+    // Regrouper les trajets par date
+    foreach ($results as $trajet) {
+        /** @var \DateTimeInterface $dateTime */
+        $dateTime = $trajet['heureDepart'];
+        $formattedDate = $formatter->format($dateTime);
+        if (isset($filledResults[$formattedDate])) {
+            $filledResults[$formattedDate]++;
+        }
     }
 
     // Reformater pour le front
@@ -135,7 +213,7 @@ class TrajetRepository extends ServiceEntityRepository
     }
 
     return $final;
-}
+    }
 
 //    /**
 //     * @return Trajet[] Returns an array of Trajet objects

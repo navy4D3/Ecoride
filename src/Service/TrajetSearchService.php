@@ -16,13 +16,13 @@ class TrajetSearchService
         // $trips = $this->trajetRepository->findBy(['statut' => Statut::from('Planifié')]); // ou mieux : les trajets à venir seulement
         
         $isOnDate = true;
-        $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, $nbPlace, $currentUserId, $isOnDate);
+        $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, $nbPlace, $isOnDate, $currentUserId);
         if (empty($trips)) {
             // chercher date sur 3 jours glissant
             // $trips = $this->trajetRepository->findByRangeDateStatutAndPlaces($date, 'Planifié', $nbPlace, $currentUserId);
             
             $isOnDate = false;
-            $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, $nbPlace, $currentUserId, $isOnDate);
+            $trips = $this->trajetRepository->findByDateStatutAndPlaces($date, $nbPlace, $isOnDate, $currentUserId);
 
         }
         

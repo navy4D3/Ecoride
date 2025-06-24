@@ -47,6 +47,7 @@ class RegistrationStepTwoType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Dupont'
                 ]
+                
             ])
             ->add('prenom', TextType::class, [
                 'attr' => [

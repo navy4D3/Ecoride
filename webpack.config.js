@@ -44,6 +44,7 @@ Encore
     .addEntry('trajet', './assets/js/trajet.js')
     .addEntry('addAvis', './assets/js/addAvis.js')
     .addEntry('employe', './assets/js/employe.js')
+    .addEntry('admin', './assets/js/admin.js')
 
     .addStyleEntry('style-app', './assets/styles/app.scss')
     // .addStyleEntry('style-home', './assets/styles/home.scss')

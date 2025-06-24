@@ -501,7 +501,7 @@ form {
     display: flex;
     gap: 20px;
 
-    input, select {
+    input, select, textarea {
         border: none;
         text-overflow: ellipsis;
         color: $green-black;
@@ -608,7 +608,7 @@ form {
             
         }
 
-        input, select {
+        input, select, textarea {
             border-radius: 10px;
             border: none;
             background-color: $green-white;
