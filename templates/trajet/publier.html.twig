@@ -61,28 +61,6 @@
                 {{ form_widget(form.voiture) }}
                 {{ form_label(form.voiture) }}
                 {% include 'voiture/user_voiture_list.html.twig' %}
-                {# <div id="user-voitures" class="user-voitures-list">
-                    {% if app.user.voitures %} {% for voiture in app.user.voitures %}
-                        <div class="voiture-card" id="{{ voiture.id }}">
-                            
-                            <span>{{ voiture.surnom }}</span>
-                            <div>
-                                <span>{{ voiture.marqueLabel }}</span>
-                                <span>{{ voiture.modele }}</span>
-                                {% if voiture.isElectric %}
-                                    <span>Electrique</span> {% else %} <span>Thermique</span>
-                                {% endif %}
-                                <span class="fw-bold">{{ voiture.places }} place{{ voiture.places > 1 ? 's' : '' }}</span>
-                            </div>
-                            
-                        </div>
-                        
-                    {% endfor %} {% endif %}
-                    <div class="add-voiture-card" id="add-voiture-btn">
-                        <span>Ajouter</span>
-                        <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
-                    </div>
-                </div> #}
             </div>
             
         
@@ -94,8 +72,49 @@
         <div id='itineraires-choices' class=" flex-column gap-3" style="display:none";>
             <div id="itineraires-list">
             </div>
-            <button id="validate-btn" form="add-trajet-form" type="submit" class="btn-green-black">Valider</button>
-            <span class="" id="back-btn">Retour</span>
+            <button id="confirm-itineraire-btn" class="btn-green-black inactive">Valider</button>
+            <span class="back-btn" id="">Retour</span>
+        </div>
+
+        <div id='recapitulatif' class="recapitulatif" style="display:none";>
+            <h3 class="date-depart">Départ le XXXXX</h3>
+            <div class="lieu-time">
+                <div class="depart">
+                    <span style="text-align:right" class="lieu-depart fw-bold">lieu depart</span>
+                    <span class="heure-depart">heure depart</span>
+                </div>
+                
+                <div class="duree-distance">
+                    <small class="duree">duree</small>
+                    <div class="vertical-line-circles">
+                        <div class="circle outline"></div>
+                        <div class="dashed-line"></div>
+                        <div class="circle"></div>
+                    </div>
+                    <small class="distance">distance</small>
+                </div>
+                <div class="arrivee">
+                    <span class="lieu-arrivee fw-bold">lieu arrivee</span>
+                    <span class="heure-arrivee">heure arrivee</span>
+                </div>
+            </div>
+
+
+            <h4>Avec</h4>
+            <div class="voiture">
+                <span class="voiture-surnom fw-bold">nom voiture</span>
+                <small class="voiture-marque">Marque</small>
+                <small class="voiture-modele">Modele</small>
+                <small class="voiture-is-electric">Modele</small>
+                <span class="voiture-place">X places</span>
+            </div>
+            
+            <h4>Pour</h4>
+
+            <span class="credits-passager">X crédits / passager</span>
+
+            <button id="validate-btn" form="add-trajet-form" type="submit" class="btn-green-black">Confirmer</button>
+            <span class="back-btn" id="">Retour</span>
         </div>
 
         {# ajouter une section recapitulatif #}
