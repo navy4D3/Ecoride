@@ -17,7 +17,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -282,4 +284,24 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_register');
     }
+
+    #[Route('/test-mail', name: 'app_test_mail')]
+    public function testMail(MailerInterface $mailer): Response
+    {
+        $email = (new TemplatedEmail())
+            ->from('yvanrobert974@gmail.com')
+            ->to('test@example.com')
+            ->subject('Test Mailtrap')
+            ->text('Ceci est un test');
+
+        try {
+            $mailer->send($email);
+        } catch (\Throwable $e) {
+            return new Response('Erreur : ' . $e->getMessage());
+        }
+        
+
+        return new Response('Email envoyé (vérifie Mailtrap)');
+    }
+
 }

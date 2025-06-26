@@ -53,8 +53,6 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
                 }
             
             }
-
-            
             
         }
 
@@ -137,6 +135,12 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
                 
             
             }
+        }
+
+        .forget-password {
+            color: $green-black;
+            text-decoration: underline;
+            font-family: $nunito;
         }
 
         

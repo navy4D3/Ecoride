@@ -1,0 +1,21 @@
+{% set pageClass = 'reset-password' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <h1>Reinitialisation du mot de passe</h1>
+
+    {{ form_start(requestForm, { 'attr': {'class': 'form-green-column'}} ) }}
+        <p class="mb-0">Renseigne ton adresse mail pour recevoir un lien de réinitialisation.</p>
+        {{ form_row(requestForm.email) }}
+        <div>
+            
+        </div>
+
+        <button class="btn-green-black">Envoyer</button>
+    {{ form_end(requestForm) }}
+{% endblock %}

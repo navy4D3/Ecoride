@@ -55,10 +55,10 @@ class TrajetSearchService
         return ['trajets' => $matchingTrips, 'isOnDate' => $isOnDate];
     }
 
-    private function isCloseToRoute(array $coord, array $routePoints, float $thresholdMeters = 1000): bool
+    private function isCloseToRoute(array $coord, array $routePoints, float $thresholdKilometers = 50): bool
     {
         foreach ($routePoints as $point) {
-            if ($this->haversineDistance($coord, $point) < $thresholdMeters) {
+            if ($this->haversineDistance($coord, $point) < $thresholdKilometers) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ class TrajetSearchService
 
     private function haversineDistance(array $point1, array $point2): float
     {
-        $earthRadius = 6371000; // m
+        $earthRadius = 6371; // m
         $lat1 = deg2rad($point1['lat']);
         $lon1 = deg2rad($point1['lng']);
         $lat2 = deg2rad($point2['lat']);
@@ -106,7 +106,7 @@ class TrajetSearchService
     }
 
     // Optionnel : ne considérer que les points à moins de 10 km
-    // return $minDistance < 10 ? $closestIndex : null;
+    $minDistance < 50 ? $closestIndex : null;
     return ['index' => $closestIndex, 'distance' => round($minDistance, 1)];
     }
 }

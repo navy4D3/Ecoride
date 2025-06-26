@@ -46,6 +46,7 @@ security:
         - { path: ^/contact, roles: PUBLIC_ACCESS }
         - { path: ^/mentions-legales, roles: PUBLIC_ACCESS }
         - { path: ^/cgu, roles: PUBLIC_ACCESS }
+        - { path: ^/test-mail, roles: PUBLIC_ACCESS }
         
         - { path: ^/mentions-legales, roles: PUBLIC_ACCESS }
 
