@@ -6,6 +6,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('registerLogin') }}
+
 {% endblock %}
 
 
@@ -27,7 +28,7 @@
         
         <div class="form-section-form">
             <div class="register-login-btns">
-                <h2 class="register-login-btns-register" id="register-label">Inscription</h2>
+                <a href="/connect?type=register"><h2 class="register-login-btns-register" id="register-label">Inscription</h2></a>
                 <h2 class="register-login-btns-login" id="login-label">Connexion</h2>
             </div>
             {# {% for flash_error in app.flashes('verify_email_error') %}

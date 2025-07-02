@@ -39,6 +39,7 @@
      </div>
 
      <div class="user-datas" >
+        {% if user.isChauffeur %}
             <div class="user-datas-description">
                 <p>{{ user.description }}</p>
             </div>
@@ -51,7 +52,7 @@
                     </div>
                 {% endfor %}
             </div>
-
+        {% endif %}
             
      </div>
 

@@ -36,6 +36,9 @@ class TrajetRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+
     public function findByDateStatutAndPlaces(
         string $dateString, 
         // string $statut, 
@@ -55,8 +58,17 @@ class TrajetRepository extends ServiceEntityRepository
         $endOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 23:59:59');
 
         if (!$isOnDate) {
-            // $startOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 00:00:00');
-            $startOfDate = $startOfDate->modify('-3 day');
+
+            // Propose un startOfDate -3j, sauf si ça tombe avant aujourd'hui à minuit
+            $startMinus3 = (clone $startOfDate)->modify('-3 days');
+            $startOfToday = new \DateTime('today');
+
+            // On prend la date la plus tardive entre startOfToday et -3 jours
+            if ($startMinus3 < $startOfToday) {
+                $startOfDate = $startOfToday;
+            } else {
+                $startOfDate = $startMinus3;
+            }
 
             // $endOfDate = new \DateTime($parsedDate->format('Y-m-d') . ' 23:59:59');
             $endOfDate = $endOfDate->modify('+ 3 day');
@@ -65,15 +77,15 @@ class TrajetRepository extends ServiceEntityRepository
     
         $qb = $this->createQueryBuilder('t')
             ->leftJoin('t.voiture', 'v')
-            ->leftJoin('t.participants', 'p')
+            ->leftJoin('t.reservations', 'r')
             ->leftJoin('t.chauffeur', 'c')
             ->addSelect('v')
-            ->addSelect('p')
+            ->addSelect('SUM(r.nbPlaces) AS HIDDEN totalPassagers')
             ->where('t.heureDepart BETWEEN :start AND :end')
             // ->andWhere('t.statut = :statut')
             ->andWhere('c.id != :chauffeurId')
             ->groupBy('t.id', 'v.id')
-            ->having('(v.places - 1 - COUNT(p.id)) >= :placesMin')
+            ->having('(v.places - 1 - SUM(COALESCE(r.nbPlaces, 0))) >= :placesMin')
             ->setParameter('start', $startOfDate)
             ->setParameter('end', $endOfDate)
             // ->setParameter('statut', $statut)

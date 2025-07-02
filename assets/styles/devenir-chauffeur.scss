@@ -68,7 +68,9 @@
     }
 
     .user-voitures-list {
-        justify-content: center;
+
+        width: fit-content;
+        max-width: 100%;
 
         .voiture-card {
             pointer-events: none;

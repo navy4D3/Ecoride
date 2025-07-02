@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationStepTwoType extends AbstractType
 {
@@ -44,14 +45,26 @@ class RegistrationStepTwoType extends AbstractType
                 ],
             ])
             ->add('nom', TextType::class, [
+                'empty_data' => '',
                 'attr' => [
                     'placeholder' => 'Dupont'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom ne peut pas être nul.'
+                    ]),
                 ]
                 
             ])
             ->add('prenom', TextType::class, [
+                'empty_data' => '',
                 'attr' => [
                     'placeholder' => 'Jean'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le prénom ne peut pas être nul.'
+                    ]),
                 ]
             ])
             ->add('date_naissance', DateType::class, [
@@ -65,16 +78,28 @@ class RegistrationStepTwoType extends AbstractType
 
             ])
             ->add('telephone', TelType::class, [
+                'empty_data' => '',
                 'attr' => [
                     'placeholder' => '06 12 34 56 78',
                     'oninput' => "this.value = this.value.replace(/[^0-9 ]/g, '')",
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le téléphone ne peut pas être nul.'
+                    ]),
+                ]
             ])
             ->add('adresse', TextType::class, [
+                'empty_data' => '',
                 'attr' => [
                     'placeholder' => '2 rue du covoiturage',
                     'class' => 'adresse-autocomplete', 
                     'autocomplete' => 'off'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => "L'adresse ne peut pas être nul."
+                    ]),
                 ]
             ])
         ;

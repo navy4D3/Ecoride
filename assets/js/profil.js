@@ -1,10 +1,7 @@
 const { checkInputs, showErrors, showSuccessAlert, treatFormAlert, checkPasswordValidity, checkRegisterFormValidity } = require("../app");
 import heic2any from 'heic2any';
 import { showAddVoitureForm } from './addVoiture';
-// const { initPreferencesBtnsEvent } = require("./devenirChauffeur");
-// import {initPreferencesBtnsEvent} from './devenirChauffeur';
 import { initPreferencesBtnsEvents } from './initPreferencesBtnsEvents';
-// import { checkPasswordValidity } from './registerLogin';
 
 const trajetsBtn = document.getElementById('trajets');
 const myDataBtn = document.getElementById('mes-informations');
@@ -54,14 +51,6 @@ const editProfilPictureBtn =  document.getElementById('edit-profil-icon');
 const profilPictureInput =  document.getElementById('registration_step_two_photo_profil');
 
 const myDataForm = document.getElementById('my-data-form');
-// const myDataFormInputs = myDataForm.querySelectorAll('input, select, textarea');
-// const myDataFormSubmitBtn = myDataForm.querySelector('.submit-btn');
-
-// myDataFormInputs.forEach(input => {
-//   input.addEventListener('input', function() {
-//     myDataFormSubmitBtn.classList.remove('inactive');
-//   });  
-// });
 
 initFormInputsValidation(myDataForm);
 
@@ -243,18 +232,8 @@ submitEspaceChauffeurFormBtn.addEventListener('click', function(e) {
     })
     .then(response => response.json())
     .then(data => {
-        // data.html contient ton formulaire rendu
         
-        if (data.status == "success") {
-            showSuccessAlert('Informations mises à jour avec succès');
-            
-        } else {
-            data.errors.forEach((error) => {
-                alert(error.message)
-            })
-            
-            showErrors(data.errors);
-        }
+        treatFormAlert(espaceChauffeurForm, 'Informations modifiés avec succès', data)
     })
     .catch(error => console.error('Erreur:', error));
 })
@@ -357,50 +336,6 @@ confirmPasswordInput.addEventListener('input', function() {
     checkPasswordValidity('mail_and_password_password_first');
     checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
 })
-
-// function checkPasswordValidity(passwordInputId) {
-
-//     const lengthCriteria = document.getElementById('length');
-//     const lowercaseCriteria = document.getElementById('lowercase');
-//     const uppercaseCriteria = document.getElementById('uppercase');
-//     const numberCriteria = document.getElementById('number');
-//     const specialCriteria = document.getElementById('special');
-  
-//     const passwordInput = document.getElementById(passwordInputId);
-//     // const confirmPasswordInput = document.getElementById(confirmPasswordInputIdd);
-  
-//     const password = passwordInput.value;
-  
-//     function toggleValidity(element, isValid) {
-//       if (isValid) {
-//         element.classList.remove('invalid');
-//         element.classList.add('valid');
-        
-//       } else {
-//         element.classList.remove('valid');
-//         element.classList.add('invalid');
-        
-//       }
-//     }
-  
-//     // Longueur >= 8
-//     toggleValidity(lengthCriteria, password.length >= 8);
-      
-//     // Contient une minuscule
-//     toggleValidity(lowercaseCriteria, /[a-z]/.test(password));
-  
-//     // Contient une majuscule
-//     toggleValidity(uppercaseCriteria, /[A-Z]/.test(password));
-  
-//     // Contient un chiffre
-//     toggleValidity(numberCriteria, /\d/.test(password));
-  
-//     // Contient un caractère spécial
-//     toggleValidity(specialCriteria, /[^A-Za-z0-9]/.test(password));
-  
-//     // checkRegisterFormValidity();
-  
-// }
 
 
 

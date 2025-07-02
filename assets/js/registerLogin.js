@@ -19,10 +19,6 @@ if (inscriptionLabel && connexionLabel) {
 }
 
 
-inscriptionLabel.addEventListener('click', () => {
-  
-  toggleForm('register');
-})
 connexionLabel.addEventListener('click', () => {
   
   toggleForm('login');
@@ -44,6 +40,17 @@ function toggleForm(formType) {
       
       document.querySelectorAll('.errors-container').innerHTML = '';
       initFormEvents();
+
+      function waitForReCaptchaReadyAndInit() {
+        if (typeof grecaptcha !== 'undefined' && typeof window.onGoogleReCaptchaApiLoad === 'function') {
+            window.onGoogleReCaptchaApiLoad();
+        } else {
+            setTimeout(waitForReCaptchaReadyAndInit, 200);
+        }
+      }
+    
+      // Ensuite, après chargement AJAX du formulaire :
+      waitForReCaptchaReadyAndInit();
 
 
   })

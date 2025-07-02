@@ -17,7 +17,7 @@
     > div {
         width: 100%;
         max-width: 1000px;
-        align-items: center;
+        // align-items: center;
 
     }
 
@@ -81,7 +81,7 @@
 
 
     .datepicker {
-        right: auto;
+        left: auto;
         top: auto;
     }
 
@@ -196,6 +196,10 @@
 
         .lieu-time {
             flex-direction: column;
+
+            .depart, .arrivee {
+                text-align: center;
+            }
 
             .duree-distance {
                 display: flex;

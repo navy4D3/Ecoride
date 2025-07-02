@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DevenirChauffeurType extends AbstractType
 {
@@ -25,9 +26,16 @@ class DevenirChauffeurType extends AbstractType
 
             ->add('description', TextareaType::class, [
                 'required' => true,
+                'empty_data' => '',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'La description ne peut pas être nulle.'
+                    ]),
+                ],
                 'attr' => [
                     'placeholder' => 'Décris-toi en quelques lignes',
                     'rows' => 4],
+
             ])
 
             ->add('hasVoiture', CheckboxType::class, [

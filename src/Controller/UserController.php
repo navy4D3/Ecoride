@@ -8,6 +8,7 @@ use App\Entity\Trajet;
 use App\Entity\User;
 use App\Enum\Preference;
 use App\Enum\Statut;
+use App\Enum\StatutAvis;
 use App\Form\AvisType;
 use App\Form\DevenirChauffeurType;
 use App\Form\MailAndPasswordType;
@@ -108,31 +109,15 @@ final class UserController extends AbstractController {
             
         }
 
-        // $trajetsPasses = $trajetRepository->findAllTrajetsByUser($currentUser->getId());
-        
-
-        // return new Response($trajetsPasses[0]->getId());
-
-        // foreach ($trajetsPasses as $trajet) {
-            
-        //     $timeDatas = $trajetController->showTrajetDateAndTime($trajet);
-
-        //     // Formatage final pour le front
-        //     $data = [
-        //         'datas' => $trajet,
-        //         'timeDatas' => $timeDatas,
-        //     ];
-
-        //     array_push($trajetsPassesDatasToDisplay, $data);
-        // }
-
         $myDataForm = $this->createForm(RegistrationStepTwoType::class, $currentUser);
         $driverSpaceForm = $this->createForm(DevenirChauffeurType::class, $currentUser);
         $mailAndPasswordForm = $this->createForm(MailAndPasswordType::class, $currentUser);
         $preferences = Preference::cases();
 
-        $avisRecus = $currentUser->getAvisRecus();
-        $avisPublies = $currentUser->getAvisPublies();
+        // $avisRecus = $currentUser->getAvisRecus();
+        $avisRecus = $em->getRepository(Avis::class)->findBy(['user' => $currentUser, 'statut' => StatutAvis::Visible]);
+        $avisPublies = $em->getRepository(Avis::class)->findBy(['creator' => $currentUser, 'statut' => StatutAvis::Visible]);
+        // $avisPublies = $currentUser->getAvisPublies();
 
 
         return $this->render('user/profil.html.twig', [
@@ -176,7 +161,7 @@ final class UserController extends AbstractController {
     #[Route('/devenir-chauffeur', name: 'app_devenir_chauffeur')]
     public function devenirChauffeur(Request $request, Security $security, EntityManagerInterface $em, UserAuthenticatorInterface $userAuthenticatorInterface): Response 
     {
-        $redirectRoute = $request->query->get('redirect', 'app_profil');
+        $redirectRoute = $request->query->get('redirect', 'app_user_profil');
 
         $preferences = Preference::cases();
 

@@ -41,6 +41,8 @@
         {{ form_label(registrationForm.password.second) }}
         {{ form_widget(registrationForm.password.second) }}
     </div>
+
+    
     
     {% if registrationForm.agreeTerms is defined %}
         <div class="cgu-section">
@@ -50,10 +52,13 @@
         </div>
 
         {{ form_widget(registrationForm.agreeTerms)  }}
-        <button type="submit" formaction="/register" class="btn btn-green inactive submit-btn" id="submit-btn">S'inscrire</button>
+        {{ form_row(registrationForm.recaptcha) }}
+        <button type="submit" formaction="/register" class="btn-green inactive submit-btn" id="submit-btn">S'inscrire</button>
     {% else %}
-        <button type="button" class="btn btn-green inactive submit-btn" id="submit-btn">Modifier</button>
+        <button type="button" class="btn-green inactive submit-btn" id="submit-btn">Modifier</button>
     {% endif %}
+
+    
 
     
     {# {{ form_errors(registrationForm) }} #}

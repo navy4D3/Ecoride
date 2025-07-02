@@ -44,6 +44,24 @@
    
 
     <div class="trajets-section current-section">
+        <div class="credits-infos">
+            <div>
+                <h3>{{ app.user.creditsDisponible }} ￠</h3>
+                <h4>disponible</h4>
+            </div>
+            <div>
+                
+                <h3>{{ app.user.creditsEnAttente }} ￠</h3>
+                <h4>en attente</h4>
+            </div>
+            <div>
+                <h3>{{ app.user.creditsReserve }} ￠</h3>
+                <h4>réservé</h4>
+            </div>
+            
+            
+            
+        </div>
         <div class="trajets-a-venir">
             <h2>Trajets à venir</h2>
             <div class="trajets">
@@ -138,14 +156,31 @@
                                 <span style="text-align:end">{{ trajet.datas.lieuArrivee }}</span>
                             </div>
 
-                            <span>
+                            <div class="right-section">
                                 {% if isChauffeur %}
+                                    {% set creditsEnAttente = 0 %}
+                                    {% for reservation in trajet.datas.reservations %}
+                                        {% if reservation.statut.label == "Enregistré" %}
+                                            {% set creditsEnAttente = creditsEnAttente + ( trajet.datas.prixPersonne * reservation.nbPlaces ) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if creditsEnAttente > 0 %}
+                                        <twig:ux:icon name="solar:dollar-bold" id="" class="icon trajet-type-icon"/>
+                                    {% endif %}
                                     <twig:ux:icon name="mingcute:car-line" id="" class="icon trajet-type-icon"/>
-                                    
                                 {% else %}
+                                    {% set reservationPaye = true %}
+                                    {% for reservation in trajet.datas.reservations %}
+                                        {% if reservation.user == app.user  and (reservation.statut.label =="Enregistré") %}
+                                            {% set reservationPaye = false %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if not reservationPaye %}
+                                        <span href="/add-avis/{{ trajet.datas.id }}">Laisser un avis</span>
+                                    {% endif %}
                                     <twig:ux:icon name="lucide:users" class="icon trajet-type-icon"/>
                                 {% endif %}
-                            </span>
+                            </div>
                         </a>
                     {% endfor %}
                 {% endif %}

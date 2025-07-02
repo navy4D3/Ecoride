@@ -58,24 +58,34 @@
 
         .lieu-time, .chauffeur {
             display: flex;
-            flex-direction: row;
+            
             align-items: center;
             gap: 10px;
 
             svg { 
                 height: 20px;
                 width: 20px;
+                min-width: 20px;
+                rotate: 90deg;
             }
         }
 
-        .lieu-time svg {
-            rotate:90deg;
+        .lieu-time {
+            flex-direction: column;
+            gap: 5px;
+
+            svg {
+                rotate:90deg;
+            }
+
         }
+            
 
         .chauffeur {
             border-radius: 100px;
             background-color: $green-medium;
             padding: 10px;
+            flex-direction: row;
 
             img {
                 width: 40px;
@@ -142,15 +152,6 @@
         .recap-1, .recap-2 {
             width: 100%;
             padding: 30px;
-        }
-
-        .recap-2 .lieu-time {
-            flex-direction: column;
-            gap: 5px;
-            
-            svg {
-                rotate: 180deg;
-            }
         }
 
     }

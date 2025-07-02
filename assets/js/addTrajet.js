@@ -178,6 +178,7 @@ continueBtn.addEventListener('click', function(e) {
 
     this.classList.add('inactive');
     rechercherItineraire(departInput.value, arriveeInput.value);
+
     
 
 

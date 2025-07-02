@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\Preference;
+use App\Enum\Statut;
 use App\Enum\StatutReservation;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -468,22 +469,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getCreditsReserve(): int
     {
-        $creditsEnAttente = 0;
+        $creditsReserve = 0;
         $reservations = $this->getReservations();
 
         foreach ($reservations as $reservation) {
             if ($reservation->getStatut() == StatutReservation::Enregistre) {
-                $creditsEnAttente += $reservation->getNbPlaces() * $reservation->getTrajet()->getPrixPersonne();
+                $creditsReserve += $reservation->getNbPlaces() * $reservation->getTrajet()->getPrixPersonne() + 2;
             }
         }
 
-        return $creditsEnAttente;
+        return $creditsReserve;
         
     }
 
     public function getCreditsDisponible(): int
     {
         return $this->getCredits() - $this->getCreditsReserve();
+    }
+
+    public function getCreditsEnAttente(): int
+    {
+        $usersTrajetAsChauffeur = $this->getTrajetsAsChauffeur();
+        $result = 0;
+
+        foreach ($usersTrajetAsChauffeur as $trajet) {
+            foreach ($trajet->getReservations() as $reservation) {
+                if ($reservation->getStatut() == StatutReservation::Enregistre) {
+                    $result += $reservation->getNbPlaces() * $trajet->getPrixPersonne();
+                }
+            }   
+        }
+        return $result;
     }
 
     /**

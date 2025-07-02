@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Trajet;
 use App\Entity\User;
 use App\Entity\Voiture;
 use App\Enum\Marque;
@@ -94,8 +95,19 @@ final class VoitureController extends AbstractController{
     public function deleteVoiture(Request $request, EntityManagerInterface $em, Security $security, $id): Response
     {
 
-
         $voiture = $em->getRepository(Voiture::class)->find($id);
+
+
+        $trajetsLinked = $em->getRepository(Trajet::class)->findBy(['voiture' => $voiture]);
+
+        if (count($trajetsLinked) > 0) {
+            return new JsonResponse([
+                'status' => 'error',
+                'errors' => [['message' => "Une voiture liée à un trajet ne peut pas être supprimée."]]
+            ]);
+        }
+
+        
 
         $em->remove($voiture);
         $em->flush();

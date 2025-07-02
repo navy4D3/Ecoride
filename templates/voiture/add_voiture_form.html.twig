@@ -68,7 +68,15 @@
         
         <div class="buttons">
             {% if (isEdit is defined) and (app.user.voitures|length > 1 ) %}
-                <button id="delete-voiture" type="button" class="btn-green">Supprimer</button>
+                <button id="show-delete-voiture-popup" type="button" class="btn-green">Supprimer</button>
+
+                <div class="blur-effect"></div>
+                <div id="delete-voiture-popup" class="popup center" style="display:none">
+                    <h3>Souhaitez-vous réellement supprimer cette voiture ?</h3>
+                    <button id="delete-voiture" type="button" class="btn-green">Supprimer</button>
+                    <button type="button" class="btn-underline hide-btn">Annuler</button>
+                    {# au de la de la confirmation empecher la suppression si lié à un trajet #}
+                </div>
             {% endif %}
             <button id="add-voiture-submit" type="button" class="btn-green-black submit-btn inactive">{% if isEdit is defined %}Modifier{% else %}Ajouter{% endif %}</button>
         </div>

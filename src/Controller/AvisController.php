@@ -58,6 +58,18 @@ final class AvisController extends AbstractController{
                 $avis->setStatut(StatutAvis::Enregistre);
 
                 $this->em->persist($avis);
+                $this->em->flush();
+
+                $userNotedAvis = $this->em->getRepository(Avis::class)->findBy(['user' =>  $userNoted]);
+                
+                $total = 0;
+                foreach ($userNotedAvis as $avis) {
+                    $total += $avis->getNote();
+                }
+                $moyenneNote = $total / count($userNotedAvis);
+
+                // Mettre à jour la moyenne
+                $userNoted->setNote($moyenneNote);
                 
 
                 if ($avis->isPositive()) {
@@ -65,6 +77,10 @@ final class AvisController extends AbstractController{
                     $currentUser->setCredits($currentUser->getCredits() - $creditsPayes - 2); //application de la commission payé par passager
                     $userNoted->setCredits($userNoted->getCredits() + $creditsPayes);
                     $reservation->setStatut(StatutReservation::Paye);
+
+                    if ($avis->getCommentaire() == "") {
+                        $avis->setStatut(StatutAvis::Visible);
+                    }
                 }
 
                 $this->em->flush();
@@ -87,8 +103,8 @@ final class AvisController extends AbstractController{
         ]); 
     }
 
-    #[Route('/avis/update-statut/{id}', name: 'app_avis-update_statut')]
-    public function updateAvisStatut(Request $request, $id): JsonResponse
+    #[Route('/avis/update-statut/{id}', name: 'app_avis_update_statut')]
+    public function updateAvisStatut(Request $request, $id): JsonResponse|Response
     {
         $isVisible = $request->query->get('visible');
 
@@ -103,7 +119,11 @@ final class AvisController extends AbstractController{
 
         $this->em->flush();
 
-
-        return new JsonResponse(['statut' => 'success']);
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['statut' => 'success']);
+        } else {
+            return $this->redirectToRoute('app_employe');
+        }
+        
     }
 }

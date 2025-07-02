@@ -8,8 +8,8 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
     display: flex;
     flex-direction: row;
     padding: 0px;
-    
-    height: 100vh;
+    gap: 0px;
+    min-height: 100vh;
 
     
 
@@ -22,6 +22,8 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
     .form-section {
         display: flex;
         flex-direction: column;
+        padding-top: 100px;
+        min-height: 80vh;
 
         
 
@@ -70,6 +72,7 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
         height: auto;
         border-radius: 20px;
         opacity: 80%;
+        min-height: 200px;
     
     
         align-items: flex-end;
@@ -179,7 +182,7 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
 @media (max-width: 1024px) {
     .body-content.connect {
         flex-direction: column-reverse;
-        
+        justify-content: flex-end;
         
 
         .image-section {
@@ -188,16 +191,19 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
             margin: 0px;
             border-radius: 0px;
             z-index: 1;
-
+            flex-grow: 1;
+            max-height: 40vh;
         }
 
         .form-section {
             width: -webkit-fill-available;
             height: 100%;
+            padding-top: 0px;
+            min-height: unset;
         }
 
         .form-section-form {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
     }
 }

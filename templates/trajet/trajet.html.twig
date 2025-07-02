@@ -82,8 +82,8 @@
             <span class="details-voiture-datas-color">{{ trajet.voiture.couleur.label }}<div style="background-color: {{ trajet.voiture.couleur.hex}}"></div></span>
             <span>{%  if trajet.voiture.isElectric %}Electrique{% else %}Thermique{% endif %}</span>
         </div>
-
-        {% if isCurrentUserChauffeur  %}
+        
+        {% if isCurrentUserChauffeur and (trajet.statut.label == "Planifié")  %}
             <div>
                 <h4>{{ trajet.placesRestante }} place{% if trajet.placesRestante > 1 %}s{% endif %} restante</h4>
             </div>
@@ -101,21 +101,24 @@
             {% else %}
                 <div class="passagers">
                     {% for reservation in trajet.reservations %}
-                        <a href="{{ path('app_user_profil', { id: reservation.user.id }) }}" class="passager">
-                            {% if reservation.user.photoProfil %}
-                                <img src="{{ path('user_profil_photo', { id: reservation.user.id }) }}" class="photo-profil" alt="Photo">
-                            {% else %}
-                                <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
-                            {% endif %}
-                            <div class="prenom-note">
-                                <span class="prenom">{{ reservation.user.prenom }}</span>
-                                {% if reservation.user.note %}
-                                    <div class="note">
-                                        <span>{{ trajet.datas.chauffeur.note }}</span>
-                                        <twig:ux:icon name="mingcute:star-fill" class="icon"/>
-                                    </div>
+                        <a class="passager" href="{{ path('app_user_profil', { id: reservation.user.id }) }}" >
+                            <div>
+                                {% if reservation.user.photoProfil %}
+                                    <img src="{{ path('user_profil_photo', { id: reservation.user.id }) }}" class="photo-profil" alt="Photo">
+                                {% else %}
+                                    <img src="../default-profil-picture.png" class="photo-profil" alt="Photo">
                                 {% endif %}
+                                <div class="prenom-note">
+                                    <span class="prenom">{{ reservation.user.prenom }}</span>
+                                    {% if reservation.user.note %}
+                                        <div class="note" style="opacity: 75%">
+                                            <span>{{ reservation.user.note }}</span>
+                                            <twig:ux:icon name="mingcute:star-fill" class="icon"/>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
+                            <span>{{ reservation.nbPlaces }} place{% if reservation.nbPlaces > 1 %}s{% endif %}</span>
 
                         </a>
                     {% endfor %}
@@ -138,6 +141,7 @@
                 </div>
             </div>
         {% elseif trajet.statut.label == "En cours" %}
+            <h4>Trajet en cours</h4>
             <a href="{{ path('app_trajet_update_statut', { id: trajet.id}) }}" class="btn-green" >Arreter le trajet</a>
         {% else %}
             <h4>Trajet terminé</h4>

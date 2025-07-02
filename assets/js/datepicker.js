@@ -22,7 +22,18 @@ monthLabel.innerText = monthInput.options[month].text;
 dateInput.addEventListener("click", (e) => {
     e.preventDefault();
   datepicker.hidden = false;
-  datepicker.scrollIntoView();
+  // const offset = 100; // décalage en pixels (vers le bas)
+
+  // // Obtenir la position absolue de l’élément
+  // const elementPosition = dateInput.getBoundingClientRect().top + window.scrollY;
+
+  // // Scroller avec un décalage
+  // window.scrollTo({
+  //     top: elementPosition - offset,
+  //     behavior: 'smooth'
+  // });
+
+  // datepicker.scrollIntoView();
 
 });
 

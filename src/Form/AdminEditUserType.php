@@ -48,12 +48,23 @@ class AdminEditUserType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('telephone', TextType::class)
+            ->add('telephone', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le telephone ne peut pas être nul.'
+                    ]),
+                ]
+            ])
             ->add('adresse', TextType::class, [
                 'attr' => [
                     'placeholder' => '2 rue du covoiturage',
                     'class' => 'adresse-autocomplete', 
                     'autocomplete' => 'off'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => "L'adresse ne peut pas être nul."
+                    ]),
                 ]
             ])
             ->add('date_naissance', DateType::class, [

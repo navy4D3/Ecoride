@@ -6,9 +6,7 @@
             <div>
                 <span class="marque">{{ voiture.marqueLabel }}</span>
                 <span class="modele">{{ voiture.modele }}</span>
-                {% if voiture.isElectric %}
-                    <span class="is-electric">Electrique</span> {% else %} <span>Thermique</span>
-                {% endif %}
+                <span class="is-electric">{% if voiture.isElectric %}Electrique{% else %}Thermique{% endif %}</span>
                 <span class="fw-bold places">{{ voiture.places }} place{{ voiture.places > 1 ? 's' : '' }}</span>
             </div>
             

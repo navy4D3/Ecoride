@@ -1,4 +1,4 @@
-import {checkInputs} from '../app';
+import {checkInputs, hidePopup, showErrors, showPopup, treatFormAlert} from '../app';
 import {showSuccessAlert} from '../app';
 
 export function addVoiture(previousElementId, currentCarId = null) {
@@ -15,25 +15,27 @@ export function addVoiture(previousElementId, currentCarId = null) {
     .then(response => response.json())
     .then(data => {
         // data.html contient ton formulaire rendu
-        document.getElementById(previousElementId).style.display = "none";
-        const container = document.getElementById('body-content');
+        if (previousElementId) {
+            document.getElementById(previousElementId).style.display = "none";
+            const container = document.getElementById('body-content');
 
-        if (container) {
-            container.insertAdjacentHTML('beforeend',data.html);
+            if (container) {
+                container.insertAdjacentHTML('beforeend',data.html);
 
-            initMarqueInputInteraction();
-            initAddVoitureFormBtns(previousElementId, currentCarId);
+                initMarqueInputInteraction();
+                initAddVoitureFormBtns(previousElementId, currentCarId);
 
-            if (currentCarId) {
-                const currentVoiture = document.getElementById(currentCarId);
+                if (currentCarId) {
+                    const currentVoiture = document.getElementById(currentCarId);
 
-                document.getElementById('add_voiture_marque').value = currentVoiture.querySelector('.marque').innerHTML;
+                    document.getElementById('add_voiture_marque').value = currentVoiture.querySelector('.marque').innerHTML;
+                }
+
+                
+
+            } else {
+                console.error('Le container cible n\'existe pas : body-content');
             }
-
-            
-
-        } else {
-            console.error('Le container cible n\'existe pas : body-content');
         }
     })
     .catch(error => console.error('Erreur:', error));
@@ -150,9 +152,20 @@ export function initAddVoitureFormBtns(divToShowId, currentCarId) {
         }
     });
 
-    const deleteVoitureBtn = document.getElementById('delete-voiture');
+    
+    const showDeleteVoiturePopupBtn = document.getElementById('show-delete-voiture-popup');
 
-    if (deleteVoitureBtn) {
+
+
+    if (showDeleteVoiturePopupBtn) {
+        const deleteVoiturePopup = document.getElementById('delete-voiture-popup');
+        const deleteVoitureBtn = document.getElementById('delete-voiture');
+        const addVoitureForm = document.getElementById("add-voiture-form");
+
+        showDeleteVoiturePopupBtn.addEventListener('click', function() {
+            showPopup(deleteVoiturePopup, 'flex');
+        })
+
         deleteVoitureBtn.addEventListener('click', function(e) {
             e.preventDefault();
     
@@ -176,9 +189,12 @@ export function initAddVoitureFormBtns(divToShowId, currentCarId) {
                     document.getElementById(currentCarId).remove();
                     currentDiv.style.display="none";
         
-                    showSuccessAlert('Voiture modifié avec succès');
+                    showSuccessAlert('Voiture supprimé avec succès');
         
                     initUserVoitureBtns(divToShowId,currentCarId);
+                } else {
+                    treatFormAlert(addVoitureForm, '', data);
+                    hidePopup(deleteVoiturePopup);
                 }
         
             })
@@ -232,12 +248,12 @@ function treatAddVoitureForm(divToShowId, currentCarId = null) {
                 newVoitureDiv.id = data.voiture.id;
 
                 newVoitureDiv.innerHTML = `
-                    <span>${data.voiture.surnom}</span>
+                    <span class="surnom">${data.voiture.surnom}</span>
                     <div>
                         <span class="marque">${data.voiture.marque}</span>
                         <span class="modele">${data.voiture.modele}</span>
-                        <span>${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
-                        <span class="fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
+                        <span class="is-electric">${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
+                        <span class="places fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
                     </div>
                 `
 
@@ -248,12 +264,12 @@ function treatAddVoitureForm(divToShowId, currentCarId = null) {
                 const currentVoitureDiv = document.getElementById(currentCarId);
 
                 currentVoitureDiv.innerHTML = `
-                    <span>${data.voiture.surnom}</span>
+                    <span class="surnom">${data.voiture.surnom}</span>
                     <div>
                         <span class="marque">${data.voiture.marque}</span>
                         <span class="modele">${data.voiture.modele}</span>
-                        <span>${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
-                        <span class="fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
+                        <span class="is-electric">${data.voiture.isElectric ? 'Electrique' : 'Thermique'}</span>
+                        <span class="places fw-bold">${data.voiture.places} place${data.voiture.places > 1 ? 's' : ''}</span>
                     </div>
                 `;
 
@@ -307,8 +323,11 @@ export function initUserVoitureBtns(divToShowId, currentCarId = null) {
               //declenche event sur voiture manuellement
               const event = new Event("input", { bubbles: true });
               voitureInput.dispatchEvent(event);
-
-              showAddVoitureForm(divToShowId, voitureBtn.id);
+              
+              if (!window.location.href.includes('publier-trajet')) {
+                showAddVoitureForm(divToShowId, voitureBtn.id);
+            }
+              
 
               voitureBtn.dataset.listenerAttached = 'true';
         
@@ -327,19 +346,6 @@ export function showAddVoitureForm(divToHideId, currentCarId = null) {
     }
     
     addVoiture(divToHideId, currentCarId);
-    //     } else {
-            
-    //         const addVoitureForm = document.getElementById('add-voiture-form');
-    //         addVoitureForm.reset();
-    //         alert('test');
-    //         addVoitureDiv.style.display = "flex";
-
-    //         document.getElementById(divToHideId).style.display = "none";
-            
-    //     }
-        
-    // } else {
-    //     addVoiture(divToHideId, currentCarId);
         
     
 

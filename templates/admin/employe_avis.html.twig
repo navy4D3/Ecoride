@@ -98,9 +98,14 @@
             </div>
         </div>
         <div class="btns-section">
-            <button id="valider" class="btn-green-black">Valider la facturation</button>
-            <button id="equilibrer" class="btn-blue">Equilibrer</button>
-            <button id="rembourser" class="btn-green">Emettre un remboursement</button>
+            {% if avis.isPositive %}
+                <a href="{{path('app_avis_update_statut', { id: avis.id, visible: true })}}" class="btn-green-black w-100">Avis visible</a>
+                <a href="{{path('app_avis_update_statut', { id: avis.id, visible: false })}}" class="btn-green w-100">Avis invisible</a>
+            {% else %}
+                <button id="valider" class="btn-green-black">Valider la facturation</button>
+                <button id="equilibrer" class="btn-blue">Equilibrer</button>
+                <button id="rembourser" class="btn-green">Emettre un remboursement</button>
+            {% endif %}
         </div>
     </div>
 

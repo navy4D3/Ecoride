@@ -196,10 +196,16 @@ class Trajet
     }
 
     public function getPlacesRestante() {
-        $nbParticipants = count($this->getParticipants());
-        $nbPlaces = $this->getVoiture()->getPlaces();
+        $result = $this->getVoiture()->getPlaces() -  1; //on enlève le chauffeur
 
-        return $nbPlaces - $nbParticipants - 1;
+        $reservations = $this->getReservations();
+
+        foreach ($reservations as $reservation) {
+            $result -= $reservation->getNbPlaces();
+        }
+
+
+        return $result;
     }
 
     public function getChauffeur(): ?User

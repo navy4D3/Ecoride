@@ -18,6 +18,10 @@ if (navbarMenuIcon) {
         navbarCloseMobileMenuBtn.style.display = "block";
         navbarMenuIcon.style.display = "none";
         navbarLogo.style.display ="none";
+
+        if (window.innerWidth < 768) {
+            document.querySelector(".navbar_buttons").style.paddingTop = '30px';
+        }
     })
 }
 
@@ -137,6 +141,14 @@ export function showPopup(divToShow, displayType) {
 
     blurEffect.style.display = "block";
     divToShow.style.display = displayType;
+
+    const hidePopupBtn = divToShow.querySelector('.hide-btn');
+
+    if (hidePopupBtn) {
+        hidePopupBtn.addEventListener('click', function() {
+            hidePopup(divToShow);
+        })
+    }
 
 
 }

@@ -14,12 +14,16 @@ use App\Form\SearchTrajetType;
 use App\Service\TrajetSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class TrajetController extends AbstractController
@@ -179,7 +183,7 @@ final class TrajetController extends AbstractController
         ]);
     }
     #[Route('/update-trajet-statut/{id}', name: 'app_trajet_update_statut')]
-    public function updateTrajetStatut(EntityManagerInterface $em, Request $request, $id): Response
+    public function updateTrajetStatut(EntityManagerInterface $em, Request $request, $id, MailerInterface $mailer, UrlGeneratorInterface $urlGeneratorInterface): Response
     {
         // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
         //regex plaque FR avant 2012 : ^\d{1,4} [A-Z]{2} \d{2,3}$
@@ -192,6 +196,33 @@ final class TrajetController extends AbstractController
         if ($currentStatut == Statut::Planifie) {
             $newStatut = Statut::EnCours;
         } else {
+            $reservations =  $trajet->getReservations();
+            $passagers = [];
+            $urlProfil = $urlGeneratorInterface->generate('app_user_profil', [], $urlGeneratorInterface::ABSOLUTE_URL);
+
+            foreach ($reservations as $reservation) {
+                $passagers[] = $reservation->getUser();
+            }
+
+
+            foreach ($passagers as $passager) {
+                if ($passager && $passager->getEmail()) {
+                    $email = (new TemplatedEmail())
+                        ->from('no-reply@ecoride.fr')
+                        ->to($passager->getEmail())
+                        ->subject('Trajet Terminé')
+                        ->htmlTemplate("trajet/email_trajet_termine.html.twig")
+                        ->context([
+                            'user' => $passager,
+                            'chauffeur' => $trajet->getChauffeur(),
+                            'trajet' => $trajet,
+                            'url_profil' => $urlProfil
+                        ]);
+            
+                    $mailer->send($email);
+                }
+            }
+
             $newStatut = Statut::Termine;
         }
 
@@ -431,9 +462,36 @@ final class TrajetController extends AbstractController
 
 
     #[Route('/delete-trajet/{id}', name: 'app_delete_trajet')]
-    public function deleteTrajet($id): Response
+    public function deleteTrajet($id, MailerInterface $mailer): Response
     {
         $trajetToDelete = $this->em->getRepository(Trajet::class)->find($id);
+
+        $reservations =  $trajetToDelete->getReservations();
+        $passagers = [];
+
+        foreach ($reservations as $reservation) {
+            $passagers[] = $reservation->getUser();
+        }
+
+        foreach ($passagers as $passager) {
+            if ($passager && $passager->getEmail()) {
+                $email = (new TemplatedEmail())
+                    ->from('no-reply@ecoride.fr')
+                    ->to($passager->getEmail())
+                    ->subject('Trajet annulé')
+                    ->htmlTemplate("trajet/annulation_email.html.twig")
+                    ->context([
+                        'user' => $passager,
+                        'trajet' => $trajetToDelete,
+                    ]);
+        
+                $mailer->send($email);
+
+                sleep(5);
+            }
+        }
+
+        
 
         $this->em->remove($trajetToDelete);
 

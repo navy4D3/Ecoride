@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use VictorPrdh\RecaptchaBundle\Form\ReCaptchaType;
 
 class ResetPasswordRequestFormType extends AbstractType
 {
@@ -21,6 +22,7 @@ class ResetPasswordRequestFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add("recaptcha", ReCaptchaType::class);
         ;
     }
 

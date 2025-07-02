@@ -21,9 +21,12 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
     {
         $user = $token->getUser();
         $roles = $token->getRoleNames();
+        $userEmail = $user->getUserIdentifier();
+
+
 
         // Redirection en fonction du rôle
-        if (in_array('ROLE_ADMIN', $roles, true)) {
+        if (in_array('ROLE_ADMIN', $roles, true) || $userEmail == 'admin@ecoride.com') {
             return new RedirectResponse($this->router->generate('app_admin'));
         }
 
