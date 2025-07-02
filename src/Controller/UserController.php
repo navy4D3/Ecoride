@@ -11,6 +11,8 @@ use App\Enum\Statut;
 use App\Enum\StatutAvis;
 use App\Form\AvisType;
 use App\Form\DevenirChauffeurType;
+use App\Form\EditMailType;
+use App\Form\EditPasswordType;
 use App\Form\MailAndPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationStepTwoType;
@@ -111,7 +113,8 @@ final class UserController extends AbstractController {
 
         $myDataForm = $this->createForm(RegistrationStepTwoType::class, $currentUser);
         $driverSpaceForm = $this->createForm(DevenirChauffeurType::class, $currentUser);
-        $mailAndPasswordForm = $this->createForm(MailAndPasswordType::class, $currentUser);
+        $editPasswordForm = $this->createForm(EditPasswordType::class, $currentUser);
+        $editMailForm = $this->createForm(EditMailType::class, $currentUser);
         $preferences = Preference::cases();
 
         // $avisRecus = $currentUser->getAvisRecus();
@@ -125,7 +128,8 @@ final class UserController extends AbstractController {
             'trajetsPasses' => $trajetsPassesDatasToDisplay,
             'myDataForm' => $myDataForm,
             'driverSpaceForm' =>$driverSpaceForm,
-            'mailAndPasswordForm' => $mailAndPasswordForm,
+            'editPasswordForm' => $editPasswordForm,
+            'editMailForm' => $editMailForm,
             'preferences' => $preferences,
             'avisRecus' => $avisRecus,
             'avisPublies' => $avisPublies

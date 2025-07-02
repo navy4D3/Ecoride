@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\EditMailType;
+use App\Form\EditPasswordType;
 use App\Form\MailAndPasswordType;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationStepTwoType;
@@ -13,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -202,14 +205,14 @@ class RegistrationController extends AbstractController
 
     }
 
-    #[Route('/edit-mail-password', name: 'app_edit_mail_password')]
-    public function editMailPassword(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security, FormService $formService)
+    #[Route('/edit-mail', name: 'app_edit_mail')]
+    public function editMail(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security, FormService $formService)
     {
         $userEmail = $security->getUser()->getUserIdentifier();
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userEmail]);
 
         $originalUser = clone $security->getUser();
-        $form = $this->createForm(MailAndPasswordType::class, $originalUser, [
+        $form = $this->createForm(EditMailType::class, $originalUser, [
             'validation_groups' => ['Default']
         ]);
 
@@ -219,20 +222,24 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted()) {
 
             if ($form->isValid()) {
-                /** @var string $plainPassword */
-                $plainPassword = $form->get('password')->getData();
                 $email = $form->get('email')->getData();
 
-                $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
 
-                $user->setPassword($hashedPassword);
+                $isEmailAvailable = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
+                if ($isEmailAvailable){
+                    
+                    return new JsonResponse([
+                        'status' => 'error',
+                        'errors' => [['message' => "Cette adresse mail est déja utilisée."]]
+                    ]);
+                }
+
                 $user->setEmail($email);
 
                 // $entityManager->persist($user);
                 $entityManager->flush();
                 $security->login($user);
-
-                
 
                 return new JsonResponse(['status' => 'success']);
 
@@ -240,12 +247,50 @@ class RegistrationController extends AbstractController
 
             }  else {
                 $errors = $formService->convertFormErrorsToJson($form);
-                
-                $html =  $this->renderView('registration/connect.html.twig', [
-                    'errors' => $errors,
-                    'registrationForm' => $form->createView(),
-                    'formType' => 'register'
+
+                return new JsonResponse([
+                    'status' => 'error',
+                    'errors' => $errors
                 ]);
+
+            }
+        }
+
+        // return $this->render('registration/register_form.html.twig', [
+        //     'formType' => 'register',
+        //     'registrationForm' => $form->createView(),
+        // ]);
+        
+    }
+    #[Route('/edit-password', name: 'app_edit_password')]
+    public function editPassword(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Security $security, FormService $formService)
+    {
+        $userEmail = $security->getUser()->getUserIdentifier();
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userEmail]);
+
+        $originalUser = clone $security->getUser();
+        $form = $this->createForm(EditPasswordType::class, $originalUser, [
+            'validation_groups' => ['Default']
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+
+            if ($form->isValid()) {
+                /** @var string $plainPassword */
+                $plainPassword = $form->get('password')->getData();
+                $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
+
+                $user->setPassword($hashedPassword);
+
+                $entityManager->flush();
+                $security->login($user);
+
+                return new JsonResponse(['status' => 'success']);
+
+            }  else {
+                $errors = $formService->convertFormErrorsToJson($form);
 
                 return new JsonResponse([
                     'status' => 'error',
@@ -256,10 +301,10 @@ class RegistrationController extends AbstractController
             }
         }
 
-        return $this->render('registration/register_form.html.twig', [
-            'formType' => 'register',
-            'registrationForm' => $form->createView(),
-        ]);
+        // return $this->render('registration/register_form.html.twig', [
+        //     'formType' => 'register',
+        //     'registrationForm' => $form->createView(),
+        // ]);
         
     }
 

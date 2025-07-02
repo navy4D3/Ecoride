@@ -309,44 +309,32 @@ avisPubliesBtn.addEventListener('click', function() {
     avisPubliesBtn.classList.add('selected');
 })
 
-const editMailPasswordForm = document.querySelector('.register-form');
-const submitEditMailPasswordFormBtn = editMailPasswordForm.querySelector('.submit-btn');
-const editMailPasswordFormInputs = editMailPasswordForm.querySelectorAll('input, select, textarea');
-const passwordInput = document.getElementById('mail_and_password_password_first');
-const confirmPasswordInput = document.getElementById('mail_and_password_password_second');
-const emailInput = document.getElementById('mail_and_password_email');
-const currentPasswordInput = document.getElementById('mail_and_password_currentPassword');
+const showEditMailSectionBtn = document.getElementById('show-edit-mail-form-btn');
+const editMailSection = document.querySelector('.parametres-section-mail');
 
+showEditMailSectionBtn.addEventListener('click', function() {
+    editMailSection.style.display = "flex";
+    mailAndPasswordSection.style.display =  "none";
+})
+const editMailForm = document.querySelector('.edit-mail-form');
+const submitEditMailFormBtn = editMailForm.querySelector('.submit-btn');
+const editMailFormInputs = editMailForm.querySelectorAll('input, select, textarea');
+// const editMailFormEmailInput = document.getElementById('edit_mail_email');
 
-
-emailInput.addEventListener('input', function(){
-    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
+editMailFormInputs.forEach((input) => {
+    input.addEventListener('input', function() {
+        checkInputs(editMailForm);
+    })
 })
 
-currentPasswordInput.addEventListener('input', function(){
-    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
-})
-
-passwordInput.addEventListener('input', function() {
-    checkPasswordValidity('mail_and_password_password_first');
-    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
-})
-
-confirmPasswordInput.addEventListener('input', function() {
-    checkPasswordValidity('mail_and_password_password_first');
-    checkRegisterFormValidity(editMailPasswordForm,passwordInput, confirmPasswordInput, emailInput, null, currentPasswordInput);
-})
-
-
-
-submitEditMailPasswordFormBtn.addEventListener('click', function(e) {
+submitEditMailFormBtn.addEventListener('click', function(e) {
     e.preventDefault();
 
-    submitEditMailPasswordFormBtn.classList.add('inactive');
+    submitEditMailFormBtn.classList.add('inactive');
 
-    const formData = new FormData(editMailPasswordForm);
+    const formData = new FormData(editMailForm);
 
-    fetch('/edit-mail-password', {
+    fetch('/edit-mail', {
         method: 'POST',
         body: formData,
         headers: {
@@ -362,8 +350,74 @@ submitEditMailPasswordFormBtn.addEventListener('click', function(e) {
     .then(data => {
         // data.html contient ton formulaire rendu
 
-        treatFormAlert(editMailPasswordForm, 'Informations mises à jour avec succès', data);
-        editMailPasswordForm.reset();
+        treatFormAlert(editMailForm, 'Informations mises à jour avec succès', data);
+        editMailForm.reset();
+        const event = new Event('input', {
+            bubbles: true,
+        });
+
+    })
+    .catch(error => console.error('Erreur:', error));
+})
+
+
+const showEditPasswordSectionBtn = document.getElementById('show-edit-password-form-btn');
+const editPasswordSection = document.querySelector('.parametres-section-password');
+
+showEditPasswordSectionBtn.addEventListener('click', function() {
+    editPasswordSection.style.display = "flex";
+    mailAndPasswordSection.style.display =  "none";
+})
+
+const editPasswordForm = document.querySelector('.edit-password-form');
+const passwordInput = document.getElementById('edit_password_password_first');
+const confirmPasswordInput = document.getElementById('edit_password_password_second');
+const currentPasswordInput = document.getElementById('edit_password_currentPassword');
+const submitEditPasswordFormBtn = editPasswordForm.querySelector('.submit-btn');
+
+currentPasswordInput.addEventListener('input', function(){
+    checkRegisterFormValidity(editPasswordForm,passwordInput, confirmPasswordInput, null, currentPasswordInput);
+})
+
+passwordInput.addEventListener('input', function() {
+    checkPasswordValidity('edit_password_password_first');
+    checkRegisterFormValidity(editPasswordForm,passwordInput, confirmPasswordInput, null, null, currentPasswordInput);
+})
+
+confirmPasswordInput.addEventListener('input', function() {
+    checkPasswordValidity('edit_password_password_first');
+    checkRegisterFormValidity(editPasswordForm,passwordInput, confirmPasswordInput, null, null, currentPasswordInput);
+})
+
+
+
+
+
+submitEditPasswordFormBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    submitEditPasswordFormBtn.classList.add('inactive');
+
+    const formData = new FormData(editPasswordForm);
+
+    fetch('/edit-password', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // important pour indiquer une requête AJAX
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // data.html contient ton formulaire rendu
+
+        treatFormAlert(editPasswordForm, 'Informations mises à jour avec succès', data);
+        editPasswordForm.reset();
         const event = new Event('input', {
             bubbles: true,
         });

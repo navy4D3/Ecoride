@@ -472,19 +472,9 @@
             width: 100%;
             max-width: 500px;
 
-            span, a {
-                padding: 10px 15px;
-                border: solid 2px $green-black;
-                border-radius: 15px;
-                text-align: center;
-                font-family: $nunito;
-                cursor: pointer;
-                color: $green-black;
-            }
-
             .logout-btn {
-                border-color: red;
-                color: red;
+                border-color: red !important;
+                color: red !important;
             }
 
         }
@@ -613,6 +603,23 @@
 
         &-mail-password {
             max-width: 600px;
+        }
+
+        .choice-btn {
+            padding: 10px 15px;
+            border: solid 2px $green-black;
+            border-radius: 15px;
+            text-align: center;
+            font-family: $nunito;
+            cursor: pointer;
+            color: $green-black;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        &-mail, &-password {
+            flex-direction: column;
+            gap: 20px;
         }
     }
 

@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class MailAndPasswordType extends AbstractType
+class EditPasswordType extends AbstractType
 {
     private $em;
 
@@ -30,28 +30,6 @@ class MailAndPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'placeholder' => "Adresse email"
-                ],
-                'label' => 'Email',
-                'constraints' => [
-                    new Callback(function ($email, ExecutionContextInterface $context) {
-                        $user = $context->getRoot()->getData(); // objet User
-            
-                        // Si l'email a changé
-                        if ($user instanceof User && $email !== $user->getEmail()) {
-                            $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
-            
-                            if ($existingUser) {
-                                $context->buildViolation('Cette adresse mail est déjà utilisée.')
-                                    ->addViolation();
-                            }
-                        }
-                    })
-                ]
-            ])
-
             ->add('currentPassword', PasswordType::class, [
                 'mapped' => false,
                 'label' => 'Mot de passe actuel',

@@ -202,7 +202,7 @@ export function checkPasswordValidity(passwordInputId) {
   // checkRegisterFormValidity();
 }
 
-export function checkRegisterFormValidity(form, passwordInput, confirmPasswordInput, emailInput, cguInput = null, currentPasswordInput = null) {
+export function checkRegisterFormValidity(form, passwordInput, confirmPasswordInput, emailInput = null, cguInput = null, currentPasswordInput = null) {
     const password = passwordInput.value;
     const confirm = confirmPasswordInput.value;
     const submitBtn = form.querySelector('.submit-btn');
@@ -211,21 +211,17 @@ export function checkRegisterFormValidity(form, passwordInput, confirmPasswordIn
     const isPasswordMatch = password && confirm && password === confirm;
     const passwordInputValidity = document.querySelectorAll('.valid').length == document.getElementById('password-criteria').children.length;
 
-    let cguCheck = true;
-    if (cguInput) {
-        cguCheck = cguInput.checked;
-    }
+    let cguCheck = cguInput ? cguInput.checked : true;
 
-    let currentPasswordCheck = true;
-    if (currentPasswordInput) {
-        currentPasswordCheck = currentPasswordInput.value;
-    }
+    let currentPasswordCheck = currentPasswordInput ? currentPasswordInput.value : true;
 
-    if (isPasswordMatch && emailInput.value && cguCheck && passwordInputValidity && currentPasswordCheck) {
+    let emailCheck = emailInput ? emailInput.value : true
+
+    if (isPasswordMatch && emailCheck && cguCheck && passwordInputValidity && currentPasswordCheck) {
       submitBtn.classList.remove('inactive');
     } else {
       submitBtn.classList.add('inactive');
     }
-  }
+}
 
 
