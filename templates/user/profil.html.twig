@@ -170,12 +170,18 @@
                                     <twig:ux:icon name="mingcute:car-line" id="" class="icon trajet-type-icon"/>
                                 {% else %}
                                     {% set reservationPaye = true %}
+                                    {% set isAvisPublie = false %}
                                     {% for reservation in trajet.datas.reservations %}
                                         {% if reservation.user == app.user  and (reservation.statut.label =="Enregistré") %}
                                             {% set reservationPaye = false %}
                                         {% endif %}
                                     {% endfor %}
-                                    {% if not reservationPaye %}
+                                    {% for avis in trajet.datas.avis %}
+                                        {% if avis.creator == app.user %}
+                                            {% set isAvisPublie = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if not reservationPaye and not isAvisPublie %}
                                         <span href="/add-avis/{{ trajet.datas.id }}">Laisser un avis</span>
                                     {% endif %}
                                     <twig:ux:icon name="lucide:users" class="icon trajet-type-icon"/>
@@ -270,6 +276,7 @@
             <span class="btn-outline choice-btn " id="mail-and-password-btn">Mail et mot de passe</span>
             <a href="/cgu" class="btn-outline choice-btn">Conditions Générales d'Utilisation</a>
             <a href="/mentions-legales" class="btn-outline choice-btn">Mentions légales</a>
+            <a href="/contact" class="btn-outline choice-btn">Contact</a>
             <a href="/logout"class="logout-btn choice-btn">Deconnexion</a>
         </div>
 

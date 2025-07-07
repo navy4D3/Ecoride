@@ -31,6 +31,7 @@ isPositiveFalseBtn.addEventListener('click', function() {
 
 const starBtns = document.querySelectorAll(".star");
 const noteInput = document.getElementById('avis_note');
+const commentaireInput = document.getElementById('avis_commentaire');
 
 starBtns.forEach((btn) => {
     btn.addEventListener('click', function() {
@@ -58,10 +59,19 @@ starBtns.forEach((btn) => {
 
 const addAvisForm = document.querySelector('form');
 const addAvisFormInputs = addAvisForm.querySelectorAll('input, textarea, select');
+const addAvisFormSubmitBtn = addAvisForm.querySelector('.submit-btn');
 
 addAvisFormInputs.forEach((input) => {
     input.addEventListener('input', function() {
         checkInputs(addAvisForm);
+
+        if (isPositiveInput.value == 0 && commentaireInput.value=="") {
+            addAvisFormSubmitBtn.classList.add('inactive');
+        }
+
+        if (isPositiveInput.value && commentaireInput.value && noteInput.value) {
+            addAvisFormSubmitBtn.classList.remove('inactive');
+        }
     })
 })
 

@@ -18,6 +18,8 @@
 @import 'admin.scss';
 @import 'employe.scss';
 @import 'reset-password.scss';
+@import 'animations.scss';
+@import 'contact.scss';
 
 .mobile-only {
     display: none !important;
@@ -386,6 +388,7 @@ form {
     left: 0px;
     top: 0px;
     z-index: 1000;
+    min-height: 81px;
 
     &_logo  {
         text-decoration: none;
@@ -464,6 +467,10 @@ form {
     }
 
     #navbar-close-mobile-menu {
+        margin-left: 50%;
+        transform: translateY(50%);
+        min-height: 35px;
+        min-width: 35px;
         height: 35px;
         width: 35px;
         padding: 5px;
@@ -524,7 +531,7 @@ form {
         padding: 10px 5px;
     }
 
-    input::placeholder, select::placeholder {
+    input::placeholder, select::placeholder, textarea::placeholder {
         color: $green-black-50;
         opacity: 100%;
     }
@@ -865,10 +872,17 @@ input[type='radio'], input[type='checkbox'] {
 }
 // Responsive pour mobile
 @media (max-width: 768px) {
+    .alert-success {
+        top: 90px;
+    }
 
     .body-content.connected {
         padding-top: 50px;
         padding-bottom: 100px !important;
+
+        .alert-success {
+            top: 40px;
+        }
     }
     .pc-only {
         display: none !important;
@@ -888,9 +902,7 @@ input[type='radio'], input[type='checkbox'] {
         display: flex !important;
     }
 
-    .alert-success {
-        top: 20px;
-    }
+    
     
     .header h1 {
         font-size: 28px;
@@ -921,6 +933,7 @@ input[type='radio'], input[type='checkbox'] {
     
     
     .navbar {
+
         &_logo {
             img {
                 height: 20px;
@@ -939,6 +952,7 @@ input[type='radio'], input[type='checkbox'] {
             align-items: center;
             // padding: 20px;
             gap: 30px;
+            padding-bottom: 20px;
 
             
         }
@@ -955,7 +969,7 @@ input[type='radio'], input[type='checkbox'] {
         transform: translate(-50%, 0%);
         width: 80%;
         border-radius: 100px;
-        
+        min-height: 0px;
         height: fit-content;
 
         svg {
@@ -970,10 +984,12 @@ input[type='radio'], input[type='checkbox'] {
         .navbar_buttons {
             display: flex !important;
             border-radius: 100px;
+            padding-bottom: 0px;
 
             .right-btns {
                 justify-content: space-around;
                 width: 100%;
+                
 
                 &-publier-trajet {
                     outline: solid 2px $green-black;

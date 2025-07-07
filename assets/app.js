@@ -12,12 +12,103 @@ const navbarBtns = document.getElementById('navbar-btns');
 const navbarCloseMobileMenuBtn = document.getElementById('navbar-close-mobile-menu');
 const navbarLogo = document.querySelector('.navbar_logo');
 
+function animateToggle(element, animationClass = 'fade-slide-down') {
+    if (element.classList.contains('show')) {
+        element.classList.remove('show');
+        element.addEventListener('transitionend', function handleTransition() {
+            element.classList.remove(animationClass); // clean si besoin
+            element.style.display =  "none";
+            element.removeEventListener('transitionend', handleTransition);
+        });
+    } else {
+        element.style.display = "flex";
+        element.classList.add(animationClass);
+        requestAnimationFrame(() => {
+            element.classList.add('show');
+        });
+    }
+}
+
+function animateToggle2(el, animationClass = 'fade', displayType = 'flex') {
+    return new Promise((resolve) => {
+        const isHidden = getComputedStyle(el).display === 'none';
+
+        // Cas : AFFICHER l'élément
+        if (isHidden) {
+            el.style.display = displayType;
+            el.classList.add(animationClass);
+
+            // Forcer un reflow pour permettre à la transition de se déclencher
+            requestAnimationFrame(() => {
+                el.classList.add('show');
+            });
+
+            el.addEventListener('transitionend', function handler(e) {
+                if (e.target === el) {
+                    el.removeEventListener('transitionend', handler);
+                    resolve();
+                }
+            });
+        }
+
+        // Cas : MASQUER l'élément
+        else {
+            el.classList.remove('show');
+
+            el.addEventListener('transitionend', function handler(e) {
+                if (e.target === el) {
+                    el.style.display = 'none';
+                    el.classList.remove(animationClass);
+                    el.removeEventListener('transitionend', handler);
+                    resolve();
+                }
+            });
+        }
+    });
+}
+
+
+
+
 if (navbarMenuIcon) {
-    navbarMenuIcon.addEventListener('click', function() {
-        navbarBtns.style.display = "flex";
-        navbarCloseMobileMenuBtn.style.display = "block";
+    navbarMenuIcon.addEventListener('click', async function() {   
         navbarMenuIcon.style.display = "none";
         navbarLogo.style.display ="none";
+        navbarBtns.style.display =  "flex";
+        navbarBtns.style.overflow = "hidden";
+        const animation = navbarBtns.animate(
+            {
+                // display: ["none", "flex"],
+                // opacity: [0, 1],
+                maxHeight: [0, "200px"],
+                // transform: ["scaleY(0)", "scaleX(1)"],
+            },
+            {
+                fill: "both",
+                duration: 500,
+                easing: 'ease'
+                // timeline,
+                // rangeStart: "cover 0%",
+                // rangeEnd: "cover 100%",
+            },
+        );
+        
+        animation.finished.then(() => {
+
+            navbarCloseMobileMenuBtn.style.display = "flex";
+            navbarCloseMobileMenuBtn.animate(
+                {
+                    opacity: [0, 1],
+                },
+                {
+                    fill: "both",
+                    duration: 500,
+                },
+            );
+        });
+
+
+        
 
         if (window.innerWidth < 768) {
             document.querySelector(".navbar_buttons").style.paddingTop = '30px';
@@ -26,11 +117,91 @@ if (navbarMenuIcon) {
 }
 
 
+
 if (navbarCloseMobileMenuBtn) {
-    navbarCloseMobileMenuBtn.addEventListener('click', function() {
-        navbarBtns.style.display ="none";
-        navbarMenuIcon.style.display = "flex";
-        navbarLogo.style.display ="flex";
+    navbarCloseMobileMenuBtn.addEventListener('click', async function() {
+        // fadeOut(navbarBtns);
+        navbarCloseMobileMenuBtn.style.display = "none";
+        
+        const animation = navbarBtns.animate(
+            {
+                opacity: [0, 1],
+                maxHeight: ["200px", 0],
+                // transform: ["scaleY(0)", "scaleX(1)"],
+            },
+            {
+                fill: "both",
+                duration: 500,
+                // timeline,
+                // rangeStart: "cover 0%",
+                // rangeEnd: "cover 100%",
+            },
+        );
+
+        animation.finished.then(() => {
+            navbarBtns.style.display = "none";
+
+            navbarMenuIcon.style.display = "flex";
+            navbarMenuIcon.animate(
+                {
+                    opacity: [0, 1],
+                },
+                {
+                    fill: "both",
+                    duration: 1000,
+                },
+            );
+            
+            navbarLogo.style.display = "flex";
+            navbarLogo.animate(
+                {
+                    opacity: [0, 1],
+                },
+                {
+                    fill: "both",
+                    duration: 1000,
+                },
+            );
+        });
+        
+        
+
+
+
+        // navbarBtns.classList.remove("show");
+        
+
+        // navbarBtns.addEventListener('transitionend', function handler() {
+        //     navbarBtns.style.display = 'none';
+            
+
+            
+
+        //     navbarBtns.removeEventListener('transitionend', handler);
+        // });
+
+        // navbarLogo.classList.add('fadeup');
+        // navbarMenuIcon.classList.add('fadeup');
+        // navbarLogo.style.display =  "flex";
+        // navbarMenuIcon.style.display =  "flex";
+        
+
+        // requestAnimationFrame(() => {
+        //     navbarLogo.classList.add('show');
+        //     navbarMenuIcon.classList.add('show');
+
+        // })
+
+        // navbarLogo.addEventListener('transitionend', function handler() {
+        //     navbarLogo.classList.remove('fadeup')
+        //     navbarLogo.classList.remove('show');
+        //     navbarMenuIcon.classList.remove('fadeup');
+        //     navbarMenuIcon.classList.remove('show');
+
+        //     navbarLogo.removeEventListener('transitionend', handler);
+        // });
+
+
     })
 }
 
@@ -58,8 +229,6 @@ export function checkInputs(currentForm) {
 
     
     });
-
-    
 
     if (allFilled) {
         submitBtn.classList.remove('inactive');
