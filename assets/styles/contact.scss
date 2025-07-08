@@ -1,0 +1,57 @@
+@import 'variables.scss';
+
+body.contact {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+
+    .body-content.contact {
+        align-items: center;
+        width: 100%;
+        max-width: 800px;
+    
+        p {
+            text-align: center;
+        }
+    
+        form {
+            width: 100%;
+
+            .row-inputs {
+
+                > div {
+                    flex-grow: 1;
+                }
+            }
+
+            textarea {
+                height: 100px;
+            }
+        }
+    }
+
+    footer {
+        width: 100%;
+    }
+}
+
+@media (max-width: 512px) {
+    .body-content.contact {
+
+        form {
+            > div {
+                align-items: start;
+                flex-direction: column;
+                width: 100%;
+
+                >div {
+                    gap: 20px;
+                    width: 100%;
+                }
+
+            }
+        }
+    }
+}

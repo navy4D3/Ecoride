@@ -1,0 +1,115 @@
+@import 'variables.scss';
+
+// .body-content.publier-trajet {
+//     background-color: red;
+// }
+
+.add-voiture-section {
+    h1 {
+        text-align: center;
+    }
+    form {
+        background-color: $green-medium;
+        padding: 20px;
+        border-radius: 20px;
+
+        .alert {
+            width: 100%;
+        }
+    }
+
+    .suggestions-box {
+        max-height: 150px;
+        overflow-y: auto;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        background: white;
+        width: 100%;
+        z-index: 10;
+        top:110%;
+        border-radius: 10px;
+        box-shadow: 0px 2px 5px $green-black-25;
+
+
+        li {
+            padding: 5px;
+            color: $green-black;
+        }
+
+        li:hover {
+            background: $green-white;
+        }
+        
+    }
+
+    #add-voiture-back-btn {
+        cursor: pointer;
+        color: $green-black-75;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+
+        span {
+            margin-top: 4px;
+        }
+
+        svg {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    .row-inputs {
+        flex-wrap: wrap;
+        align-items: center !important;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 20px;
+
+        > div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            height: -webkit-fill-available;
+            flex-grow: 1;
+
+        }
+
+        .select-color-placeholder {
+            color: $green-black-50;
+        }
+
+        .color-view {
+            position: absolute;
+            right: 30px;
+            height: 20px;
+            width: 20px;
+            border-radius: 100px;
+        }
+    
+        
+    }
+    
+    #delete-voiture-popup {
+        border-radius: 20px;
+        background-color: $green-medium;
+        box-shadow: 0px 2px 5px $green-black-25;
+        padding: 20px;
+        flex-direction: column;
+        gap: 20px;
+        width: 80%;
+        max-width: 650px;
+    }
+
+}
+
+@media (max-width :512px) {
+    .form-green-column > div label {
+        white-space: wrap !important;
+
+    }
+}

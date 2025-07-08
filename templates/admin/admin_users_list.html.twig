@@ -1,0 +1,28 @@
+{% set pageClass = 'admin list-users' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('admin') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>Liste des utilisateurs</h1>
+
+    <form id='search-form'>
+        <twig:ux:icon name="iconamoon:search" class=""/>
+        <input type="text" id="search-input" name="search" placeholder="Rechercher..." value="{{ search }}">
+    </form>
+
+    <div id="users-table">
+        {% include 'admin/admin_users_table.html.twig' %}
+    </div>
+
+
+{% endblock %}

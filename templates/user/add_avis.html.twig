@@ -1,0 +1,77 @@
+{% set pageClass = 'add-avis' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('addAvis') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% if errors %}
+            <div class="errors-container d-flex flex-column gap-1">
+                {% for error in errors %}
+                    <div class="alert alert-danger">
+                        {{ error.message }}
+                    </div>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    {% include 'header.html.twig' with { title: 'Laisser un avis', 'isHistoryBackTrue' : true } %}
+
+    {{ form_start(form, {attr: { class:'', id:"add-avis-form"}}) }}
+        
+        <div class="section is-positive">
+            {{ form_label(form.isPositive) }}
+            {{ form_widget(form.isPositive) }}
+            <div class="btns">
+                <button type="button" id="is-positive-true-btn" class="btn-outline">OUI</button>
+                <button type="button" id="is-positive-false-btn" class="btn-outline">NON</button>
+            </div>
+            
+        </div>
+        
+        <div class="section note">
+            {{ form_label(form.note) }}
+            {{ form_widget(form.note) }}
+            <div class="stars">
+                <div id="1" class="star">
+                    <twig:ux:icon class="outline" name="mingcute:star-line" />
+                    <twig:ux:icon  class="fill" name="mingcute:star-fill" style="display:none" />
+                </div>
+                <div id="2" class="star">
+                    <twig:ux:icon class="outline" name="mingcute:star-line" />
+                    <twig:ux:icon  class="fill" name="mingcute:star-fill" style="display:none" />
+                </div>
+                <div id="3" class="star">
+                    <twig:ux:icon class="outline" name="mingcute:star-line" />
+                    <twig:ux:icon  class="fill" name="mingcute:star-fill" style="display:none" />
+                </div>
+                <div id="4" class="star">
+                    <twig:ux:icon class="outline" name="mingcute:star-line" />
+                    <twig:ux:icon  class="fill" name="mingcute:star-fill" style="display:none" />
+                </div>
+                <div id="5" class="star">
+                    <twig:ux:icon class="outline" name="mingcute:star-line" />
+                    <twig:ux:icon  class="fill" name="mingcute:star-fill" style="display:none" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="section commentaire">
+            {{ form_label(form.commentaire) }}
+            {{ form_widget(form.commentaire) }}
+        </div>
+        
+
+        <button id="continue-btn" class="btn-green-black submit-btn inactive">Confirmer</button>
+    
+    {{ form_end(form) }}
+{% endblock %}
+

@@ -1,0 +1,13 @@
+{% set pageClass = 'reset-password' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Reinitialisation du mot de passe{% endblock %}
+
+{% block body %}
+    <h1>Reintialisation du mot de passse</h1>
+
+    {{ form_start(resetForm, { 'attr': {'class': 'form-green-column'}}) }}
+        {{ form_row(resetForm.plainPassword) }}
+        <button class="btn-green-black">Reinitialiser</button>
+    {{ form_end(resetForm) }}
+{% endblock %}

@@ -1,0 +1,348 @@
+@import 'variables.scss';
+
+.navbar.employe.connected {
+    border-radius: 100px;
+    top: 20px;
+    width: 60%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .navbar_buttons .icon {
+        height: 30px;
+        width: 30px;
+    }
+}
+
+.body-content.employe {
+    padding-top: 120px;
+
+    h2 {
+        text-align: center;
+        font-weight: 700;
+    }
+
+    
+    .avis-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        
+        width: 100%;
+
+        
+
+        .avis.negative {
+            background-color: $red-white;
+        }
+    }
+
+    .avis {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border-radius: 15px;
+        width: 100%;
+        max-width: 700px;
+        background-color: $green-white;
+        box-shadow: 0px 2px 4px $green-black-25;
+        padding: 10px;
+        align-items: center;
+        gap: 10px;
+
+        p {
+            margin-bottom: 0px;
+        }
+
+        p::first-letter {
+            text-transform: capitalize;
+        }
+
+        .note {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+
+            span {
+                font-size: 18px;
+                margin-top: 4px;
+            }
+
+            svg {
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+        .right-div {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            ;
+
+            svg {
+                height: 30px;
+                width: 30px;
+            }
+
+            
+
+            #check-icon {
+
+                background-color: $green-btn;
+                padding: 5px;
+                border-radius: 100px;
+                cursor: pointer;
+                
+            }
+
+            #cross-icon {
+                color: $green-white;
+                background-color: red;
+                padding: 5px;
+                border-radius: 100px;
+                cursor: pointer;
+
+                * {
+                    color: $green-white;
+                }
+            }
+
+            #plus-icon {
+                background-color: $green-black;
+                // padding: 5px;
+                border-radius: 100px;
+
+                * {
+                    color: $green-white;
+                    stroke: $green-white;
+                    stroke-width: 0.5px;
+                }
+
+                
+            }
+
+
+        }
+    }
+
+    .trajet-section {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        width: 100%;
+        
+
+
+        &-date-id {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            h3 {
+                white-space : nowrap;
+            }
+
+            span {
+                font-family: $nunito;
+                opacity: 75%;
+            }
+        }
+    }
+
+    .reservation-section {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+
+        span {
+            font-family: $nunito;
+            margin-top: 3px;
+            opacity: 75%;
+        }
+    }
+
+    .users-btns-section {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        align-items: center;
+
+        .users-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .emetteur-section, .chauffeur-section {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                .user-infos {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                    align-items: center;
+
+
+                    img {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 100px;
+                    }
+
+                    h5 {
+                        white-space: nowrap;
+                        margin-top: 3px;
+                    }
+
+                    span {
+                        font-family: $nunito;
+                        opacity: 75%;
+                    }
+
+                    &-note {
+                        opacity: 75%;
+                        display: flex;
+                        flex-direction: row;
+                        gap: 3px;
+                        align-items: center;
+
+                        span {
+                        }
+
+                        svg {
+
+                            height: 18px;
+                            width: 18px;
+                        }
+                    }
+                }
+
+                .avis {
+                    border-radius: 0px 15px 15px 15px;
+                    width: fit-content;
+                    gap: 20px;
+                }
+            }
+        }
+
+        .btns-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            align-items: center;
+
+            button, a {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    }
+
+    #treat-paiement-popup, #avis-visibility-popup {
+        flex-direction: column;
+        background-color: $green-medium;
+        border-radius: 20px;
+        gap: 20px;
+        padding: 40px;
+        align-items: center;
+        width: 80%;
+
+        h4 {
+            text-align: center;
+        }
+
+        span {
+            font-size: 18px;
+            font-family: $nunito;
+        }
+
+        strong {
+            font-family: $josefin-sans;
+        }
+
+        .btns {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+
+            > * {
+                flex-grow: 1;
+                max-width: 200px;
+
+            }
+        }
+
+
+
+        // .close-popup-btn {
+        //     background:unset;
+        //     border: unset;
+        //     text-decoration: underline;
+        // }
+    }
+    
+}
+
+@media (max-width : 768px) {
+    .navbar.employe.connected {
+        width: 90%;
+        flex-direction: row;
+
+        h1 {
+            font-size: 20px;
+        }
+
+        .navbar_buttons {
+            flex-direction: row;
+        }
+
+        svg * {
+            stroke-width: 2px;
+        }
+    }
+
+    .body-content.employe.connected {
+        padding-top: 120px;
+
+        .trajet-section {
+            flex-direction: column;
+            width: fit-content;
+
+            &-date-id {
+                align-items: start;
+                flex-direction: row;
+                gap: 10px;
+            }
+        }
+
+        .reservation-section {
+            gap: 10px;
+        }
+
+        .users-btns-section {
+            flex-direction: column;
+            gap: 20px;
+            align-items: start;
+
+            .users-section {
+
+                .user-infos {
+                    flex-wrap: wrap;
+                }
+            }
+        }
+    }
+}

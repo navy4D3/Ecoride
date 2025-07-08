@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+    <meta charset="UTF-8">
+    <title>Trajet terminé !</title>
+    {% include 'email/email_style.html.twig' %}
+    </head>
+    <body>
+        <div class="container">
+            <h2>Trajet terminé 🚗</h2>
+
+            <p>Bonjour {{ user.prenom|default('utilisateur') }},</p>
+
+            <p>Le trajet du <strong>{{ trajet.heureDepart|date('d/m/Y à H:i') }}</strong> avec {{ chauffeur.prenom }} est terminé.</p>
+
+            <p>Prenez un instant pour laisser un avis sur votre trajet. Votre retour est nécessaire pour finaliser la transaction !</p>
+
+            <a href="{{ url_profil }}" class="button">Donner mon avis</a>
+
+            <p style="margin-top: 20px;">Merci pour votre confiance et à bientôt sur Ecoride 🌿</p>
+
+            <div class='footer'>2025 EcoRide - Tous droits réservés.</div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Note</th>
+            <th>Niveau</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr class="clickable-row" data-href="{{ path('app_admin_user', { id: user.id }) }}">
+                <td>{{ user.id }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.note }}</td>
+                <td>{{ user.userLevel }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucun utilisateur trouvé.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if totalPages > 1 %}
+    <div class="pagination">
+        {% for i in 1..totalPages %}
+            {% if i == page %}
+                <strong>{{ i }} </strong>
+            {% else %}
+                <a href="{{ path('app_admin_users_list', {'page': i, 'search': search}) }}"> {{ i }}</a>
+            {% endif %}
+            {% if not loop.last %} - {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

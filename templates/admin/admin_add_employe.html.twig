@@ -1,0 +1,39 @@
+{% set pageClass = 'admin add-employe' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('admin') }}
+
+    {% include "google_autocomplete.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% include 'header.html.twig' with { title:'Ajouter employé', isHistoryBackTrue : true} %}
+
+    {{ form_start(form, {'attr': {'class':'form-green-column admin-user', 'id':'admin-add-employe-form'}}) }}
+        <div class="row-div">
+            {{ form_row(form.nom) }}
+            {{ form_row(form.prenom) }}
+        </div>
+        
+        {{ form_row(form.adresse) }}
+        
+        <div class="row-div">
+            {{ form_row(form.date_naissance) }}
+            {{ form_row(form.telephone) }}
+        </div>
+        {{ form_row(form.email) }}
+        {{ form_row(form.password.first) }}
+        {{ form_row(form.password.second) }}
+
+        <button type="submit" class=" btn-green-black inactive submit-btn" id="admin-add-employe-btn">Créer</button>
+
+    {{ form_end(form) }}
+{% endblock %}

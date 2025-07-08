@@ -1,0 +1,56 @@
+{% set pageClass = 'admin' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{ encore_entry_script_tags('admin') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="admin-header">
+        <div>
+            <h2>{{ creditsAcquis }}</h2>
+            <h4>CREDITS ACQUIS</h4>
+        </div>
+
+        <div>
+            <h2>{{ creditsEnAttente }}</h2>
+            <h4>CREDITS EN ATTENTE</h4>
+        </div>
+
+        <div>
+            <h2>{{ usersCount  }}</h2>
+            <h4>UTILISATEURS</h4>
+        </div>
+    </div>
+
+    <div class="prochains-trajet-section section">
+        <div class="d-flex flex-row w-100 justify-content-between">
+            <h3>Prochains trajets</h3>
+            <div class="period-div">
+                <label for="period">Période</label>
+                <select id="period-select">
+                    <option value="7">7 jours</option>
+                    <option value="14">14 jours</option>
+                    <option value="30">30 jours</option>
+                </select>
+            </div>
+            
+        </div>
+
+        <canvas id="prochains-trajet-chart"></canvas>
+    </div>
+
+    <div class="credits-a-venir-section section">
+        <h3>Crédits à venir</h3>
+
+        <canvas id="credits-a-venir-chart" ></canvas>
+    </div>
+{% endblock %}

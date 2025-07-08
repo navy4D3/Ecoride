@@ -1,0 +1,54 @@
+
+{# <input type="text" class="date-input" placeholder="Date" /> #}
+<div class="datepicker" hidden>
+    <!-- .datepicker-header -->
+    <div class="datepicker-header">
+        <button class="prev">Prev</button>
+
+        <div>
+        
+        <select class="month-input" hidden>
+            <option value="1">Janvier</option>
+            <option value="2">Fevrier</option>
+            <option value="3">Mars</option>
+            <option value="4">Avril</option>
+            <option value="5">Mai</option>
+            <option value="6">Juin</option>
+            <option value="7">Juillet</option>
+            <option value="8">Aout</option>
+            <option value="9">Septembre</option>
+            <option value="10">Octobre</option>
+            <option value="11">Novembre</option>
+            <option value="12">Decembre</option>
+        </select>
+        <span class="month-input-label" style="text-transform : uppercase"></span>
+        {# <input type="number" class="year-input" /> #}
+        </div>
+
+        <button class="next">Next</button>
+    </div>
+    <!-- /.datepicker-header -->
+
+    <!-- .days -->
+    <div class="days">
+        <span>Dim</span>
+        <span>Lun</span>
+        <span>Mar</span>
+        <span>Mer</span>
+        <span>Jeu</span>
+        <span>Ven</span>
+        <span>Sam</span>
+    </div>
+    <!-- /.days -->
+
+    <!-- .dates -->
+    <div class="dates"></div>
+    <!-- /.dates -->
+
+    <!-- .datepicker-footer -->
+    <div class="datepicker-footer">
+        <button class="cancel">Annuler</button>
+        <button class="apply">Valider</button>
+    </div>
+    <!-- /.datepicker-footer -->
+</div>

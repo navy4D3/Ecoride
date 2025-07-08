@@ -1,0 +1,86 @@
+<div id="add-voiture-section" class="add-voiture-section flex-column gap-3" style="display:flex">
+    
+    <div class="w-100 title-section d-flex flex-row align-items-center justify-content-between">
+        <div id="add-voiture-back-btn">
+            <twig:ux:icon name="tabler:chevron-left" class="icon"/>
+            <span class="pc-only">Retour</span>
+            {# icone #}
+        </div>
+
+        <h1>{% if isEdit is defined %}Modifier{% else %}Ajouter{% endif %} un véhicule</h1>
+
+        <div style="opacity: 0%;">Retour</div>
+    </div>
+
+    {{ form_start(form, {attr: { class:'form-green-column', id:"add-voiture-form"}}) }}
+        {% if errors %}
+                <div class="errors-container d-flex flex-column gap-1">
+                    {% for error in errors %}
+                        <div class="alert alert-danger">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+        {% endif %}
+            
+        <div class="row-inputs" >
+            {{ form_row(form.immatriculation) }}
+            {{ form_row(form.date_premiere_immatriculation, {
+                row_attr: { style:'min-width:100px'},
+                attr: { max: ( "now"|date("Y-m-d") ) }
+                })
+            }}    
+        </div>
+        
+        <div >
+            {{ form_label(form.marque) }}
+            <div class="w-100" style="position:relative">
+                {{ form_widget(form.marque, {attr: { class:'w-100'}}) }}
+                <ul id="suggestions-marque-box" class="suggestions-box"></ul>
+            </div>
+        </div>
+        
+        {{ form_row(form.modele) }}
+
+        <div class="row-inputs" >
+            
+            <div class="position-relative" style="max-width:250px; min-width: 250px;">
+                {{ form_label(form.couleur) }}
+                {{ form_widget(form.couleur) }}
+                <div id="color-view" class="color-view"></div>
+            </div>
+            {{ form_row(form.places, {
+                row_attr: { style: 'min-width:150px; max-width:300px;'}
+            }) }}
+            
+            {{ form_row(form.surnom, {
+                row_attr: { style: 'min-width:240px;'}
+            }) }}
+            <div>
+                {{ form_label(form.isElectric) }}
+                <label class="switch">
+                    {{ form_widget(form.isElectric) }}
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        
+        
+        <div class="buttons">
+            {% if (isEdit is defined) and (app.user.voitures|length > 1 ) %}
+                <button id="show-delete-voiture-popup" type="button" class="btn-green">Supprimer</button>
+
+                <div class="blur-effect"></div>
+                <div id="delete-voiture-popup" class="popup center" style="display:none">
+                    <h3>Souhaitez-vous réellement supprimer cette voiture ?</h3>
+                    <button id="delete-voiture" type="button" class="btn-green">Supprimer</button>
+                    <button type="button" class="btn-underline hide-btn">Annuler</button>
+                    {# au de la de la confirmation empecher la suppression si lié à un trajet #}
+                </div>
+            {% endif %}
+            <button id="add-voiture-submit" type="button" class="btn-green-black submit-btn inactive">{% if isEdit is defined %}Modifier{% else %}Ajouter{% endif %}</button>
+        </div>
+    {{ form_end(form) }}
+
+
+</div>

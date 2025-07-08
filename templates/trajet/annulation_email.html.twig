@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+    <meta charset="UTF-8">
+    <title>Trajet annulé</title>
+    {% include 'email/email_style.html.twig' %}
+    </head>
+    <body>
+        <div class="container">
+            <p>Bonjour {{ user.prenom|default('utilisateur') }},</p>
+            <p>Nous vous informons que le trajet du {{ trajet.heureDepart|date('d/m/Y') }} a été annulé par le chauffeur {{ trajet.chauffeur.prenom }}.</p>
+            <p>N'hésites pas à faire de nouvelles recherches sur notre application pour trouver des trajets alternatifs.</p>
+            <p>A bientôt sur Ecoride !</p>
+
+            <div class='footer'>2025 EcoRide - Tous droits réservés.</div>
+        </div>
+    </body>
+</html>

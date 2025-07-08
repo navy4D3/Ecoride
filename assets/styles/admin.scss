@@ -1,0 +1,395 @@
+.body-content.admin {
+
+    h1 {
+        text-align: center;
+    }
+
+    .admin-header {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            h2, h4 {
+                text-align: center;
+            }
+
+            h2 {
+                font-weight: 700;
+                font-size: 40px;
+            }
+        }
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .prochains-trajet-section {
+
+        > div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            label {
+                font-size: 18px;
+            }
+
+            .period-div {
+                display: flex;
+                flex-direction: row;
+                gap: 5px;
+                align-items: center;
+            }
+
+            select {
+                border-radius: 10px;
+                border: none;
+                background-color: $green-medium;
+                padding: 5px;
+                box-shadow: 0px 2px 4px $green-black-25;
+            }
+        }
+    }
+
+    canvas {
+        padding: 15px;
+        background-color: $green-white;
+        border-radius: 20px;
+        box-shadow: 0px 2px 4px $green-black-25;
+        min-height: 300px;
+
+    }
+
+    
+
+}
+
+.body-content.admin.list-users {
+    align-items: center;
+    #search-form {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        max-width: 600px;
+
+        svg {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            transform: translate(0%, -50%);
+            left: 5px;
+
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 10px;
+            width: 250px;
+            transition: border-color 0.3s;
+            padding-left: 30px;
+            background-color: $green-medium;
+            box-shadow: 0px 2px 4px $green-black-25;
+            width: 100%;
+
+        }
+    
+        input[type="text"]:focus {
+            border-color: solid 2px $green-black;
+            outline: none;
+        }
+    }
+
+    
+    #users-table {
+        width: 100%;
+        max-width: 1000px;
+        overflow: auto;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: $green-white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    
+            thead {
+                background-color: $green-black;
+                
+            }
+    
+            th, td {
+                padding: 12px 16px;
+                text-align: center;
+                border-bottom: 1px solid #e9e9e9;
+            }
+        
+            th {
+                background-color: $green-black;
+                font-weight: bold;
+                color: $green-white;
+                cursor: default !important;
+            }
+
+            tr {
+                cursor: pointer;
+            }
+        
+            tr:hover {
+                background-color: $green-medium;
+            }
+        }
+    }
+    
+
+    
+
+    .pagination {
+        margin-top: 1rem;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        a, strong {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 0 4px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    
+        a {
+            background-color: $green-white;
+            color: $green-black;
+        }
+    
+        a:hover {
+            background-color: $green-btn;
+            color: $green-black;
+        }
+    
+        strong {
+            background-color: $green-black;
+            color: white;
+        }
+    }
+
+    
+}
+
+.body-content.admin.user {
+
+    .form-btns-div {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+
+        form {
+            width: 100%;
+
+            .errors-container {
+                flex-direction: column !important;
+
+                .alert {
+                    width: 100%;
+                }
+
+            }
+            .profil-picture-div {
+
+                > div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .btn-blue {
+                        padding: 5px 10px;
+                        width: fit-content;
+                    }
+                }
+                
+    
+                img {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 100px;
+                }
+            }
+
+            .roles {
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+                align-items: start;
+
+                > div {
+                    display: flex;
+                    flex-direction: row;
+                    width: fit-content;
+                    gap: 10px;
+                    align-items: center;
+
+                    label {
+                        font-family: $nunito;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+
+        .btns-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            gap: 20px;
+            width: 100%;
+
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        #delete-user-popup {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding: 40px;
+            width: 80%;
+            max-width: 800px;
+            background-color: $green-medium;
+            align-items: center;
+            border-radius: 20px;
+            box-shadow: 0px 2px 4px $green-black-25;
+
+            .btns {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                gap: 30px;
+                align-items: center;
+                justify-content: center;
+
+                .btn-underline {
+                    border: unset;
+                    background-color: unset;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    
+}
+
+.body-content.admin.add-employe {
+    align-items: center;
+
+    .form-green-column {
+        background-color: $green-medium;
+        border-radius: 30px;
+        box-shadow: 0px 2px 4px $green-black-25;
+        padding: 20px !important;
+        max-width: 800px;
+        width: 100%;
+
+        .row-div {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: auto;
+            flex-grow: 1;
+            
+
+            > div {
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+                flex-grow: 1;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        > div {
+            flex-wrap: wrap;
+
+            input {
+                flex-grow: 1;
+                width: auto;
+                min-width: 150px;
+            }
+        }
+
+        
+
+
+    }
+}
+
+@media (max-width:768px) {
+    .body-content.admin.user {
+
+        .form-btns-div {
+            flex-direction: column;
+        }
+
+        .roles {
+            flex-wrap: wrap;
+        }
+    }
+}
+
+@media (max-width:512px) {
+    .body-content.admin {
+
+        .header {
+            flex-direction: column;
+            justify-content: start;
+            gap: 10px;
+
+            > div {
+                flex-direction: row;
+                gap: 10px;
+
+                h2 {
+                    font-size: 24px;
+                }
+
+                h4 {
+                    font-size: 20px;
+                }
+            }
+
+            
+        }
+
+        canvas {
+            height: 200px;
+            min-height: 150px;
+        }
+
+    }
+
+    
+    
+}

@@ -1,0 +1,389 @@
+{% set pageClass = 'profil' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('profil') }}
+    {# {{ encore_entry_script_tags('registerLogin') }} #}
+
+    {% include 'google_autocomplete.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="w-100 d-flex  flex-column align-items-center">
+         <div class="profil-navbar">
+            <div id="trajets" class="selected">
+                <span class="pc-tablet-mobile-large-only">Trajets</span>
+                <twig:ux:icon name="bx:directions" id="trajets-icon" class="espace-chauffeur-icon mobile-small-only"/>
+                
+            </div>
+
+            <div id="mes-informations">
+                <span class="pc-tablet-mobile-large-only">Mes informations</span>
+                <twig:ux:icon name="majesticons:data-line" id="trajets-icon" class="espace-chauffeur-icon mobile-small-only"/>
+            </div>
+
+            <div id="espace-chauffeur" data-is-chauffeur="{{ app.user.isChauffeur }}">
+                <span class="pc-tablet-mobile-large-only">{% if app.user.isChauffeur %}Espace chauffeur{% else %}Devenir chauffeur{% endif %}</span>
+                <twig:ux:icon name="mingcute:car-line" id="trajets-icon" class="trajets-icon mobile-small-only"/>
+            </div>
+
+            <div id="parametres">
+                <span class="pc-tablet-mobile-large-only">Paramètres</span>
+                <twig:ux:icon class="" name="weui:setting-outlined" class="parametres-icon mobile-small-only"/>
+            </div>
+            
+        </div>
+    </div>
+   
+
+    <div class="trajets-section current-section">
+        <div class="credits-infos">
+            <div>
+                <h3>{{ app.user.creditsDisponible }} ￠</h3>
+                <h4>disponible</h4>
+            </div>
+            <div>
+                
+                <h3>{{ app.user.creditsEnAttente }} ￠</h3>
+                <h4>en attente</h4>
+            </div>
+            <div>
+                <h3>{{ app.user.creditsReserve }} ￠</h3>
+                <h4>réservé</h4>
+            </div>
+            
+            
+            
+        </div>
+        <div class="trajets-a-venir">
+            <h2>Trajets à venir</h2>
+            <div class="trajets">
+                {% if trajetsAVenir is empty %}
+                    <p>Aucun trajet.</p>
+                {% else %}
+                    {% for trajet in trajetsAVenir %}
+                        <a href="{{ path('app_trajet', { id: trajet.datas.id }) }}" class="trajet">
+                            <div class="trajet-date-type">
+                                {{ trajet.timeDatas.dateDepart }}
+                                {% set isChauffeur = (trajet.datas.chauffeur == app.user) %}
+                                {% if isChauffeur %}
+                                    <twig:ux:icon name="mingcute:car-line" class="icon"/>
+                                {% else %}
+                                    <twig:ux:icon name="lucide:users" class="icon"/>
+                                {% endif %}
+                            </div>
+
+                            <div class="trajet-data">
+                                <div class="trajet-data-hour">
+                                    <span>{{ trajet.timeDatas.heureDepart }}</span>
+
+                                    <div class="trajet-data-hour-duree">
+                                        <div class="circle outline"></div>
+                                        <div class="dashed-line"></div>
+                                        <span>{{ trajet.timeDatas.duree }}</span>
+                                        <div class="dashed-line"></div>
+                                        <div class="circle"></div>
+                                    </div>
+                                    
+                                    <span>{{ trajet.timeDatas.heureArrivee }}</span>
+                                    {% if trajet.timeDatas.isNextDay %}<span>+1</span>{% endif %}
+                                </div>
+                            </div>
+                                
+                            <div class="trajet-lieu">
+                                <span class="depart">{{ trajet.datas.lieuDepart }}</span>
+                                <span class="arrivee">{{ trajet.datas.lieuArrivee }}</span>
+                                
+                            </div>
+                            
+                            {% if not isChauffeur %}
+                                <div class="trajet-chauffeur-price">
+                                    <div class="chauffeur">
+                                        {% if trajet.datas.chauffeur.photoProfil %}
+                                            <img src="{{ path('user_profil_photo', { id: trajet.datas.chauffeur.id }) }}" class="photo-profil-conducteur" alt="Photo">
+                                        {% else %}
+                                            <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                        {% endif %}
+                                        <span>{{ trajet.datas.chauffeur.prenom }}</span>
+                                        {% if trajet.datas.chauffeur.note %}
+                                            <div class="chauffeur-note">
+                                                <span>{{ trajet.datas.chauffeur.note }}</span>
+                                                <twig:ux:icon name="mingcute:star-fill" />
+                                            </div>
+                                        {% endif %}
+
+                                        {% if trajet.datas.voiture.isElectric %}
+                                            <div>
+                                                <span>Eco</span>
+                                                <svg viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M18.3546 10.7143C14.8185 11.067 8.75272 13.2329 5.74806 14.6224C5.50855 13.9277 5.00068 11.2498 7.11975 7.653C10.1897 2.4422 15.2193 0.944102 19.2691 0.553292C23.3188 0.162482 29.3935 1.92113 33.8351 5.82923C37.3885 8.95571 40.7589 15.0784 42 17.7489C41.2379 17.4667 39.2174 16.9282 37.2317 17.0324C34.7496 17.1627 32.2675 17.9443 29.3935 19.3773C26.5194 20.8103 23.3188 24.3276 17.7014 24.7184C13.2075 25.031 8.73095 21.7222 7.70762 20.0938C7.70762 20.0938 5.85158 21.5308 4.76827 22.5689C3.64857 23.6419 2.0902 25.5 2.0902 25.5C2.0902 25.5 1.20747 25.1349 0.783826 24.7184C0.375651 24.317 0 23.4808 0 23.4808C0.631415 22.4604 2.86066 18.7272 10.1897 14.6224C14.8571 12.0084 24.4685 10.913 27.4461 11.8248C26.057 11.345 23.3499 10.2162 18.3546 10.7143Z" fill="#386150"/>
+                                                </svg>
+                                            </div>
+                                            
+                                        {% endif %}
+                                    </div>
+                                    <span>{{ (trajet.datas.prixPersonne + 2) * trajet.reservation.nbPlaces }} crédits</span>
+                                    {# integrer dans le calcul le prix* le nombre de passagers #}
+                                </div>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="trajets-passes">
+        
+            <h2>Trajets passés</h2>
+            <div class="trajets">
+                {% if trajetsPasses is empty %}
+                    <p>Aucun trajet.</p>
+                {% else %}
+                    {% for trajet in trajetsPasses %}
+                        {% set isChauffeur = (trajet.datas.chauffeur == app.user) %}
+                        <a href="{{ path('app_trajet', { id: trajet.datas.id }) }}" class="trajet-passe">
+                            <span class="date-depart">{{ trajet.timeDatas.dateDepart }}</span>
+                            <div class="lieux">
+                                <span>{{ trajet.datas.lieuDepart }}</span>
+                                <twig:ux:icon name="lucide:arrow-up" class="icon" style="rotate: 90deg;"/>
+                                <span style="text-align:end">{{ trajet.datas.lieuArrivee }}</span>
+                            </div>
+
+                            <div class="right-section">
+                                {% if isChauffeur %}
+                                    {% set creditsEnAttente = 0 %}
+                                    {% for reservation in trajet.datas.reservations %}
+                                        {% if reservation.statut.label == "Enregistré" %}
+                                            {% set creditsEnAttente = creditsEnAttente + ( trajet.datas.prixPersonne * reservation.nbPlaces ) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if creditsEnAttente > 0 %}
+                                        <twig:ux:icon name="solar:dollar-bold" id="" class="icon trajet-type-icon"/>
+                                    {% endif %}
+                                    <twig:ux:icon name="mingcute:car-line" id="" class="icon trajet-type-icon"/>
+                                {% else %}
+                                    {% set reservationPaye = true %}
+                                    {% set isAvisPublie = false %}
+                                    {% for reservation in trajet.datas.reservations %}
+                                        {% if reservation.user == app.user  and (reservation.statut.label =="Enregistré") %}
+                                            {% set reservationPaye = false %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for avis in trajet.datas.avis %}
+                                        {% if avis.creator == app.user %}
+                                            {% set isAvisPublie = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if not reservationPaye and not isAvisPublie %}
+                                        <span href="/add-avis/{{ trajet.datas.id }}">Laisser un avis</span>
+                                    {% endif %}
+                                    <twig:ux:icon name="lucide:users" class="icon trajet-type-icon"/>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+     <div class="mes-informations-section" style="display:none">
+
+        {{ form_start(myDataForm, {'attr': {'class':'form-green-column', 'id':"my-data-form"}}) }}
+            <div class="profil-picture-div">
+                {{ form_widget(myDataForm.photo_profil) }}
+                {{ form_label(myDataForm.photo_profil)}}
+                <div class="profil-picture-img">
+                    <twig:ux:icon name="lucide:edit" id="edit-profil-icon" class="edit-icon"/>
+                    {% if app.user.photoProfil %}
+                        {% set profilPicturePath = path('user_profil_photo', { id: app.user.id }) %}
+                    {% else %}
+                        {% set profilPicturePath = '/default-profil-picture.png' %}
+                    {% endif %}
+                    <img src="{{ profilPicturePath }}" id="profil-picture-img" class="photo-profil" alt="Photo de profil">
+                </div>
+            </div>
+            
+            <div class="row-inputs">
+                {{ form_row(myDataForm.nom) }}
+                {{ form_row(myDataForm.prenom) }}
+            </div>
+            <div class="row-inputs">
+                {{ form_row(myDataForm.date_naissance) }}
+                {{ form_row(myDataForm.telephone) }}
+            </div>
+            
+            {{ form_row(myDataForm.adresse) }}
+            
+            
+
+            <button type="submit" class="btn btn-green inactive submit-btn" id="submit-my-data-form-btn">Modifier</button>
+            {# {{ form_errors(myDataForm) }} #}
+        {{ form_end(myDataForm) }}
+
+        {# {% if errors %}
+            <div class="errors-container d-flex flex-column gap-1">
+                {% for error in errors %}
+                    <div class="alert alert-danger">
+                        {{ error.message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %} #}
+
+     </div>
+
+     <div class="espace-chauffeur-section" id="espace-chauffeur-section" style="display:none">
+        {{ form_start(driverSpaceForm, {attr: { class:'', id:"devenir-chauffeur-form"}}) }}
+            <div class="section-preferences section">
+                <h3>Sélectionne ce qui te corresponds en voiture</h3>
+                <div class="preferences-list" data-user-preferences="{{ app.user.preferences|map(p => p.label)|join(',') }}">
+                    {% for preference in preferences %}
+                        <span id="{{ preference.label }}" class="preference">{{ preference.label}}</span>
+                    {% endfor %}
+                </div>
+                {{ form_widget(driverSpaceForm.preferences) }}
+            </div>
+
+            <div class="section-preferences section">
+                <h3>Description complémentaire</h3>
+                {{ form_widget(driverSpaceForm.description) }}
+            </div>
+
+            <div class=" section section-voiture">
+                {{ form_widget(driverSpaceForm.hasVoiture) }}
+                <h3>Véhicules</h3>
+
+                {% include 'voiture/user_voiture_list.html.twig' %}
+
+            </div>
+            <button id="" class="btn-green submit-btn inactive">Modifier</button>
+        
+        {{ form_end(driverSpaceForm) }}
+     </div>
+
+     <div class="parametres-section" style="display:none">
+        <div class="parametres-section-btns">
+            <span class="btn-outline choice-btn" id="avis-btn">Avis</span>
+            <span class="btn-outline choice-btn " id="mail-and-password-btn">Mail et mot de passe</span>
+            <a href="/cgu" class="btn-outline choice-btn">Conditions Générales d'Utilisation</a>
+            <a href="/mentions-legales" class="btn-outline choice-btn">Mentions légales</a>
+            <a href="/contact" class="btn-outline choice-btn">Contact</a>
+            <a href="/logout"class="logout-btn choice-btn">Deconnexion</a>
+        </div>
+
+        <div class="parametres-section-avis" style="display:none">
+            {# {% include 'header.html.twig' with { title : "Avis", 'isHistoryBackTrue' : false } %} #}
+            <div class="labels">
+                <twig:ux:icon name="tabler:chevron-left" id="" class="back-btn"/>
+                <h3 class="selected" id="avis-recus-btn">Avis recus</h3>
+                <h3 class="" id="avis-publies-btn">Avis publiés</h3>
+                <twig:ux:icon name="tabler:chevron-left" style="opacity: 0%"/>
+            </div>
+            
+            <div class="avis-recus-section" >
+                {% if avisRecus is empty %}
+                    <p class="empty-message">Aucun avis reçus</p>
+                {% else %}
+                    <div class="global-note">
+                        <span class="global-note-note">{{ app.user.note }}/5</span>
+                        <twig:ux:icon name="mingcute:star-fill" />
+                        <span class="global-note-nb">{{ avisRecus|length }} avis</span>
+                    </div>
+                    {% for avis in avisRecus %}
+                        <div class="avis {% if not avis.isPositive %}negative{% endif %}">
+                            <div class="avis-user-infos">
+                                {% if avis.creator.photoProfil %}
+                                    <img src="{{ path('user_profil_photo', { id: avis.creator.id }) }}" class="photo-profil" alt="Photo">
+                                {% else %}
+                                    <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                {% endif %}
+                                <span>{{ avis.creator.prenom }}</span>
+                            </div>
+                            
+                            <div class="avis-note-infos">
+                                <div class="avis-note-infos-note">
+                                    <span>{{ avis.note }}</span>
+                                    <twig:ux:icon name="mingcute:star-fill" />
+                                </div>
+                                
+                                <p>{{ avis.commentaire }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="avis-publies-section" style="display:none";>
+                {% if avisPublies is empty %}
+                    <p class="empty-message">Aucun avis publié</p>
+                {% else %}
+                    {% for avis in avisPublies %}
+                        <div class="avis {% if not avis.isPositive %}negative{% endif %}">
+                            <div class="avis-user-infos">
+                                {% if avis.user.photoProfil %}
+                                    <img src="{{ path('user_profil_photo', { id: avis.user.id }) }}" class="photo-profil" alt="Photo">
+                                {% else %}
+                                    <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                {% endif %}
+                                <span>{{ avis.user.prenom }}</span>
+                            </div>
+                            
+                            <div class="avis-note-infos">
+                                <div class="avis-note-infos-note">
+                                    <span>{{ avis.note }}</span>
+                                    <twig:ux:icon name="mingcute:star-fill" />
+                                </div>
+                                
+                                <p>{{ avis.commentaire }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="parametres-section-mail-password" style="display:none">
+            
+            <div class="labels">
+                <twig:ux:icon name="tabler:chevron-left" id="" class="back-btn"/>
+                <h3 style="opacity:100%">Mail et mot de passe</h3>
+                <twig:ux:icon name="tabler:chevron-left" style="opacity: 0%"/>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                <span id="show-edit-mail-form-btn" class="choice-btn">Modifier mon adresse mail</span>
+                <span id="show-edit-password-form-btn" class="choice-btn">Modifier mon mot de passe</span>
+            </div>
+            
+            {# coder le JS pour faire apparaitre les bonnes fenetres #}
+            
+        </div>
+
+        <div class="parametres-section-mail" style="display:none";>
+                <div class="labels">
+                    <twig:ux:icon name="tabler:chevron-left" id="" class="back-btn"/>
+                    <h3 style="opacity:100%">Modification du mail</h3>
+                    <twig:ux:icon name="tabler:chevron-left" style="opacity: 0%"/>
+                </div>
+                {% include 'registration/edit_mail_form.html.twig' with { 'form': editMailForm} %}
+            </div>
+            <div class="parametres-section-password" style="display:none";>
+                <div class="labels">
+                    <twig:ux:icon name="tabler:chevron-left" id="" class="back-btn"/>
+                    <h3 style="opacity:100%">Modification du mot de passe</h3>
+                    <twig:ux:icon name="tabler:chevron-left" style="opacity: 0%"/>
+                </div>
+                {% include 'registration/edit_password_form.html.twig' with { 'form': editPasswordForm} %}
+            </div>
+
+     </div>
+{% endblock %}

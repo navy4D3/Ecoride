@@ -1,0 +1,78 @@
+{% set pageClass = 'reserver' %}
+{% set totalCredits = ((trajet.prixPersonne + 2) * reservationDatas.nbPlaces) %}
+{% set creditsSuffisant = (totalCredits <= app.user.creditsDisponible) %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Reserver un trajet{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('reserver') }}
+{% endblock %}
+
+{% block body %}
+    {% include 'header.html.twig' with { title: 'Réserver un trajet' , 'isHistoryBackTrue' : true } %}
+
+    <div class="recap-1" id="recap-1">
+        <strong class="nb-places">{{ reservationDatas.nbPlaces }} place{% if reservationDatas.nbPlaces > 1 %}s{% endif %} <twig:ux:icon name="lucide:users"/></strong>
+        <span><strong>{{ trajet.prixPersonne + 2 }}¢</strong> / passager</span>
+        <span>Crédits nécessaires : <strong id="credits-needed">{{ totalCredits }}¢</strong></span>
+        <span>Crédits disponibles : <strong {% if not creditsSuffisant %}style="color:red"{% endif %} id="user-credits">{{ app.user.creditsDisponible }}¢</strong></span>
+        {% if creditsSuffisant %}
+            <button class="btn-green" id="continue-btn">Continuer</button>
+        {% else %}
+            <button class="btn-green" id="show-add-credits-section-btn">Ajouter des crédits</button>
+        {% endif %}
+    </div>
+
+    <div class="recap-2" id="recap-2" style="display:none">
+        <h3 style="text-align:center">Départ le {{ timeDatas.dateDepart }}</h3>
+        <div class="lieu-time">
+            <span style="text-align:center">{{ trajet.lieuDepart}}</span>
+            <span>{{ timeDatas.heureDepart}}</span>
+            <twig:ux:icon name="lucide:arrow-up" style=""/>
+            <span>{{ timeDatas.heureArrivee}}</span>
+            <span style="text-align:center">{{ trajet.lieuArrivee}}</span>
+        </div>
+        <h4>Avec</h4>
+
+        <div class="chauffeur" >
+            {% if trajet.chauffeur.photoProfil %}
+                <img src="{{ path('user_profil_photo', { id: trajet.chauffeur.id }) }}" class="photo-profil-conducteur" alt="Photo">
+            {% else %}
+                <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+            {% endif %}
+            <span>{{ trajet.chauffeur.prenom }}</span>
+            {% if trajet.chauffeur.note %}
+                <div class="note" style="opacity:75%">
+                    <small>{{ trajet.chauffeur.note }}</small>
+                    <twig:ux:icon name="mingcute:star-fill" />
+                </div>
+            {% endif %}
+        </div>
+        <h4>Pour</h4>
+        <span class="credits-passager">{{ totalCredits }} crédits ({{ reservationDatas.nbPlaces }} passager{% if reservationDatas.nbPlaces > 1 %}s{% endif %})</span>
+        <a href="{{ path('app_ajouter_passagers', { user: app.user.id , trajet: trajet.id , places:reservationDatas.nbPlaces }) }}" class="btn-green w-100">Confirmer</a>
+        
+
+        {# afficher une laerte de succès après validation ajout #}
+    </div>
+
+    <div class="blur-effect"></div>
+
+    <div class="add-credits" style="display:none";>
+        <h3>Combien de crédits souhaites-tu ajouter ?</h3>
+        <select id="credits-select" name="credits" class="form-select">
+            {% for i in range(5,50, 5) %}
+                <option value="{{ i }}">{{ i }} crédits</option>
+            {% endfor %}
+        </select>
+        <button class="btn-green" id="add-credits-btn">Ajouter</button>
+        <span class="close-popup-btn" style="text-decoration:underline">Annuler</button>
+    </div>
+
+
+
+    
+
+{% endblock %}
