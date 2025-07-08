@@ -518,4 +518,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->avisRecus;
     }
 
+    public function isAdult(int $ageMinimum = 18): bool
+{
+    if (!$this->getDateNaissance()) {
+        return false; // ou throw une exception selon le besoin
+    }
+
+    $today = new \DateTime();
+    $birthdayThreshold = (clone $today)->modify("-{$ageMinimum} years");
+
+    return $this->getDateNaissance() <= $birthdayThreshold;
+}
+
 }

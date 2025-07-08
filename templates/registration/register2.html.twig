@@ -36,12 +36,12 @@
         {{ form_row(registrationStepTwoForm.nom) }}
         {{ form_row(registrationStepTwoForm.prenom) }}
         {{ form_row(registrationStepTwoForm.date_naissance) }}
+        <p id="message-majorite" class="mb-0" style="display:none;"></p>
         {{ form_row(registrationStepTwoForm.adresse) }}
         {{ form_row(registrationStepTwoForm.telephone) }}
         
-
+        
         <button type="submit" class="btn-green" id="submit-btn">Finaliser</button>
-        {# {{ form_errors(registrationStepTwoForm) }} #}
     {{ form_end(registrationStepTwoForm) }}
 
     {% if errors %}

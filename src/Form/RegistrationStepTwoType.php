@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationStepTwoType extends AbstractType
@@ -73,8 +74,14 @@ class RegistrationStepTwoType extends AbstractType
                 'widget' => 'single_text',
                 'attr' => [
                     'class' => 'picker',
-                    'max' => (new \DateTime())->modify('-1 day')->format('Y-m-d')
-                ]
+                    'max' => (new \DateTime())->modify('-16 years')->format('Y-m-d')
+                ],
+                'constraints' => [
+                    new LessThanOrEqual([
+                        'value' => (new \DateTime())->modify('-16 years'),
+                        'message' => 'Vous devez avoir au moins 16 ans pour vous inscrire.'
+                    ]),
+                ],
 
             ])
             ->add('telephone', TelType::class, [
