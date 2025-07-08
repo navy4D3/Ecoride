@@ -18,7 +18,6 @@ class TrajetRepository extends ServiceEntityRepository
     }
 
     public function findAllTrajetsByUser(int $userId, 
-    // string $statut
     ): array
     {
         
@@ -82,13 +81,11 @@ class TrajetRepository extends ServiceEntityRepository
             ->addSelect('v')
             ->addSelect('SUM(r.nbPlaces) AS HIDDEN totalPassagers')
             ->where('t.heureDepart BETWEEN :start AND :end')
-            // ->andWhere('t.statut = :statut')
             ->andWhere('c.id != :chauffeurId')
             ->groupBy('t.id', 'v.id')
             ->having('(v.places - 1 - SUM(COALESCE(r.nbPlaces, 0))) >= :placesMin')
             ->setParameter('start', $startOfDate)
             ->setParameter('end', $endOfDate)
-            // ->setParameter('statut', $statut)
             ->setParameter('placesMin', $nbPassagers)
             ->setParameter('chauffeurId', $chauffeurId);
     
