@@ -70,13 +70,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Voiture>
      */
 
-    #[ORM\OneToMany(mappedBy: 'chauffeur', targetEntity: Trajet::class)]
-    private Collection $trajetsEnTantQueChauffeur;
+    // #[ORM\OneToMany(mappedBy: 'chauffeur', targetEntity: Trajet::class)]
+    // private Collection $trajetsEnTantQueChauffeur;
 
     /**
      * @var Collection<int, Trajet>
      */
-    #[ORM\OneToMany(targetEntity: Trajet::class, mappedBy: 'chauffeur2', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Trajet::class, mappedBy: 'chauffeur', orphanRemoval: true)]
     private Collection $trajetsAsChauffeur;
 
     #[ORM\Column(nullable: true)]
@@ -106,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
-        $this->trajetsEnTantQueChauffeur = new ArrayCollection();
+        // $this->trajetsEnTantQueChauffeur = new ArrayCollection();
         $this->trajetsAsChauffeur = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->credits = 20;
@@ -316,20 +316,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function getTrajetsEnTantQueChauffeur(): Collection
-    {
-        return $this->trajetsEnTantQueChauffeur;
-    }
+    // public function getTrajetsEnTantQueChauffeur(): Collection
+    // {
+    //     return $this->trajetsEnTantQueChauffeur;
+    // }
 
-    public function addTrajetEnTantQueChauffeur(Trajet $trajet): self
-    {
-        if (!$this->trajetsEnTantQueChauffeur->contains($trajet)) {
-            $this->trajetsEnTantQueChauffeur[] = $trajet;
-            $trajet->setChauffeur($this);
-        }
+    // public function addTrajetEnTantQueChauffeur(Trajet $trajet): self
+    // {
+    //     if (!$this->trajetsEnTantQueChauffeur->contains($trajet)) {
+    //         $this->trajetsEnTantQueChauffeur[] = $trajet;
+    //         $trajet->setChauffeur($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function isChauffeur(): bool
     {
@@ -368,7 +368,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->trajetsAsChauffeur->contains($trajetsAsChauffeur)) {
             $this->trajetsAsChauffeur->add($trajetsAsChauffeur);
-            $trajetsAsChauffeur->setChauffeur2($this);
+            $trajetsAsChauffeur->setChauffeur($this);
         }
 
         return $this;
@@ -378,8 +378,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->trajetsAsChauffeur->removeElement($trajetsAsChauffeur)) {
             // set the owning side to null (unless already changed)
-            if ($trajetsAsChauffeur->getChauffeur2() === $this) {
-                $trajetsAsChauffeur->setChauffeur2(null);
+            if ($trajetsAsChauffeur->getChauffeur() === $this) {
+                $trajetsAsChauffeur->setChauffeur(null);
             }
         }
 
