@@ -100,6 +100,7 @@ GOOGLE_RECAPTCHA_SECRET_KEY=yourkey
 
 # Créer la base et les tables
 php bin/console doctrine:database:create
+php bin/console make:migration
 php bin/console doctrine:migrations:migrate
 
 # (Optionnel) Charger des données de test
