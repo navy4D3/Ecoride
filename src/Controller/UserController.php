@@ -67,7 +67,7 @@ final class UserController extends AbstractController {
             $trajetsPassager[] = $reservation->getTrajet();
         }
 
-        $trajetsChauffeur = $currentUser->getTrajetsEnTantQueChauffeur();
+        $trajetsChauffeur = $currentUser->getTrajetsAsChauffeur();
 
         $trajetsAVenirDatasToDisplay = [];
         $trajetsPassesDatasToDisplay = [];

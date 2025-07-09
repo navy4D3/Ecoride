@@ -45,9 +45,9 @@ class Trajet
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'trajets')]
     private Collection $participants;
 
-    #[ORM\ManyToOne(inversedBy: 'trajetsEnTantQueChauffeur')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $chauffeur = null;
+    // #[ORM\ManyToOne(inversedBy: 'trajetsEnTantQueChauffeur')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?User $chauffeur = null;
 
     #[ORM\Column]
     private ?array $googleData = [];
@@ -57,7 +57,7 @@ class Trajet
 
     #[ORM\ManyToOne(inversedBy: 'trajetsAsChauffeur')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $chauffeur2 = null;
+    private ?User $chauffeur = null;
 
     /**
      * @var Collection<int, Reservation>
@@ -208,17 +208,17 @@ class Trajet
         return $result;
     }
 
-    public function getChauffeur(): ?User
-    {
-        return $this->chauffeur;
-    }
+    // public function getChauffeur(): ?User
+    // {
+    //     return $this->chauffeur;
+    // }
 
-    public function setChauffeur(User $chauffeur): static
-    {
-        $this->chauffeur = $chauffeur;
+    // public function setChauffeur(User $chauffeur): static
+    // {
+    //     $this->chauffeur = $chauffeur;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getGoogleData(): ?array
     {
@@ -244,14 +244,14 @@ class Trajet
         return $this;
     }
 
-    public function getChauffeur2(): ?User
+    public function getChauffeur(): ?User
     {
-        return $this->chauffeur2;
+        return $this->chauffeur;
     }
 
-    public function setChauffeur2(?User $chauffeur2): static
+    public function setChauffeur(?User $chauffeur): static
     {
-        $this->chauffeur2 = $chauffeur2;
+        $this->chauffeur = $chauffeur;
 
         return $this;
     }

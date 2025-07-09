@@ -78,7 +78,7 @@ L’application intègre des fonctionnalités avancées comme la suggestion dyna
 
 ```bash
 # Cloner le projet
-git clone https://github.com/tonpseudo/ecoride.git
+git clone https://github.com/navy4D3/Ecoride.git
 cd ecoride
 
 # Installer les dépendances PHP

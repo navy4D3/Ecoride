@@ -45,7 +45,7 @@ final class Version20250401185111 extends AbstractMigration
             CREATE INDEX IDX_8F91ABF0A76ED395 ON avis (user_id)
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE trajet ADD voiture_id INT NOT NULL, ADD chauffeur_id INT NOT NULL
+            ALTER TABLE trajet ADD voiture_id INT NOT NULL, ADD chauffeur_id INT NOT NULL, ADD chauffeur2_id INT NOT NULL
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE trajet ADD CONSTRAINT FK_2B5BA98C181A8BA FOREIGN KEY (voiture_id) REFERENCES voiture (id)

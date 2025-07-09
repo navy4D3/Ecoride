@@ -327,8 +327,8 @@ final class TrajetController extends AbstractController
             $voitureId = $form->get('voiture')->getData();
             $voitureObject = $em->getRepository(Voiture::class)->find($voitureId);
             // $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
-            $trajet->setChauffeur2($user);
             $trajet->setChauffeur($user);
+            // $trajet->setChauffeur($user);
             // return new Response($voitureObject->get);
 
             $trajet->setVoiture($voitureObject);

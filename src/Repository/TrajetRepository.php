@@ -22,11 +22,8 @@ class TrajetRepository extends ServiceEntityRepository
     {
         
         return $this->createQueryBuilder('t')
-            ->leftJoin('t.chauffeur', 'chauffeur')
-            ->leftJoin('t.chauffeur2', 'chauffeur2')
             ->leftJoin('t.participants', 'participant')
             ->where('chauffeur.id = :userId')
-            ->orWhere('chauffeur2.id = :userId')
             ->orWhere('participant.id = :userId')
             // ->andWhere('t.statut = :statut')
             ->setParameter('userId', $userId)
