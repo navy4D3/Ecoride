@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Form\ContactType;
 use App\Form\SearchTrajetType;
+use App\Service\TrajetSearchService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,13 +15,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class HomeController extends AbstractController{
     #[Route('/', name: 'app_home')]
-    public function index(Request $request): Response
+    public function index(Request $request, TrajetController $trajetController, TrajetSearchService $trajetSearchService, HttpClientInterface $client, Security $security, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(SearchTrajetType::class);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            return $trajetController->rechercher($request, $trajetSearchService, $client, $security, $em);
+        }
 
         return $this->render('home/index.html.twig', [
             'form' => $form,
