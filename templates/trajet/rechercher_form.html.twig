@@ -13,7 +13,7 @@
     <div class="datepicker-div">
         {# icone #}
         <twig:ux:icon name="akar-icons:calendar" />
-        {{ form_widget(form.dateDepart, { attr: { autocomplete:'off' }}) }}
+        {{ form_widget(form.dateDepart, { attr: { autocomplete:'off', readonly:"" }}) }}
         {% include 'home/datepicker.html.twig' %}
     </div>
     <div id="nb-passager-section">
@@ -32,7 +32,7 @@
         
     </div>
     
-    <button class="btn-green-black"><twig:ux:icon name="iconamoon:search" />Rechercher</button>            
+    <button type='submit' class="btn-green-black"><twig:ux:icon name="iconamoon:search" />Rechercher</button>            
             
 {{ form_end(form) }}
 

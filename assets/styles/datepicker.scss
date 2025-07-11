@@ -143,6 +143,8 @@
       width: 100%;
       padding: 20px;
       padding-bottom: 30px;
+      position:fixed;
+      border-radius: 0px;
 
       .dates, .days {
         grid-template-columns: repeat(7, auto);
