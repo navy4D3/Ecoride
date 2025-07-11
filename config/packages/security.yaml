@@ -17,7 +17,7 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                login_path: app_connect
+                login_path: app_login
                 check_path: app_login
                 success_handler: App\Security\LoginSuccessHandler
                 enable_csrf: true
