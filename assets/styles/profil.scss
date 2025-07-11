@@ -52,6 +52,7 @@
         flex-direction: column;
         gap: 20px;
         width: 100%;
+        
 
         .credits-infos {
             display: flex;
@@ -65,6 +66,7 @@
 
             > div {
                 display: flex;
+                width: 100%;
                 flex-direction: column;
                 gap: 5px;
                 align-items: center;
@@ -203,6 +205,8 @@
                             img {
                                 width: 30px;
                                 height: 30px;
+                                border-radius: 100px;
+                                object-fit: cover;
                             }
     
                             svg {
@@ -360,6 +364,8 @@
                     }}
             }
 
+            
+
             > div {
                 width: 100%;
             }
@@ -374,6 +380,7 @@
 
             .profil-picture-img {
                 position: relative;
+                object-fit: cover;
 
                 .edit-icon {
                     position: absolute;
@@ -397,6 +404,9 @@
                 }
             }
 
+            > label {
+                white-space: nowrap !important;
+            }
             
 
             
@@ -601,8 +611,9 @@
             }
         }
 
-        &-mail-password {
+        &-mail-password, &-mail, &-password {
             max-width: 600px;
+            width: 100%;
         }
 
         .choice-btn {
@@ -729,6 +740,42 @@
                 }
             }
         }
+
+        .mes-informations-section .form-green-column {
+            .date-naissance-telephone {
+                flex-direction: column;
+                gap: 20px;
+
+                > div {
+                    width: 100%;
+                }
+
+                label {
+                    white-space: nowrap !important;
+                }
+            }
+
+            .adresse {
+                flex-direction: column;
+                align-items: start;
+                gap: 0px;
+            }
+        }
+        
+        .parametres-section-mail {
+            form {
+                > div {
+                    flex-direction: column;
+                    align-items: start;
+
+                    label {
+                        white-space: nowrap !important;
+                    }
+                }
+            }
+
+        }
+
 
     }
 }

@@ -200,7 +200,7 @@
         {{ form_start(myDataForm, {'attr': {'class':'form-green-column', 'id':"my-data-form"}}) }}
             <div class="profil-picture-div">
                 {{ form_widget(myDataForm.photo_profil) }}
-                {{ form_label(myDataForm.photo_profil)}}
+                {{ form_label(myDataForm.photo_profil) }}
                 <div class="profil-picture-img">
                     <twig:ux:icon name="lucide:edit" id="edit-profil-icon" class="edit-icon"/>
                     {% if app.user.photoProfil %}
@@ -216,12 +216,12 @@
                 {{ form_row(myDataForm.nom) }}
                 {{ form_row(myDataForm.prenom) }}
             </div>
-            <div class="row-inputs">
+            <div class="row-inputs date-naissance-telephone">
                 {{ form_row(myDataForm.date_naissance) }}
                 {{ form_row(myDataForm.telephone) }}
             </div>
             
-            {{ form_row(myDataForm.adresse) }}
+            {{ form_row(myDataForm.adresse, {'row_attr': {'class':'adresse'}} ) }}
             
             
 

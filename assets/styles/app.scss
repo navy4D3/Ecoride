@@ -877,7 +877,7 @@ input[type='radio'], input[type='checkbox'] {
     }
 
     .body-content.connected {
-        padding-top: 50px;
+        padding-top: 20px;
         padding-bottom: 100px !important;
 
         .alert-success {
@@ -928,6 +928,17 @@ input[type='radio'], input[type='checkbox'] {
     form {
         label {
             font-size: 20px;
+        }
+
+        select {
+            line-height: 1.35;
+            -webkit-appearance: initial;
+        }
+
+        input[type="date"] {
+            -webkit-appearance: none;
+            line-height: 1.35;
+            min-height: 44px;
         }
     }
     
