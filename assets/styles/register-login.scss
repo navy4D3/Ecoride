@@ -101,11 +101,13 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
             border: none;
             background-color: $green-white;
             padding: 10px 5px;
-            outline-color: $green-black;
+            // outline-color: $green-black;
         }
 
         input:focus {
             outline-color: $green-black;
+            // box-shadow: 0 0 0 3px $green-black;
+            
         }
 
         #password-criteria  {
@@ -120,7 +122,7 @@ nav.connect, footer.connect, nav.register-step-two, footer.register-step-two {
                 
                 font-size: 12px;
                 transition: color 0.3s ease;
-                border : solid;
+                border : solid 1.5px;
                 padding: 0px 5px;
                 width: fit-content;
                 border-radius: 20px;

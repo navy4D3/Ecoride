@@ -10,6 +10,7 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -17,16 +18,17 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                login_path: app_connect
+                login_path: app_login
                 check_path: app_login
                 success_handler: App\Security\LoginSuccessHandler
-                # enable_csrf: true
                
             logout:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
-
+        secured_area:
+            form_login:
+                enable_csrf: true
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -51,8 +53,9 @@ security:
         - { path: ^/mentions-legales, roles: PUBLIC_ACCESS }
 
         # 🔒 Toutes les autres pages nécessitent d'être connecté
-        - { path: ^/, roles: ROLE_USER }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
+        
 
 when@test:
     security:

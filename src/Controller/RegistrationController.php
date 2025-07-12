@@ -36,7 +36,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/connect', name: 'app_connect')]
-    public function connect(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils): Response
+    public function connect(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils, SessionInterface $sessionInterface): Response
     {
         
         
@@ -48,10 +48,11 @@ class RegistrationController extends AbstractController
              $form = $this->createForm(RegistrationFormType::class, null, [
                 'validation_groups' => ['Default', 'registration']
              ]);
+             $form->handleRequest($request);
              $errors = $form->getErrors(true);
 
              if ($form->isSubmitted() ) {
-                return $this->redirectToRoute('app_home');
+                return $this->register($request, $userPasswordHasher, $entityManager, $sessionInterface);
              }
         
              return $this->render('registration/connect.html.twig', [
@@ -59,17 +60,19 @@ class RegistrationController extends AbstractController
                  'formType' => 'register',
                  'errors' => $errors
              ]);
-        } else {            
-            $errors = $authenticationUtils->getLastAuthenticationError();
+        } else {      
+            return $this->redirectToRoute('app_login');
 
-            // last username entered by the user
-            $lastUsername = $authenticationUtils->getLastUsername();
+            // $errors = $authenticationUtils->getLastAuthenticationError();
 
-            return $this->render('registration/connect.html.twig', [
-                'formType' => 'login',
-                'last_username' => $lastUsername,
-                'errors' => $errors,
-            ]);
+            // // last username entered by the user
+            // $lastUsername = $authenticationUtils->getLastUsername();
+
+            // return $this->render('registration/connect.html.twig', [
+            //     'formType' => 'login',
+            //     'last_username' => $lastUsername,
+            //     'errors' => $errors,
+            // ]);
             
         }
         
@@ -132,11 +135,13 @@ class RegistrationController extends AbstractController
             }
         }
 
-        return $this->render('registration/register_form.html.twig', [
+        return $this->render('registration/connect.html.twig', [
             'formType' => 'register',
             'registrationForm' => $form->createView(),
             'errors' => $errors
         ]);
+
+        
     }
 
     #[Route('/register2', name: 'app_register2')]

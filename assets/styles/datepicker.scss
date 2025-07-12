@@ -1,139 +1,165 @@
 
 @import 'variables.scss';
 
-
-
-
 .datepicker-div {
-//   background: mediumpurple;
-  
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-  
   overflow:visible;
   position: relative;
-}
 
-// .date-input {
-//   padding: 10px;
-//   font-size: 1rem;
-//   border-radius: 5px;
-//   border: 1px solid #eee;
-// }
+  .datepicker {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    margin-top: 2px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+
+    .datepicker-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid $green-black-25 ;
+
+      select, input {
+        font-size: 14px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        height: 30px;
+        padding: 5px;
+      }
+      
+      input {
+        max-width: 64px;
+        
+      }
+      
+      button {
+        color: $green-black-75;
+      }
+      
+      button:hover {
+        color: $green-black;
+      }
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 3px;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      transition: 0.3s;
+      touch-action: manipulation;
+      border-radius: 10px;
+    }
+
+    .days, .dates {
+      display: grid;
+      grid-template-columns: repeat(7, 32px);
+      gap: 10px;
+      margin-block: 10px;
+    }
+
+    .days {
+      
+      span {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        text-align: center;
+        color: $green-black;
+      }
+
+    }
+
+    .dates {
+
+      button {
+        color: slategray;
+        font-family: $nunito;
+        aspect-ratio: 1;
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        user-select: none;
+      }
+      
+      button:hover {
+        background: rgba(119, 136, 153, 0.1);
+      }
+      
+      button.today {
+        background: $green-black-25;
+        color: $green-black;
+      }
+      
+      button.selected {
+        background: $green-black;
+        color: #fff;
+      }
+
+    }
+
+    .datepicker-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    
+      button {
+        background: rgba(119, 136, 153, 0.1);
+        padding: 5px 10px;
+      }
+    
+      button.apply {
+        background: $green-black;
+        color: #fff;
+      }
+    }
+
+  }
+}
 
 .datepicker-container {
   position: relative;
 }
 
-.datepicker {
-  position: absolute;
-  top: 0px;
-  left: -50px;
-  z-index: 1000;
-  margin-top: 2px;
-  background: #fff;
-  padding: 10px;
-  border-radius: 5px;
-}
 
-.datepicker button {
-  cursor: pointer;
-  border: none;
-  border-radius: 3px;
-  background: transparent;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  transition: 0.3s;
-  touch-action: manipulation;
-}
+@media (max-width: 768px) {
+  .datepicker-div {
+    position:unset;
 
-.days,
-.dates {
-  display: grid;
-  grid-template-columns: repeat(7, 32px);
-  gap: 10px;
-  margin-block: 10px;
-}
+    .datepicker {
+      left: 0px;
+      bottom: 0px;
+      top: unset;
+      width: 100%;
+      padding: 20px;
+      padding-bottom: 30px;
+      position:fixed;
+      border-radius: 0px;
 
-.days span {
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  text-align: center;
-  color: $green-black;
-}
+      .dates, .days {
+        grid-template-columns: repeat(7, auto);
+      }
 
-.dates button {
-  color: slategray;
-  font-family: $nunito;
-  aspect-ratio: 1;
-}
-
-.dates button:disabled {
-  opacity: 0.5;
-  pointer-events: none;
-  user-select: none;
-}
-
-.dates button:hover {
-  background: rgba(119, 136, 153, 0.1);
-}
-
-.dates button.today {
-  background: $green-black-25;
-  color: $green-black;
-}
-
-.dates button.selected {
-  background: $green-black;
-  color: #fff;
-}
-
-.datepicker-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 10px;
-  border-bottom: 1px solid $green-black-25 ;
-}
-
-.datepicker-header select, .datepicker-header input {
-  font-size: 14px;
-  border: 1px solid #eee;
-  border-radius: 5px;
-  height: 30px;
-  padding: 5px;
-}
-
-.datepicker-header input {
-  max-width: 64px;
+      .datepicker-footer {
+        button {
+          flex-grow: 1;
+        }
+      }
+    }
+  }
   
 }
 
-.datepicker-header button {
-  color: $green-black-75;
-}
 
-.datepicker-header button:hover {
-  color: $green-black;
-}
 
-.datepicker-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #eee;
-}
 
-.datepicker-footer button {
-  background: rgba(119, 136, 153, 0.1);
-  padding: 3px 10px;
-}
-
-.datepicker-footer button.apply {
-  background: $green-black;
-  color: #fff;
-}

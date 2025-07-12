@@ -496,7 +496,7 @@ form {
 
            &-profil {
                 background-color: $green-black;
-                aspect-ratio: 1 / 1;
+                padding: 3px;
                 border-radius: 100px;
             
 
@@ -851,6 +851,39 @@ input[type='radio'], input[type='checkbox'] {
     }
 }
 
+/* stylisationd de la fenetre de suggestion d'adresse autocomplete google*/
+.pac-container {
+    border-radius: 10px !important;
+    // box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    min-width: 200px;
+    font-family: 'Inter', sans-serif !important;
+    z-index: 9999 !important;
+
+    
+    
+}
+
+.pac-container:after {
+    background-image: none !important;
+    height: 0px;
+}
+
+/* Chaque suggestion */
+.pac-item {
+    
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #eee !important;
+    font-size: 14px !important;
+
+    * {
+        font-family: $nunito !important;
+    }
+}
+
+.pac-icon {
+    display: none;
+}
+
 @media (max-width: 1024px) {
 
     .logo-top-left {
@@ -877,7 +910,7 @@ input[type='radio'], input[type='checkbox'] {
     }
 
     .body-content.connected {
-        padding-top: 50px;
+        padding-top: 20px;
         padding-bottom: 100px !important;
 
         .alert-success {
@@ -928,6 +961,17 @@ input[type='radio'], input[type='checkbox'] {
     form {
         label {
             font-size: 20px;
+        }
+
+        select {
+            line-height: 1.35;
+            -webkit-appearance: initial;
+        }
+
+        input[type="date"] {
+            -webkit-appearance: none;
+            line-height: 1.35;
+            min-height: 44px;
         }
     }
     
@@ -995,6 +1039,7 @@ input[type='radio'], input[type='checkbox'] {
                     outline: solid 2px $green-black;
                     border-radius: 100px;
                     display: flex !important;
+                    padding: 3px;
                     
 
                 }

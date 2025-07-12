@@ -35,12 +35,17 @@
                 <div class="row-inputs">
                     <div class="datepicker-div">
                         {{ form_label(form.dateDepart)}}
-                        {{ form_widget(form.dateDepart, attr: { max: ( "now"|date("Y-m-d")) }) }}
+                        {{ form_widget(form.dateDepart, {
+                            attr: {
+                            max: ( "now"|date("Y-m-d")), 
+                            autocomplete:'off' 
+                            }
+                        }) }}
                         {% include 'home/datepicker.html.twig' %}
                     </div>
                     
                     <div class="">
-                        {{ form_widget(form.heureDepart) }}
+                        {{ form_widget(form.heureDepart ) }}
                         <label for="">Heure</label>
                         <div class="hour-picker">
                             <select id="hours">
