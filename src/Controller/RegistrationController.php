@@ -51,6 +51,7 @@ class RegistrationController extends AbstractController
                 'validation_groups' => ['Default', 'registration']
              ]);
              $form->handleRequest($request);
+             $form->handleRequest($request);
              $errors = $form->getErrors(true);
 
              if ($form->isSubmitted() ) {

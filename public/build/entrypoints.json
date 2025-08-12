@@ -1,0 +1,172 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "datepicker": {
+      "js": [
+        "/build/runtime.js",
+        "/build/datepicker.js"
+      ]
+    },
+    "googlePlace": {
+      "js": [
+        "/build/runtime.js",
+        "/build/googlePlace.js"
+      ]
+    },
+    "searchTrajet": {
+      "js": [
+        "/build/runtime.js",
+        "/build/searchTrajet.js"
+      ]
+    },
+    "registerLogin": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/registerLogin.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "register2": {
+      "js": [
+        "/build/runtime.js",
+        "/build/register2.js"
+      ]
+    },
+    "addTrajet": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/assets_js_addVoiture_js.js",
+        "/build/addTrajet.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css",
+        "/build/addTrajet.css"
+      ]
+    },
+    "addVoiture": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/assets_js_addVoiture_js.js",
+        "/build/addVoiture.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "resultatsRecherche": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/resultatsRecherche.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "devenirChauffeur": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/assets_js_addVoiture_js.js",
+        "/build/devenirChauffeur.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "reserver": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/reserver.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "profil": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_heic2any_dist_heic2any_js.js",
+        "/build/assets_app_js.js",
+        "/build/assets_js_addVoiture_js.js",
+        "/build/profil.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "trajet": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/trajet.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "addAvis": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/addAvis.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "employe": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/employe.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "admin": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/admin.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "contact": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_app_js.js",
+        "/build/contact.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    },
+    "style-app": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/assets_styles_app_scss.css"
+      ]
+    }
+  }
+}
