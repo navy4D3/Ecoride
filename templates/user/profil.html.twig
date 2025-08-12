@@ -120,7 +120,7 @@
                                         {% endif %}
 
                                         {% if trajet.datas.voiture.isElectric %}
-                                            <div>
+                                            <div class='chauffeur-eco'>
                                                 <span>Eco</span>
                                                 <svg viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M18.3546 10.7143C14.8185 11.067 8.75272 13.2329 5.74806 14.6224C5.50855 13.9277 5.00068 11.2498 7.11975 7.653C10.1897 2.4422 15.2193 0.944102 19.2691 0.553292C23.3188 0.162482 29.3935 1.92113 33.8351 5.82923C37.3885 8.95571 40.7589 15.0784 42 17.7489C41.2379 17.4667 39.2174 16.9282 37.2317 17.0324C34.7496 17.1627 32.2675 17.9443 29.3935 19.3773C26.5194 20.8103 23.3188 24.3276 17.7014 24.7184C13.2075 25.031 8.73095 21.7222 7.70762 20.0938C7.70762 20.0938 5.85158 21.5308 4.76827 22.5689C3.64857 23.6419 2.0902 25.5 2.0902 25.5C2.0902 25.5 1.20747 25.1349 0.783826 24.7184C0.375651 24.317 0 23.4808 0 23.4808C0.631415 22.4604 2.86066 18.7272 10.1897 14.6224C14.8571 12.0084 24.4685 10.913 27.4461 11.8248C26.057 11.345 23.3499 10.2162 18.3546 10.7143Z" fill="#386150"/>
@@ -130,7 +130,7 @@
                                         {% endif %}
                                     </div>
                                     <span>{{ (trajet.datas.prixPersonne + 2) * trajet.reservation.nbPlaces }} crédits</span>
-                                    {# integrer dans le calcul le prix* le nombre de passagers #}
+                                
                                 </div>
                             {% endif %}
                         </a>
@@ -300,14 +300,14 @@
                     </div>
                     {% for avis in avisRecus %}
                         <div class="avis {% if not avis.isPositive %}negative{% endif %}">
-                            <div class="avis-user-infos">
+                            <a href="/profil?id={{avis.creator.id }}" class="avis-user-infos">
                                 {% if avis.creator.photoProfil %}
                                     <img src="{{ path('user_profil_photo', { id: avis.creator.id }) }}" class="photo-profil" alt="Photo">
                                 {% else %}
                                     <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
                                 {% endif %}
                                 <span>{{ avis.creator.prenom }}</span>
-                            </div>
+                            </a>
                             
                             <div class="avis-note-infos">
                                 <div class="avis-note-infos-note">
@@ -328,14 +328,14 @@
                 {% else %}
                     {% for avis in avisPublies %}
                         <div class="avis {% if not avis.isPositive %}negative{% endif %}">
-                            <div class="avis-user-infos">
+                            <a href="/profil?id={{avis.user.id }}" class="avis-user-infos">
                                 {% if avis.user.photoProfil %}
                                     <img src="{{ path('user_profil_photo', { id: avis.user.id }) }}" class="photo-profil" alt="Photo">
                                 {% else %}
                                     <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
                                 {% endif %}
                                 <span>{{ avis.user.prenom }}</span>
-                            </div>
+                            </a>
                             
                             <div class="avis-note-infos">
                                 <div class="avis-note-infos-note">

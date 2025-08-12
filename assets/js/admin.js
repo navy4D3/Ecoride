@@ -7,7 +7,7 @@ if (prochainTrajeTChart) {
     const ctx = document.getElementById('prochains-trajet-chart').getContext('2d');
     const ctx2 = document.getElementById('credits-a-venir-chart').getContext('2d');
     let rideChart;
-    let credistChart;
+    let creditsChart;
 
     function fetchData(days) {
         fetch(`/admin/stats?days=${days}`)

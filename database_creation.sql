@@ -1,0 +1,105 @@
+CREATE DATABASE IF NOT EXISTS ecoride5;
+USE ecoride5;
+
+CREATE TABLE user (
+    id INT AUTO_INCREMENT NOT NULL,
+    email VARCHAR(180) NOT NULL,
+    roles JSON NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nom VARCHAR(50) NOT NULL,
+    prenom VARCHAR(50) NOT NULL,
+    telephone VARCHAR(15) NOT NULL,
+    photo_profil LONGBLOB DEFAULT NULL,
+    adresse VARCHAR(255) NOT NULL,
+    date_naissance DATETIME NOT NULL,
+    is_verified TINYINT(1) NOT NULL,
+    note DOUBLE PRECISION DEFAULT NULL,
+    description LONGTEXT DEFAULT NULL,
+    preferences LONGTEXT DEFAULT NULL,
+    credits INT NOT NULL,
+    UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL (email),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE voiture (
+    id INT AUTO_INCREMENT NOT NULL,
+    proprietaire_id INT NOT NULL,
+    modele VARCHAR(50) NOT NULL,
+    marque VARCHAR(255) NOT NULL,
+    is_electric TINYINT(1) NOT NULL,
+    immatriculation VARCHAR(20) NOT NULL,
+    date_premiere_immatriculation DATETIME NOT NULL,
+    couleur VARCHAR(255) NOT NULL,
+    places INT NOT NULL,
+    surnom VARCHAR(50) NOT NULL,
+    INDEX IDX_E9E2810F76C50E4A (proprietaire_id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE trajet (
+    id INT AUTO_INCREMENT NOT NULL,
+    voiture_id INT NOT NULL,
+    chauffeur_id INT NOT NULL,
+    heure_depart DATETIME NOT NULL,
+    lieu_depart VARCHAR(100) NOT NULL,
+    lieu_arrivee VARCHAR(100) NOT NULL,
+    statut VARCHAR(255) NOT NULL,
+    prix_personne INT NOT NULL,
+    google_data JSON NOT NULL,
+    duree_in_seconds INT NOT NULL,
+    INDEX IDX_2B5BA98C181A8BA (voiture_id),
+    INDEX IDX_2B5BA98C85C0B3BE (chauffeur_id),
+    PRIMARY KEY(id)
+); 
+
+CREATE TABLE avis (
+    id INT AUTO_INCREMENT NOT NULL,
+    creator_id INT NOT NULL,
+    user_id INT NOT NULL,
+    trajet_id INT NOT NULL,
+    commentaire LONGTEXT DEFAULT NULL,
+    is_positive TINYINT(1) NOT NULL,
+    note INT NOT NULL,
+    statut VARCHAR(255) NOT NULL,
+    INDEX IDX_8F91ABF061220EA6 (creator_id),
+    INDEX IDX_8F91ABF0A76ED395 (user_id),
+    INDEX IDX_8F91ABF0D12A823 (trajet_id),
+    PRIMARY KEY(id)
+); 
+
+CREATE TABLE reservation (
+    id INT AUTO_INCREMENT NOT NULL,
+    user_id INT NOT NULL,
+    trajet_id INT NOT NULL,
+    nb_places INT NOT NULL,
+    statut VARCHAR(255) NOT NULL,
+    INDEX IDX_42C84955A76ED395 (user_id),
+    INDEX IDX_42C84955D12A823 (trajet_id),
+    PRIMARY KEY(id)
+); 
+
+CREATE TABLE trajet_user (
+    trajet_id INT NOT NULL,
+    user_id INT NOT NULL,
+    INDEX IDX_825A9176D12A823 (trajet_id),
+    INDEX IDX_825A9176A76ED395 (user_id),
+    PRIMARY KEY(trajet_id, user_id)
+); 
+
+-- Contraintes de clés étrangères
+ALTER TABLE avis ADD CONSTRAINT FK_8F91ABF061220EA6 FOREIGN KEY (creator_id) REFERENCES user (id);
+ALTER TABLE avis ADD CONSTRAINT FK_8F91ABF0A76ED395 FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE avis ADD CONSTRAINT FK_8F91ABF0D12A823 FOREIGN KEY (trajet_id) REFERENCES trajet (id);
+
+ALTER TABLE reservation ADD CONSTRAINT FK_42C84955A76ED395 FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE reservation ADD CONSTRAINT FK_42C84955D12A823 FOREIGN KEY (trajet_id) REFERENCES trajet (id);
+
+ALTER TABLE reset_password_request ADD CONSTRAINT FK_7CE748AA76ED395 FOREIGN KEY (user_id) REFERENCES user (id);
+
+ALTER TABLE trajet ADD CONSTRAINT FK_2B5BA98C181A8BA FOREIGN KEY (voiture_id) REFERENCES voiture (id);
+ALTER TABLE trajet ADD CONSTRAINT FK_2B5BA98C85C0B3BE FOREIGN KEY (chauffeur_id) REFERENCES user (id);
+
+ALTER TABLE trajet_user ADD CONSTRAINT FK_825A9176D12A823 FOREIGN KEY (trajet_id) REFERENCES trajet (id) ON DELETE CASCADE;
+ALTER TABLE trajet_user ADD CONSTRAINT FK_825A9176A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE;
+
+ALTER TABLE voiture ADD CONSTRAINT FK_E9E2810F76C50E4A FOREIGN KEY (proprietaire_id) REFERENCES user (id);
