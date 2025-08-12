@@ -67,6 +67,7 @@ final class AvisController extends AbstractController{
                     $total += $avis->getNote();
                 }
                 $moyenneNote = $total / count($userNotedAvis);
+                $moyenneNote = number_format($moyenneNote, 1);
 
                 // Mettre à jour la moyenne
                 $userNoted->setNote($moyenneNote);

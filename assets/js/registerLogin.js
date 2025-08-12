@@ -28,6 +28,7 @@ document.getElementById('submit-login-form-btn').addEventListener('submit', func
 // })
 
 
+
 connexionLabel.addEventListener('click', () => {
   
   toggleForm('login');

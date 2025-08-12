@@ -36,9 +36,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/connect', name: 'app_connect')]
-    public function connect(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, AuthenticationUtils $authenticationUtils, SessionInterface $sessionInterface): Response
+    public function connect(Request $request, UserPasswordHasherInterface $userPasswordHasher, SessionInterface $sessionInterface, Security $security): Response
     {
-        
+        if ($security->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
         
         $connectType = $request->query->getString('type', 'login');
         
@@ -49,10 +51,11 @@ class RegistrationController extends AbstractController
                 'validation_groups' => ['Default', 'registration']
              ]);
              $form->handleRequest($request);
+             $form->handleRequest($request);
              $errors = $form->getErrors(true);
 
              if ($form->isSubmitted() ) {
-                return $this->register($request, $userPasswordHasher, $entityManager, $sessionInterface);
+                return $this->register($request, $userPasswordHasher, $sessionInterface, $security);
              }
         
              return $this->render('registration/connect.html.twig', [
@@ -63,17 +66,6 @@ class RegistrationController extends AbstractController
         } else {      
             return $this->redirectToRoute('app_login');
 
-            // $errors = $authenticationUtils->getLastAuthenticationError();
-
-            // // last username entered by the user
-            // $lastUsername = $authenticationUtils->getLastUsername();
-
-            // return $this->render('registration/connect.html.twig', [
-            //     'formType' => 'login',
-            //     'last_username' => $lastUsername,
-            //     'errors' => $errors,
-            // ]);
-            
         }
         
         
@@ -82,8 +74,12 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, SessionInterface $session, Security $security): Response
     {
+        if ($security->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, null,[
             'validation_groups' => ['Default', 'registration']
@@ -160,7 +156,7 @@ class RegistrationController extends AbstractController
         $data = $session->get('registration_data');
 
         if (!$data) {
-            return $this->redirectToRoute('app_connect', ['type' => 'register']);
+            return $this->redirectToRoute('app_register');
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
