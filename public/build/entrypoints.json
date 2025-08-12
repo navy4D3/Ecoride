@@ -2,170 +2,166 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/app.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/app.e4e5636a.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "datepicker": {
       "js": [
-        "/build/runtime.js",
-        "/build/datepicker.js"
+        "/build/runtime.177b00e0.js",
+        "/build/datepicker.715e2dd7.js"
       ]
     },
     "googlePlace": {
       "js": [
-        "/build/runtime.js",
-        "/build/googlePlace.js"
+        "/build/runtime.177b00e0.js",
+        "/build/googlePlace.00a88d7b.js"
       ]
     },
     "searchTrajet": {
       "js": [
-        "/build/runtime.js",
-        "/build/searchTrajet.js"
+        "/build/runtime.177b00e0.js",
+        "/build/searchTrajet.5ec9f3c7.js"
       ]
     },
     "registerLogin": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/registerLogin.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/registerLogin.7944f959.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "register2": {
       "js": [
-        "/build/runtime.js",
-        "/build/register2.js"
+        "/build/runtime.177b00e0.js",
+        "/build/register2.f90a27eb.js"
       ]
     },
     "addTrajet": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/assets_js_addVoiture_js.js",
-        "/build/addTrajet.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/addTrajet.050b0d15.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css",
-        "/build/addTrajet.css"
+        "/build/264.69868719.css",
+        "/build/addTrajet.31dc489f.css"
       ]
     },
     "addVoiture": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/assets_js_addVoiture_js.js",
-        "/build/addVoiture.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/addVoiture.7107d10a.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "resultatsRecherche": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/resultatsRecherche.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/resultatsRecherche.49122b9d.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "devenirChauffeur": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/assets_js_addVoiture_js.js",
-        "/build/devenirChauffeur.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/devenirChauffeur.11caef04.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "reserver": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/reserver.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/reserver.2b2ea6d8.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "profil": {
       "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_heic2any_dist_heic2any_js.js",
-        "/build/assets_app_js.js",
-        "/build/assets_js_addVoiture_js.js",
-        "/build/profil.js"
+        "/build/runtime.177b00e0.js",
+        "/build/816.0be5064f.js",
+        "/build/28.98e657fa.js",
+        "/build/profil.34edd859.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "trajet": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/trajet.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/trajet.6957db11.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "addAvis": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/addAvis.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/addAvis.d6983a99.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "employe": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/employe.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/employe.88fe87fb.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "admin": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/admin.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/admin.0ffa52cc.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "contact": {
       "js": [
-        "/build/runtime.js",
-        "/build/assets_app_js.js",
-        "/build/contact.js"
+        "/build/runtime.177b00e0.js",
+        "/build/28.98e657fa.js",
+        "/build/contact.474d177a.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     },
     "style-app": {
       "js": [
-        "/build/runtime.js"
+        "/build/runtime.177b00e0.js"
       ],
       "css": [
-        "/build/assets_styles_app_scss.css"
+        "/build/264.69868719.css"
       ]
     }
   }
