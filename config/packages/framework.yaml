@@ -4,6 +4,7 @@ framework:
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
+    csrf_protection: true
 
     #esi: true
     #fragments: true
@@ -13,3 +14,8 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+            
+        form:
+            csrf_protection:
+                enabled: true
+                field_name: 'custom_token_name'

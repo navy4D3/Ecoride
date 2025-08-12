@@ -1,0 +1,282 @@
+@import 'variables.scss';
+
+.body-content.publier-trajet {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:40px;
+    padding-bottom: 40px;
+
+    h1 {
+        text-align: center;
+        color: $green-black;
+    }
+
+    > div {
+        width: 100%;
+        max-width: 1000px;
+        // align-items: center;
+
+    }
+
+    
+
+    .row-inputs {
+    
+        display: flex;
+        flex-direction: row;
+        // align-items: stretch;
+        gap: 20px;
+
+        > div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            // height: -webkit-fill-available;
+            flex-grow: 1;
+
+        }
+
+        .hour-picker {
+            font-size: 18px;
+            background-color: $green-white; 
+            border-radius: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 2px;
+            justify-content: space-around;
+            // min-height: 44px;
+            
+
+            select {
+                color : $green-black-50;
+            }
+    
+            select.valid {
+                color: $green-black;
+            }
+    
+        }
+
+        .prix-container {
+            position: relative;
+
+            span {
+                position: absolute;
+                right: 25px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $green-black;
+                pointer-events: none; /* pour que l'utilisateur puisse cliquer/taper sans gêne */
+                font-family: $nunito;
+
+            }
+        }
+
+    }
+
+
+    // .datepicker {
+    //     left: auto;
+    //     top: auto;
+    // }
+
+    .voitures-div {
+        flex-direction: column;
+        align-items: start;
+        gap:0px;
+        
+
+        
+    }    
+
+    #itineraires-choices {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 80%;
+
+        #itineraires-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            // cursor: pointer;
+
+            * {
+                cursor: pointer;
+            }
+
+            .itineraire {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                padding: 10px 20px;
+                outline: solid 2px $green-black;
+                border-radius: 20px;
+    
+            }
+
+            .itineraire.selected {
+                background-color: $green-btn;
+                outline: none;
+                border: none;
+            }
+    
+            strong, span {
+                color: $green-black;
+            }
+    
+    
+            strong {
+                font-family: $josefin-sans;
+                font-size: 18px;
+            }
+    
+            
+        }
+
+        span {
+            font-family: $nunito;
+            opacity: 75%;
+        }
+
+        > span {
+            
+        }
+
+        
+
+
+    }
+
+    #itineraires-choices, .recapitulatif {
+        .back-btn {
+            font-family: $nunito;
+            opacity: 75%;
+            text-align: center;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    }
+
+    .recapitulatif {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 30px;
+        background-color:  $green-medium;
+        width: fit-content;
+        align-items: center;
+        border-radius: 30px;
+        box-shadow: 0px 2px 4px $green-black-25;
+
+        span {
+            font-family: $nunito;
+            font-size: 18px;
+        }
+
+        h3, h4 {
+            font-weight: 700;
+        }
+
+        .lieu-time, .voiture, .credits-passager {
+            width: 100%;
+            background-color: $green-white;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        .lieu-time {
+            flex-direction: column;
+
+            .depart, .arrivee {
+                text-align: center;
+            }
+
+            .duree-distance {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+
+
+                .vertical-line-circles {
+                    height: 50px;
+                }
+
+                small {
+                    opacity: 75%;
+                }
+
+            }
+        }
+
+        .voiture {
+            flex-direction: row;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #validate-btn {
+            width: 100%;
+        }
+
+        .back-btn {
+            margin-top: -10px;
+        }
+    }
+
+}
+
+@media (max-width: 768px) {
+    .body-content.publier-trajet {
+        padding-top: 50px;
+        padding-bottom: 100px;
+    
+        .row-inputs {
+            flex-wrap: wrap;
+
+            > div {
+                flex-grow: 1;
+            }
+
+        }
+
+        
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .body-content.publier-trajet {
+        #itineraires-choices {
+            width: 100%;
+    }
+    }
+}
+@media (max-width: 512px) {
+    .recapitulatif {
+        width: 100%;
+        padding: 30px;
+    }
+    
+    .recapitulatif .lieu-time {
+        flex-direction: column;
+        gap: 5px;
+        
+        svg {
+            rotate: 180deg;
+        }
+    }
+}
+
+

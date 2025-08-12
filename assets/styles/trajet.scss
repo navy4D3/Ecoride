@@ -1,0 +1,379 @@
+
+@import 'variables.scss';
+
+body.trajet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer.trajet {
+    display: none;
+}
+
+.body-content.trajet {
+    width: 100%;
+    max-width: 1000px;
+
+    * {
+        color: $green-black;
+    }
+
+    
+
+    .details-trajet {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 20px;
+
+        &-title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            h2 {
+                white-space: nowrap;
+            }
+
+            span {
+                flex-direction: row;
+                gap: 5px;
+                opacity: 75%;
+                font-family: $nunito;
+            }
+
+        }
+
+        
+
+
+    }
+
+    .details-chauffeur, .details-voiture, .details-passagers {
+        display: flex;
+    }
+
+    .title {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        padding: 5px 10px;
+        border-radius: 15px;
+        border: solid 2px $green-black;
+        width: fit-content;
+        align-items: center;
+
+        svg {
+            width: 30px ;
+            height: 30px;
+        }
+
+        h3 {
+            margin-top: 3px;
+        }
+    }
+
+    .details-chauffeur {
+        flex-direction: column;
+        gap: 20px;
+        
+        &-datas {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+
+            &-photo-prenom {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                > span {
+                    margin-top: 5px;
+                    font-size: 18px;
+                }
+
+                img {
+                    height: 60px;
+                    width: 60px;
+                    background-size: cover;
+                    background-position: center;
+                    object-fit: cover;
+                    border-radius: 50%;
+
+                }
+
+                .note {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 5px;
+                    align-items: center;
+
+                    svg {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            &-description {
+                background-color: $green-white;
+                border-radius: 20px 20px 20px 0px ;
+                box-shadow: 0px 2px 4px $green-black-25;
+                padding: 20px;
+
+
+                p::first-letter {
+                    text-transform: capitalize;
+                }
+
+                .preferences {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    gap: 10px 20px;
+                    width: 100%;
+
+                    .preference {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 5px;
+                        align-items: center;
+                        padding: 5px;
+                        background-color: $green-medium;
+                        // box-shadow: 0px 2px 4px $green-black-25;
+                        border-radius: 10px;
+
+                        span {
+                            font-family: $nunito;
+                            white-space : nowrap;
+                        }
+
+                        svg {
+                            width: 30px;
+                            height: 30px;
+                            min-width: 30px;
+
+                            // * {
+                            //     stroke: $green-black;
+                            // }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .details-voiture {
+        gap: 20px;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+
+        &-datas {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+
+            span {
+                font-family: $nunito;
+                white-space: nowrap;
+            }
+
+
+            &-color {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 5px;
+
+                div {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                }
+            }
+            
+        }
+    }
+
+    .details-passagers {
+        flex-direction: column;
+        gap: 10px;
+
+        .passagers {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            overflow: auto;
+            padding: 20px;
+            margin: -20px;
+
+            .passager {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                box-shadow: 0px 2px 4px $green-black-25;
+                padding: 10px;
+                border-radius: 15px;
+                background-color: $green-medium;
+                width: fit-content;
+                gap: 5px;
+                // margin: 0px 0px -20px -20px;
+
+                > div {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                    
+                    
+                    align-items: center;
+                    
+        
+                    .photo-profil {
+                        height: 50px;
+                        width: 50px;
+                        border-radius: 100px;
+        
+                    }
+        
+                    .prenom-note {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 5px;
+                        align-items: center;
+                        justify-content: space-around;
+                        
+        
+                        .prenom {
+                            font-size: 18px;
+                        }
+        
+                        .note {
+                            opacity: 75%;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            gap: 3px;
+
+                            span {
+                                margin-bottom: -3px;
+                            }
+        
+                            svg {
+                                height: 20px;
+                                width: 20px;
+                            }
+                        }
+                    }
+                }
+
+                > span {
+                    font-family: $nunito;
+                    text-align: center;
+                }
+    
+            }
+        }
+
+        
+    }
+
+    .delete-trajet-popup, .cancel-reservation-popup {
+        flex-direction: column;
+        gap: 30px;
+        width: 80%;
+        max-width: 800px;
+        background-color: $green-medium;
+        border-radius: 20px;
+        padding: 40px 20px;
+
+        h4 {
+            text-align: center;
+        }
+
+        .btn-underline {
+            background: none;
+            border: none;
+            text-decoration: underline;
+        }
+
+    }
+
+    .prix-place {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        align-items: center;
+
+        svg {
+            width: 25px;
+            height: 25px;
+
+            * {
+                stroke: $green-black;
+                stroke-width: 3px;
+            }
+        }
+    }
+
+    .btn-green {
+        width: fit-content;
+    }
+
+    
+}
+
+@media (max-width: 1024px) {
+    .body-content.trajet {
+
+        .details-trajet {
+            flex-direction: column;
+            gap: 10px;
+
+        }
+
+        .details-chauffeur {
+            &-title {
+                display: none;
+            }
+
+            &-datas {
+                flex-direction: column;
+                align-items: start;
+                
+                
+
+                &-photo-prenom {
+                    flex-direction: row;
+                    gap: 10px;
+                    justify-content: start;
+
+                    img {
+                        width: 40px;
+                        height: 40px;
+                    }
+
+                    .note {
+                        margin-top: 3px;
+                    }
+                }
+
+                &-description {
+                    border-radius: 0px 20px 20px 20px;
+                }
+            }
+        }
+    }
+    
+
+}

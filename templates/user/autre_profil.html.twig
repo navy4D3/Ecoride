@@ -1,0 +1,88 @@
+{% set pageClass = 'autre-profil' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('profil') }}
+    {# {{ encore_entry_script_tags('registerLogin') }} #}
+
+    {% include 'google_autocomplete.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {% include 'header.html.twig' with { title: "" , isHistoryBackTrue: true} %}
+
+     <div class="user-header" >
+            {% if user.photoProfil %}
+                {% set profilPicturePath = path('user_profil_photo', { id: app.user.id }) %}
+            {% else %}
+                {% set profilPicturePath = '/default-profil-picture.png' %}
+            {% endif %}
+
+            <img src="{{ profilPicturePath }}" id="user-header-photo-profil" class="user-header-photo-profil" alt="Photo de profil">
+            <div class="user-header-infos">
+                <h3 class="user-header-infos-prenom">{{ user.prenom }}</h3>
+                {% if not (user.avisRecus is empty) %}
+                    <div class="user-header-infos-note">
+                        <span class="global-note-note">{{ user.note }}</span>
+                        <twig:ux:icon name="mingcute:star-fill" />
+                    </div>         
+                {% endif %}
+            </div>
+            
+     </div>
+
+     <div class="user-datas" >
+        {% if user.isChauffeur %}
+            <div class="user-datas-description">
+                <p>{{ user.description }}</p>
+            </div>
+
+            <div class="user-datas-preferences">
+                {% for preference in user.preferences %}
+                    <div class="preference">
+                        <span id="{{ preference.label }}" class="">{{ preference.label}}</span>
+                        <twig:ux:icon name="{{ preference.icon }}" />
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+            
+     </div>
+
+    <div class="avis-list">
+        {% if user.avisRecus is empty %}
+            <p class="empty-message">Aucun avis reçus</p>
+        {% else %}
+            <h4 class="global-note">{{ user.avisRecus|length }} avis</h4>
+            {% for avis in user.avisRecus %}
+                <div class="avis {% if not avis.isPositive %}negative{% endif %}">
+                    <div class="avis-user-infos">
+                        {% if avis.creator.photoProfil %}
+                            <img src="{{ path('user_profil_photo', { id: avis.creator.id }) }}" class="photo-profil" alt="Photo">
+                        {% else %}
+                            <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                        {% endif %}
+                        <span>{{ avis.creator.prenom }}</span>
+                    </div>
+                    
+                    <div class="avis-note-infos">
+                        <div class="avis-note-infos-note">
+                            <span>{{ avis.note }}</span>
+                            <twig:ux:icon name="mingcute:star-fill" />
+                        </div>
+                        
+                        <p>{{ avis.commentaire }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+{% endblock %}

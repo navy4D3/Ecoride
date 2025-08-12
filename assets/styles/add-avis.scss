@@ -1,0 +1,110 @@
+@import 'variables.scss';
+
+.body-content.add-avis {
+    align-items: center;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        padding: 20px;
+        border-radius: 20px;
+        background-color: $green-medium;
+        box-shadow: 0px 2px 4px $green-black-25;
+        max-width: 600px;
+        width: 100%;
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+        }
+
+        .is-positive {
+            width: fit-content;
+
+            .btns {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+                width: 100%;
+
+                .btn-outline, .btn-green {
+                    padding: 5px 10px;
+                    flex-grow: 1;
+                }
+
+                .btn-green {
+                    border: solid 2px $green-btn;
+                }
+
+            }
+        }
+
+        .note {
+
+            .stars {
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+
+                .star {
+                    width: 40px;
+                    height: 40px;
+                    cursor: pointer;
+                    
+                }
+
+                .fill * {
+                    color: $blue-btn;
+                    box-shadow: 0px 2px 4px $green-black-25;
+                    
+                }
+            }
+        }
+
+        .commentaire {
+
+            textarea {
+                background-color: $green-white;
+                border: none;
+                border-radius: 10px;
+                width: 100%;
+                min-width: 250px;
+                max-width: 600px;
+                min-height: 100px;
+                box-shadow: 0px 2px 4px $green-black-25;
+                padding: 10px;
+            }
+
+            textarea:focus {
+                outline-width: 2px;
+                outline-color: $green-black;
+            }
+        }
+
+        .btn-green-black {
+            width: 100%;
+        }
+    }
+
+}
+
+@media (max-width:512px) {
+    nav.add-avis {
+        display: none !important;
+    }
+    .body-content.add-avis {
+
+        form {
+            position: absolute;
+            bottom: 0px;
+            top: 120px;
+            height: 100%;
+            padding-bottom: 40px;
+        }
+    }
+}

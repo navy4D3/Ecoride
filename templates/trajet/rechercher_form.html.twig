@@ -1,0 +1,39 @@
+{{ form_start(form, {attr: { class:'rechercher-form' }}) }}
+    <div>
+        {# icone #}
+        <div id="lieu-depart-icon"></div>
+        {{ form_widget(form.lieuDepart) }}
+    </div>
+    <div>
+        {# icone #}
+        <div id="lieu-arrivee-icon"><div></div></div>
+        {{ form_widget(form.lieuArrivee) }}
+    </div>
+    
+    <div class="datepicker-div">
+        {# icone #}
+        <twig:ux:icon name="akar-icons:calendar" />
+        {{ form_widget(form.dateDepart, { attr: { autocomplete:'off', readonly:"" }}) }}
+        {% include 'home/datepicker.html.twig' %}
+    </div>
+    <div id="nb-passager-section">
+        {# icone #}
+        
+        <twig:ux:icon name="lucide:users" />
+        {{ form_widget(form.nbPlace) }}
+        <div id="nb-user-div">
+            <span id="place-count">1 passager</span>
+            <div id="nb-passager-btns">
+                <div id="minus-icon" style="display:none;"><div></div></div>
+                <div><twig:ux:icon name="bi:plus"  id="plus-icon"/></div>
+            </div>
+
+        </div>
+        
+    </div>
+    
+    <button type='submit' class="btn-green-black"><twig:ux:icon name="iconamoon:search" />Rechercher</button>            
+            
+{{ form_end(form) }}
+
+

@@ -1,0 +1,76 @@
+{% set pageClass = 'home' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}EcoRide - Covoiturez l'esprit tranquille{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datepicker') }}
+    {{ encore_entry_script_tags('searchTrajet') }}
+    
+    {% include 'google_autocomplete.html.twig' %}
+    
+    {# <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"> #}
+    {# </script> #}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    {# {{ encore_entry_link_tags('style-app') }} #}
+    {# {{ encore_entry_link_tags('style-home') }} #}
+{% endblock %}
+
+{% block body %}
+    <div class="home-intro">
+        {# <img src="./home-background.jpg" alt=""> #}
+        <div class="linear-gradient">
+            <div class="d-flex flex-row gap-3 align-items-center mb-3">
+                <h1>Covoiturez l'esprit tranquille <img src="./calm-apple-icon.png" alt="" style=""></h1>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 d-flex justify-content-center">
+        {% include 'trajet/rechercher_form.html.twig' %}     
+    </div>
+
+    <div id="description-section">
+        <h2>Voyager autrement, partagez plus !</h2>
+        <p>Avec EcoRide, optimisez vos trajets en partageant votre voiture ou en trouvant un conducteur près de chez vous en quelques clics. </p>
+
+        <div id="advantage-section">
+            <div class="advantage-div">
+                <img src="./feuilles-apple-icon.png" alt="">
+                <span>Réduis tes émissions de CO2</span>
+            </div>
+
+            <div class="advantage-div">
+                <img src="./money-apple-icon.png" alt="">
+                <span>optimise tes dépenses</span>
+            </div>
+
+            <div class="advantage-div">
+                <img src="./fiesta-apple-icon.png" alt="">
+                <span>Kiff avec les passager</span>
+            </div>
+        </div>
+        
+
+    </div>
+
+    <div class="user_type_section">
+        <div class="user_type_section_conducteur">
+            <span>Je suis conducteur</span>
+            <twig:ux:icon name="mingcute:car-line" class="user_type_section_conducteur_icon" />
+            <a href="/connect" class="btn-green-black">Publier un trajet</a>
+        </div>
+        <div class="user_type_section_passager">
+            <span>Je suis passager</span>
+            <twig:ux:icon name="lucide:users"  class="user_type_section_passager_icon"/>
+            <a href="/rechercher" class="btn-blue">Rechercher un trajet</a>
+        </div>
+    </div>
+
+{% endblock %}

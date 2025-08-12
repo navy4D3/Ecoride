@@ -1,0 +1,41 @@
+{% set pageClass = 'contact' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('contact') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>Contactez-nous !</h1>
+    <p>Complétez le formulaire ci-dessous pour nous transmettre votre message. Nous l'étudierons dans les plus brefs délais.</p>
+    {{ form_start(form, {'attr': {'class':'form-green-column'}}) }}
+        {% if errors is defined %}
+            {% if errors|length > 0 %}
+                <div class="errors-container">
+                    {% for error in errors %}
+                        <div class="alert alert-danger">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="row-inputs">
+            {{ form_row(form.nom) }}
+            {{ form_row(form.prenom) }}
+        </div>
+
+        {{ form_row(form.email) }}
+        {{ form_row(form.message) }}
+
+        <button type="button" class="btn-green inactive submit-btn" id="submit-btn">Envoyer</button>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,185 @@
+{% set pageClass = 'resultats-recherche' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats de recherche{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('resultatsRecherche') }}
+    {{ encore_entry_script_tags('datepicker') }}
+    {{ encore_entry_script_tags('searchTrajet') }}
+
+    {% include 'google_autocomplete.html.twig' %}
+{% endblock %}
+
+{% block body %}
+    {# bouton retour #}
+    <div class="form-div" style="">
+        {% include 'trajet/rechercher_form.html.twig' %}
+        <twig:ux:icon name="maki:cross" id="hide-form-btn-mobile" />
+    </div>
+    
+    
+    <div class="rechercher-form-collapse">
+        <div class="search-section" id="show-form-mobile">
+            <twig:ux:icon name="iconamoon:search" />
+            <div class="form-content">
+                {% set lieuDepart = app.request.get('search_trajet')['lieuDepart'] ?? '' %}
+                {% set lieuArrivee = app.request.get('search_trajet')['lieuArrivee'] ?? '' %}
+                {% set dateDepart = app.request.get('search_trajet')['dateDepart'] ?? '' %}
+                {% set nbPlace = app.request.get('search_trajet')['nbPlace'] ?? '' %}
+                <span class="lieu">{{ lieuDepart }}<twig:ux:icon name="lucide:arrow-up" style="rotate:90deg"/>{{ lieuArrivee }}</span>
+                <span class="date-place">{{ dateDepart }}, {{ nbPlace }} passager{% if nbPlace > 1 %}s{% endif %}</span>
+            </div>
+        </div>
+        <div class="filter-section" id="toggle-filter-mobile"><twig:ux:icon name="mynaui:sort" /></div>
+    </div>
+    <div class="filters-trajets">
+        <div class="blur-effect"></div>
+        <div class="filters" id="filters-section">
+            <div class="sort filter-div">
+                <h3>Trier par<twig:ux:icon name="mynaui:sort" /></h3>
+                <div class="filter-list">
+                    <div>
+                        <input id="prix" type="radio" name="sort" value="prix">
+                        <label class="radio-label" for="prix">Prix</label>
+                    </div>
+                    <div>
+                        <input id="duree" type="radio" name="sort" value="duree">
+                        <label class="radio-label" for="duree">Trajet le plus court</label>
+                    </div>
+                    <div>
+                        <input id="note-chauffeur" type="radio" name="sort" value="note_chauffeur">
+                        <label class="radio-label" for="note-chauffeur">Note chauffeur</label>
+                    </div>
+                </div>
+            </div>
+            <div class="heure-depart filter-div">
+                <h3>Heure de départ<twig:ux:icon name="ion:time-outline" /></h3>
+                <div class="filter-list">
+                    <div>
+                        <input id="date-depart-avant-6" type="checkbox" name="date_depart" value="avant_6h">
+                        <label for="date-depart-avant-6">Avant 6h</label>
+                    </div>
+                    <div>
+                        <input id="date-depart-6-12" type="checkbox" name="date_depart" value="6h_12h">
+                        <label for="date-depart-6-12">Entre 6h et 12h</label>
+                    </div>
+                    <div>
+                        <input id="date-depart-12-18" type="checkbox" name="date_depart" value="12h_18h">
+                        <label for="date-depart-12-18">Entre 12h et 18h</label>
+                    </div>
+                    <div>
+                        <input id="date-depart-apres18" type="checkbox" name="date_depart" value="apres_18h">
+                        <label for="date-depart-apres18">Après 18h</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="note-chauffeur filter-div">
+                <h3>Note chauffeur<twig:ux:icon name="mingcute:star-fill" /></h3>
+                <div class="filter-list">
+                    <div>
+                        <input id="note4" type="checkbox" name="note" value="plus_4">
+                        <label for="note4">4 et plus</label>
+                    </div>
+                    <div>
+                        <input id="note3" type="checkbox" name="note" value="plus_3">
+                        <label for="note3">3 et plus</label>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="gap:15px">Electrique
+                    <label class="switch filter-list" >
+                        <input type="checkbox" name="electric" value="1">
+                        <span class="slider round"></span>
+                    </label>
+                </h3>
+            </div>
+            <div class="d-flex flex-row gap-2 justify-content-around">
+                <button id="reset-filters-btn" class="reset-btn" style="display:none";>Réinitialiser</button>
+                <button class="btn-green-black" id="see-results-filter-btn">Voir les résultats</button>
+            </div>
+        </div>
+        <div class="trajets">
+            <p id="empty-message" class="{% if trajets is empty %}visible{% endif %}">Aucun trajet ne correspond à votre recherche.</p>
+            {% if not isOnDate and trajets is not empty %}
+                <p id="alternative-message">
+                    Aucun trajet ne convient à l’itinéraire et à la date demandé.
+                    <br>
+                    Les trajets suivants correspondent à ton itinéraire à des dates proches.
+                </p>
+            {% endif %}
+            {% for trajet in trajets %}
+                <div class="trajet-div"
+                    data-note="{{ trajet.datas.chauffeur.note|default(0) }}"
+                    data-prix="{{ trajet.datas.prixPersonne }}"
+                    data-electrique="{{ trajet.datas.voiture.isElectric ? '1' : '0' }}"
+                    data-duree="{{ trajet.datas.dureeInSeconds }}"
+                    data-heure-depart="{{ trajet.timeDatas.heureDepart }}">
+
+                    {% if not isOnDate %}<span>{{ trajet.timeDatas.dateDepart }}</span>{% endif %}
+                    <a href="{{ path('app_trajet', { id: trajet.datas.id }) }}" class="trajet">
+                        <div class="trajet-left">
+                            <div class="trajet-left-chauffeur">
+                                <div class="trajet-left-chauffeur-profil">
+                                    {% if trajet.datas.chauffeur.photoProfil %}
+                                        <img src="{{ path('user_profil_photo', { id: trajet.datas.chauffeur.id }) }}" class="photo-profil-conducteur" alt="Photo">
+                                    {% else %}
+                                        <img src="../default-profil-picture.png" class="photo-profil-conducteur" alt="Photo">
+                                    {% endif %}
+                                    
+                                    <span>{{ trajet.datas.chauffeur.prenom }}</span>
+                                </div>
+                                {% if trajet.datas.chauffeur.note %}
+                                    <div class="trajet-left-chauffeur-note">
+                                        <span>{{ trajet.datas.chauffeur.note }}</span>
+                                        <twig:ux:icon name="mingcute:star-fill" class="icon"/>
+                                    </div>
+                                {% endif %}
+                                <div class="trajet-left-chauffeur-places">
+                                    <span>{{ trajet.placesRestante }} <span class="pc-only">place{% if trajet.placesRestante > 1 %}s{% endif %}</span></span>
+                                    <twig:ux:icon name="lucide:users" class="icon"/>
+                                </div>
+                                {% if trajet.datas.voiture.isElectric %}
+                                    <div class="trajet-left-chauffeur-eco">
+                                        <span class="pc-only">Eco</span>
+                                        <svg viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M18.3546 10.7143C14.8185 11.067 8.75272 13.2329 5.74806 14.6224C5.50855 13.9277 5.00068 11.2498 7.11975 7.653C10.1897 2.4422 15.2193 0.944102 19.2691 0.553292C23.3188 0.162482 29.3935 1.92113 33.8351 5.82923C37.3885 8.95571 40.7589 15.0784 42 17.7489C41.2379 17.4667 39.2174 16.9282 37.2317 17.0324C34.7496 17.1627 32.2675 17.9443 29.3935 19.3773C26.5194 20.8103 23.3188 24.3276 17.7014 24.7184C13.2075 25.031 8.73095 21.7222 7.70762 20.0938C7.70762 20.0938 5.85158 21.5308 4.76827 22.5689C3.64857 23.6419 2.0902 25.5 2.0902 25.5C2.0902 25.5 1.20747 25.1349 0.783826 24.7184C0.375651 24.317 0 23.4808 0 23.4808C0.631415 22.4604 2.86066 18.7272 10.1897 14.6224C14.8571 12.0084 24.4685 10.913 27.4461 11.8248C26.057 11.345 23.3499 10.2162 18.3546 10.7143Z" fill="#386150"/>
+                                        </svg>
+
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="trajet-left-datas">
+                                <div class="trajet-left-datas-time">
+                                    <span class="">{{ trajet.timeDatas.heureDepart }}</span>
+                                    <span class="">{{ trajet.timeDatas.heureArrivee }}</span>
+                                    {# heure arrivée #}
+                                </div>
+                                <div class="trajet-left-datas-points">
+                                        <div class="circle outline"></div>
+                                        <div class="dashed-line"></div>
+                                        <div class="circle"></div>
+                                </div>
+                                <div class="trajet-left-datas-lieu">
+                                    <span class="">{{ trajet.datas.lieuDepart }} <small>{{ trajet.nearestStartPoint.distance }} km</small></span>
+                                    <span class="">{{ trajet.datas.lieuArrivee }} <small>{{ trajet.nearestEndPoint.distance }} km</small></span>
+                                </div>
+                                
+
+                            </div>
+                        </div>
+                        <div class="trajet-right">
+                            <span class="trajet-right-prix">{{ trajet.datas.prixPersonne + 2 }} €</span>
+                            <span class="trajet-right-duree"><twig:ux:icon name="ion:time-outline" />{{ trajet.timeDatas.duree }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+{% endblock %}

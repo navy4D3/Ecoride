@@ -1,0 +1,20 @@
+<div id="user-voitures" class="user-voitures-list">
+    {% if app.user.voitures %} {% for voiture in app.user.voitures %}
+        <div class="voiture-card" id="{{ voiture.id }}">
+            
+            <span class="surnom">{{ voiture.surnom }}</span>
+            <div>
+                <span class="marque">{{ voiture.marqueLabel }}</span>
+                <span class="modele">{{ voiture.modele }}</span>
+                <span class="is-electric">{% if voiture.isElectric %}Electrique{% else %}Thermique{% endif %}</span>
+                <span class="fw-bold places">{{ voiture.places }} place{{ voiture.places > 1 ? 's' : '' }}</span>
+            </div>
+            
+        </div>
+        
+    {% endfor %} {% endif %}
+    <div class="add-voiture-card" id="add-voiture-btn">
+        <span>Ajouter</span>
+        <twig:ux:icon name="simple-line-icons:plus" class="icon"/>
+    </div>
+</div>
