@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Document\GoogleData;
 use App\Entity\Reservation;
 use App\Entity\Trajet;
 use App\Entity\User;
@@ -12,8 +13,10 @@ use App\Enum\StatutReservation;
 use App\Form\AddTrajetType;
 use App\Form\SearchTrajetType;
 use App\Service\TrajetSearchService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
+use MongoDB\Client;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -270,7 +273,7 @@ final class TrajetController extends AbstractController
     
 
     #[Route('/publier-trajet', name: 'app_publier_trajet')]
-    public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
+    public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security, DocumentManager $dm): Response
     {
         $user = $security->getUser();
 
@@ -284,7 +287,6 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_devenir_chauffeur', [
                 'redirect' => 'app_publier_trajet'
             ]);
-            // rajouter un code pour que l'utilisateur soit redirigé vers ajout trajet à la fin
         }
 
         $trajet = new Trajet();
@@ -292,32 +294,17 @@ final class TrajetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $trajet = $form->getData();
-
-            // $dateString = $form->get('dateDepart')->getData();
-            // $formatter = new IntlDateFormatter(
-            //     'fr_FR',
-            //     IntlDateFormatter::LONG,
-            //     IntlDateFormatter::NONE,
-            //     'Europe/Paris',
-            //     IntlDateFormatter::GREGORIAN,
-            //     'd MMMM yyyy' // → correspond à '20 mai 2025'
-            // );
-
-            // $timestamp = $formatter->parse($dateString);
-
-            // if ($timestamp === false) {
-            //     throw new \Exception("Impossible de parser la date : $dateString");
-            // }
-            // $dateFormatted = (new \DateTime())->setTimestamp($timestamp);
-
-            //interpreter pour date arrivée.
-            //faire la même chose pour les autres attributs
+            
             
 
             $googleDataJson = $form->get('googleData')->getData();
+
+            
             $googleDataArray = json_decode($googleDataJson, true);
-            $trajet->setGoogleData($googleDataArray);
+
+            // $trajet->setGoogleDataId($googleDataArray);
+            // $trajet->setGoogleDataId($googleDataArray);
+            # a completer pour faire le lien avec MonGoDB
 
             // return new Response($googleDataJson);
             $dureeInSeconds = $googleDataArray['legs'][0]['duration']['value'];
@@ -326,10 +313,8 @@ final class TrajetController extends AbstractController
 
             $voitureId = $form->get('voiture')->getData();
             $voitureObject = $em->getRepository(Voiture::class)->find($voitureId);
-            // $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+
             $trajet->setChauffeur($user);
-            // $trajet->setChauffeur($user);
-            // return new Response($voitureObject->get);
 
             $trajet->setVoiture($voitureObject);
             $trajet->setStatut(Statut::Planifie);
@@ -337,6 +322,15 @@ final class TrajetController extends AbstractController
             $em->persist($trajet);
             $em->flush();
 
+            $googleDataDocument = new GoogleData();
+            $googleDataDocument->setData($googleDataArray);
+            $googleDataDocument->setTrajetId($trajet->getId());
+            
+            $dm->persist($googleDataDocument);
+            $dm->flush();
+            // $trajet->setGoogleDataId
+            return new Response('GoogleData trajetId ' . $googleDataDocument->getTrajetId());
+            
             return $this->redirectToRoute('app_user_profil');
         }
 
@@ -500,8 +494,36 @@ final class TrajetController extends AbstractController
         return $this->redirectToRoute('app_user_profil');
     }
 
-    
+    #[Route('/test-mongo', name: 'test_mongo')]
+    public function testMongoConnection(DocumentManager $dm): Response
+    {
+        try {
+            // Connexion à MongoDB
+            // $client = new Client('mongodb://root:example@mongodb:27017/admin');
 
+
+            $document_test = new GoogleData();
+            $document_test->setTrajetId(1);
+            $document_test->setData(['test']);
+
+            $dm->persist($document_test);
+            $dm->flush();
+
+
+            // Vérifier la connexion en listant les bases
+            // $databases = $client->listDatabases();
+
+            // $dbNames = [];
+            // foreach ($databases as $db) {
+            //     $dbNames[] = $db->getName();
+            // }
+
+            return new Response(
+                'Ajout réussi ✅. Bases disponibles : ' . $document_test->getId());
+        } catch (\Exception $e) {
+            return new Response('❌ Erreur connexion MongoDB : ' . $e->getMessage());
+        }
+    }
     
 
 }

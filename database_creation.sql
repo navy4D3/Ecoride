@@ -45,7 +45,7 @@ CREATE TABLE trajet (
     lieu_arrivee VARCHAR(100) NOT NULL,
     statut VARCHAR(255) NOT NULL,
     prix_personne INT NOT NULL,
-    google_data JSON NOT NULL,
+    google_data VARCHAR(100) NOT NULL,
     duree_in_seconds INT NOT NULL,
     INDEX IDX_2B5BA98C181A8BA (voiture_id),
     INDEX IDX_2B5BA98C85C0B3BE (chauffeur_id),
