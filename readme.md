@@ -12,6 +12,7 @@ L’application intègre des fonctionnalités avancées comme la suggestion dyna
 - **Doctrine ORM**
 - **Symfony Mailer** (via [Mailtrap](https://mailtrap.io/))
 - **Composer**
+- **Docker**
 
 ### Frontend
 - **Twig** (templates Symfony)
@@ -81,34 +82,26 @@ L’application intègre des fonctionnalités avancées comme la suggestion dyna
 git clone https://github.com/navy4D3/Ecoride.git
 cd ecoride
 
-# Installer les dépendances PHP
+# Lancer les conteneurs
+docker compose up -d --build
+
+# Connexion au conteneur PHP
+docker compose exec php bash
+
+# Dans le conteneur PHP
+##Installation des dépendances PHP
 composer install
 
-# Copier le fichier d'environnement
+#sortie du conteneur
+exit
+
+# Copier le fichier d'environnement .env en .env.local (non versionné)
 cp .env .env.local
 
-# Configurer les variables d'environnement dans .env.local (base de données, mailer, google keys)
-DATABASE_URL="mysql://root:password@127.0.0.1:3306/ecoride"
-
-
+# Configurer les variables d'environnement dans .env.local (bases de données, mailer, google keys)
 MAILER_DSN=mailtrap+smtp://PASSWORD@default
 
 GOOGLE_API_KEY=yourkey
 
 GOOGLE_RECAPTCHA_SITE_KEY=yourkey
 GOOGLE_RECAPTCHA_SECRET_KEY=yourkey
-
-# Créer la base et les tables
-php bin/console doctrine:database:create
-php bin/console make:migration
-php bin/console doctrine:migrations:migrate
-
-# (Optionnel) Charger des données de test
-php bin/console doctrine:fixtures:load
-
-# Installer les assets frontend
-npm install
-npm run build
-
-# Lancer le serveur
-symfony server:start
