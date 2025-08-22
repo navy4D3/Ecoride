@@ -82,7 +82,10 @@ L’application intègre des fonctionnalités avancées comme la suggestion dyna
 git clone https://github.com/navy4D3/Ecoride.git
 cd ecoride
 
-# Lancer les conteneurs
+# Connexion à Docker
+docker login
+
+# Lancer les conteneurs Docker
 docker compose up -d --build
 
 # Connexion au conteneur PHP
@@ -105,3 +108,7 @@ GOOGLE_API_KEY=yourkey
 
 GOOGLE_RECAPTCHA_SITE_KEY=yourkey
 GOOGLE_RECAPTCHA_SECRET_KEY=yourkey
+
+# Installer les assets frontend
+npm install
+npm run build
