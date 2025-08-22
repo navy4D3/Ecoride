@@ -59,7 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
             input.checked = false;
         });
 
-        hidePopup(filtersSection);
+        if (window.innerWidth < 1024) {
+            hidePopup(filtersSection);
+        }
+        
 
         inputsLabels.forEach((label) => {
             label.classList.remove('active');

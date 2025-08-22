@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Document\GoogleData;
 use App\Entity\Reservation;
 use App\Entity\Trajet;
 use App\Entity\User;
@@ -12,8 +13,10 @@ use App\Enum\StatutReservation;
 use App\Form\AddTrajetType;
 use App\Form\SearchTrajetType;
 use App\Service\TrajetSearchService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use IntlDateFormatter;
+use MongoDB\Client;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -55,7 +58,6 @@ final class TrajetController extends AbstractController
             $endAddress = $form->get('lieuArrivee')->getData();
             $date = $form->get('dateDepart')->getData();
             $nbPlace = $form->get('nbPlace')->getData();
-            // $endAddress = $request->query->get('lieuArrivee');
 
             $startCoords = $this->geocode($startAddress, $client);
             $endCoords = $this->geocode($endAddress, $client);
@@ -67,12 +69,8 @@ final class TrajetController extends AbstractController
                 $currentUserId = $em->getRepository(User::class)->findOneBy(['email' => $currentUser->getUserIdentifier()])->getId();
             }
             
-
-
-            // Appel au service de recherche
             $results = $trajetSearchService->findMatchingTrips($startCoords, $endCoords, $date, $nbPlace, $currentUserId);
-            // inclure un filtre sur la date d'aujourd'hui, afficher que les trajets ultérieurs
-            // faire une fonction qui met à jour les trajets à passés a partir du moment ou la date est passé
+            
             $session = $request->getSession();
             $session->set('reservation_data', [
                 'nbPlaces' => $form->get('nbPlace')->getData(),
@@ -84,36 +82,13 @@ final class TrajetController extends AbstractController
                 'form' => $form,
             ]);
 
-            // Ici tu peux lancer une recherche en base, par exemple :
-            // $resultats = $trajetRepository->search($data);
 
-            // Pour la démo, on va juste afficher les données
-            // return $this->render('trajets.html.twig', [
-            //     'search' => $data,
-            //     // 'resultats' => $resultats,
-            // ]);
         }
 
         return $this->render('trajet/rechercher.html.twig', [
             'form' => $form,
         ]);
     }
-
-    // public function search(Request $request, HttpClientInterface $client, TrajetSearchService $trajetSearchService): Response
-    // {
-    //     $startAddress = $request->query->get('lieuDepart');
-    //     $endAddress = $request->query->get('lieuArrivee');
-
-    //     $startCoords = $this->geocode($startAddress, $client);
-    //     $endCoords = $this->geocode($endAddress, $client);
-
-    //     // Appel au service de recherche
-    //     $results = $trajetSearchService->findMatchingTrips($startCoords, $endCoords);
-
-    //     return $this->render('search/results.html.twig', [
-    //         'trajets' => $results
-    //     ]);
-    // }
 
     public function showTrajetDateAndTime(Trajet $trajet)
     {
@@ -128,12 +103,7 @@ final class TrajetController extends AbstractController
         $departureDateTime = $trajet->getHeureDepart();
         $durationInSeconds = $trajet->getDureeInSeconds(); // exemple : 5h40 = 20400 sec
 
-        // if (!$departureDateTime instanceof \DateTime) {
-        //     $departureDateTime = \DateTime::createFromInterface($departureDateTime);
-        // }
 
-        // $arrivalDateTime = $departureDateTime->modify("+$durationInSeconds seconds");
-        // $arrivalDateTime = $departureDateTime->add(new \DateInterval('PT' . $durationInSeconds . 'S'));
         $arrivalDateTimeStamp = $departureDateTime->getTimestamp() + $durationInSeconds;
         $arrivalDateTime = new \DateTime();
         $arrivalDateTime->setTimestamp($arrivalDateTimeStamp)->setTimezone($currentTime->getTimezone());
@@ -169,13 +139,9 @@ final class TrajetController extends AbstractController
     #[Route('/trajet/{id}', name: 'app_trajet')]
     public function trajet(EntityManagerInterface $em, Request $request, $id): Response
     {
-        // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
-        //regex plaque FR avant 2012 : ^\d{1,4} [A-Z]{2} \d{2,3}$
-        // $nbPlaces = $request->query->get('reservation_datas')['nb_places'];
 
         $trajet = $em->getRepository(Trajet::class)->find($id);
         $timeDatas = $this->showTrajetDateAndTime($trajet);
-        // $placesRestante = $trajet->getVoiture()->getPlaces() - count($trajet->getParticipants());
         
         return $this->render('trajet/trajet.html.twig', [
             'trajet' => $trajet,
@@ -185,9 +151,7 @@ final class TrajetController extends AbstractController
     #[Route('/update-trajet-statut/{id}', name: 'app_trajet_update_statut')]
     public function updateTrajetStatut(EntityManagerInterface $em, Request $request, $id, MailerInterface $mailer, UrlGeneratorInterface $urlGeneratorInterface): Response
     {
-        // regex plaque FR depuis 2012 : ^[A-Z]{2}-\d{3}-[A-Z]{2}$
-        //regex plaque FR avant 2012 : ^\d{1,4} [A-Z]{2} \d{2,3}$
-        // $nbPlaces = $request->query->get('reservation_datas')['nb_places'];
+
 
         $trajet = $em->getRepository(Trajet::class)->find($id);
 
@@ -257,9 +221,6 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_rechercher');
         }
 
-
-        //recuperer le nombre de place désiré par l'utilisateur
-
         return $this->render('trajet/reserver.html.twig', [
             'trajet' => $trajet,
             'timeDatas' => $timeDatas,
@@ -270,7 +231,7 @@ final class TrajetController extends AbstractController
     
 
     #[Route('/publier-trajet', name: 'app_publier_trajet')]
-    public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security): Response
+    public function publierTrajet(Request $request, EntityManagerInterface $em, Security $security, DocumentManager $dm): Response
     {
         $user = $security->getUser();
 
@@ -284,7 +245,6 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_devenir_chauffeur', [
                 'redirect' => 'app_publier_trajet'
             ]);
-            // rajouter un code pour que l'utilisateur soit redirigé vers ajout trajet à la fin
         }
 
         $trajet = new Trajet();
@@ -292,50 +252,35 @@ final class TrajetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $trajet = $form->getData();
-
-            // $dateString = $form->get('dateDepart')->getData();
-            // $formatter = new IntlDateFormatter(
-            //     'fr_FR',
-            //     IntlDateFormatter::LONG,
-            //     IntlDateFormatter::NONE,
-            //     'Europe/Paris',
-            //     IntlDateFormatter::GREGORIAN,
-            //     'd MMMM yyyy' // → correspond à '20 mai 2025'
-            // );
-
-            // $timestamp = $formatter->parse($dateString);
-
-            // if ($timestamp === false) {
-            //     throw new \Exception("Impossible de parser la date : $dateString");
-            // }
-            // $dateFormatted = (new \DateTime())->setTimestamp($timestamp);
-
-            //interpreter pour date arrivée.
-            //faire la même chose pour les autres attributs
+            
             
 
             $googleDataJson = $form->get('googleData')->getData();
-            $googleDataArray = json_decode($googleDataJson, true);
-            $trajet->setGoogleData($googleDataArray);
 
-            // return new Response($googleDataJson);
+            
+            $googleDataArray = json_decode($googleDataJson, true);
+
             $dureeInSeconds = $googleDataArray['legs'][0]['duration']['value'];
             $trajet->setDureeInSeconds($dureeInSeconds);
 
 
             $voitureId = $form->get('voiture')->getData();
             $voitureObject = $em->getRepository(Voiture::class)->find($voitureId);
-            // $user = $em->getRepository(User::class)->findOneBy(['email' => $currentUserEmail]);
+
             $trajet->setChauffeur($user);
-            // $trajet->setChauffeur($user);
-            // return new Response($voitureObject->get);
 
             $trajet->setVoiture($voitureObject);
             $trajet->setStatut(Statut::Planifie);
 
             $em->persist($trajet);
             $em->flush();
+
+            $googleDataDocument = new GoogleData();
+            $googleDataDocument->setData($googleDataArray);
+            $googleDataDocument->setTrajetId($trajet->getId());
+            
+            $dm->persist($googleDataDocument);
+            $dm->flush();
 
             return $this->redirectToRoute('app_user_profil');
         }
@@ -499,9 +444,6 @@ final class TrajetController extends AbstractController
 
         return $this->redirectToRoute('app_user_profil');
     }
-
-    
-
     
 
 }

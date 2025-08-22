@@ -2,13 +2,90 @@
 namespace App\Service;
 
 use App\Controller\TrajetController;
+use App\Document\GoogleData;
 use App\Entity\User;
 use App\Enum\Statut;
 use App\Repository\TrajetRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class TrajetSearchService
 {
-    public function __construct(private TrajetRepository $trajetRepository, private TrajetController $trajetController) {}
+    public function __construct(private TrajetRepository $trajetRepository, private TrajetController $trajetController, private DocumentManager $dm) {}
+
+    public function saveGoogleData(int $trajetId, array $googleResponse): void
+    {
+        $googleData = new GoogleData();
+        $googleData->setTrajetId((string)$trajetId);
+        $googleData->setData($googleResponse);
+
+        $this->dm->persist($googleData);
+        $this->dm->flush();
+    }
+
+    public function getGoogleData(int $trajetId): ?array
+    {
+        $document = $this->dm->getRepository(GoogleData::class)->findOneBy(['trajetId' => (string)$trajetId]);
+
+        return $document ? $document->getData() : null;
+    }
+
+    public function getGpsPoints($googleDataId): array
+    {
+        // $monGoDbDataId = $this->getGoogleDataId(); // JSON brut de Google
+        // // $data = json_decode($json, true);
+
+        // ajuster pour recuperer le json depuis MonGoDB
+        $googleDataDocument = $this->dm->getRepository(GoogleData::class)->findOneBy(['trajetId' => $googleDataId]);
+        $data = $googleDataDocument->getData();
+
+        $polyline = $data['overview_polyline']['points'];
+        // $polyline = $data['summary'];
+
+        return $this->decodePolyline($polyline);
+    }
+
+    public function decodePolyline(string $polyline): array
+    {
+        if (!$polyline) {
+            return [];
+        }
+
+        $points = [];
+    
+        $index = 0;
+        $lat = 0;
+        $lng = 0;
+        $length = strlen($polyline);
+    
+        while ($index < $length) {
+            $result = 1;
+            $shift = 0;
+            do {
+                $b = ord($polyline[$index++]) - 63 - 1;
+                $result += $b << $shift;
+                $shift += 5;
+            } while ($b >= 0x1f);
+            $lat += ($result & 1) ? ~($result >> 1) : ($result >> 1);
+    
+            $result = 1;
+            $shift = 0;
+            do {
+                $b = ord($polyline[$index++]) - 63 - 1;
+                $result += $b << $shift;
+                $shift += 5;
+            } while ($b >= 0x1f);
+            $lng += ($result & 1) ? ~($result >> 1) : ($result >> 1);
+    
+            $points[] = [
+                'lat' => $lat * 1e-5,
+                'lng' => $lng * 1e-5,
+            ];
+        }
+    
+        return $points;
+        // Fonction pour décoder les polylines Google en tableau de ['lat' => ..., 'lng' => ...]
+        // => peux t’en fournir une version PHP si besoin
+    }
 
     public function findMatchingTrips(array $startCoords, array $endCoords, $date, $nbPlace, string $currentUserId = ""): array
     {
@@ -30,7 +107,7 @@ class TrajetSearchService
         $matchingTrips = [];
 
         foreach ($trips as $trip) {
-            $points = $trip->getGpsPoints(); // À implémenter : decode JSON et extraire les lat/lng
+            $points = $this->getGpsPoints($trip->getId()); // À implémenter : decode JSON et extraire les lat/lng
 
             $tripIsPlan = $trip->getStatut() == Statut::Planifie;
             if (

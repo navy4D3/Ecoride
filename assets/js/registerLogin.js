@@ -18,10 +18,10 @@ if (inscriptionLabel && connexionLabel) {
   }
 }
 
-document.getElementById('submit-login-form-btn').addEventListener('submit', function(e) {
-  e.preventDefault();
-  document.querySelector('login-form').submit()
-})
+// document.getElementById('submit-login-form-btn').addEventListener('submit', function(e) {
+//   e.preventDefault();
+//   document.querySelector('login-form').submit()
+// })
 
 // document.querySelector('login-form').addEventListener('submit', function(e) {
 //   e.preventDefault();

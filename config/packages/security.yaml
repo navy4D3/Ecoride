@@ -51,6 +51,7 @@ security:
         - { path: ^/test-mail, roles: PUBLIC_ACCESS }
         
         - { path: ^/mentions-legales, roles: PUBLIC_ACCESS }
+        - { path: ^/test-mongo, roles: PUBLIC_ACCESS } #a enlever
 
         # 🔒 Toutes les autres pages nécessitent d'être connecté
         - { path: ^/admin, roles: ROLE_ADMIN }
